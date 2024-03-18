@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Close from "../icons/Close";
 import HamburgerMenu from "../icons/HamburgerMenu";
 import Link from "next/link";
@@ -7,12 +7,27 @@ import navItems from "./navItems";
 import { usePathname } from "next/navigation";
 import Search from "../icons/Search";
 import User from "../icons/User";
+import { useSession } from "next-auth/react";
+import ProfileDropdown from "./ProfileDropdown";
 
 const Header: React.FC = () => {
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const [isScrolled, setIsScrolled] = useState<boolean>(false);
+    const [profileOpen, setProfileOpen] = useState<boolean>(false);
     const path = usePathname();
+
+    const { status, data : session} = useSession();
+    const userData = session?.user;
+
+    let userName = userData?.name || userData?.email;
+    if (userName && userName.includes(' ')) {
+        userName = userName.split(' ')[0];
+    }
+    
+    console.log(userData);
+    const images = userData?.image;
+    const email = userData?.email;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -30,6 +45,10 @@ const Header: React.FC = () => {
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
+    }
+
+    const toggleProfile = () => {
+        setProfileOpen(!profileOpen);
     }
 
     return (
@@ -86,10 +105,18 @@ const Header: React.FC = () => {
                                 <Search />
                             </div>
                             <div className="md:hidden">
-
+                                
                             </div>
-                            <div className="bg-gray-100 profile-hover cursor-pointer text-black hover:text-white hover:bg-gray-300">
-                                <User />
+                            <div className="flex justify-center items-center">
+                                <button 
+                                    className="bg-gray-100 profile-hover cursor-pointer text-black hover:text-white hover:bg-gray-300 focus:ring focus:bg-gray-300 focus:text-white" 
+                                    onClick={toggleProfile}
+                                >
+                                    <User />
+                                </button>
+                                { profileOpen &&
+                                    <ProfileDropdown status={status} name={userName} images={images} email={email} />
+                                }
                             </div>
                         </div>
                     </div>

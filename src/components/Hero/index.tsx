@@ -1,8 +1,10 @@
+import SearchMenuBtn from "./SearchMenuBtn";
+
 const Hero: React.FC = () => {
   return (
     <section id="hero" className="mx-auto max-w-[1170px] w-full absolute">
-        <div className="absolute inset-0 bg-primary/40 z-10 rounded-3xl"/>
-        <div className="absolute inline-block z-5">
+        <div className="absolute inset-0 bg-primary/40 mx-2 my-4 lg:m-0 z-10 rounded-3xl"/>
+        <div className="absolute inline-block z-5 px-2 py-4 lg:p-0">
             <picture>
                 <source media="(min-width: 900px)" srcSet="/images/ml.jpeg"/>
                 <img 
@@ -24,9 +26,10 @@ const Hero: React.FC = () => {
             </div>
         </div>
         <div className="mt-4 absolute flex flex-col bg-white shadow-xl rounded-xl mx-auto left-[50%] z-10 w-[calc(100vw-48px)] max-w-[400px] -translate-x-[50%] -translate-y-[60%] transform p-4 text-left md:w-[461px] md:max-w-none md:p-6 lg:w-[520px] lg:p-8">
-            <span className="mb-2 block text-black">Cari menu</span>
-            <div className="flex flex-col items-center justify-center"></div>
-            <div></div>
+            <span className="mb-2 block text-gray-500">Cari menu</span>
+            <div className="flex flex-col items-center justify-center mx-auto">
+                <SearchMenuBtn />
+            </div>
         </div>
     </section>
   )

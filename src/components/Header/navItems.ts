@@ -18,8 +18,8 @@ const navItems: Navbar[] = [
   },
   {
     id: 4,
-    title: "Pengguna",
-    path: "/pengguna",
+    title: "Dashboard",
+    path: "/dashboard",
   }
 ];
 export default navItems;
