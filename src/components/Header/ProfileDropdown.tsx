@@ -1,7 +1,18 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function ProfileDropdown({status, name, images, email}) {
+
+    const handleLogout = () => {
+        const logout = signOut();
+        toast.promise(logout, {
+            loading: 'Loading...',
+            success: 'Logout Succesfully!',
+            error: 'Error',
+        });
+    }
+
     return (
         <div className="absolute right-0 mt-0 top-14 flex w-60 flex-col gap-3 rounded-xl bg-tertiary p-4 text-black shadow-xl border-2 border-tertiary invisible lg:visible">
             <div className="flex items-center gap-3">
@@ -33,12 +44,12 @@ export default function ProfileDropdown({status, name, images, email}) {
             </div>
             <div className="border-t border-slate-500/30"></div>
             <div className="flex flex-col">
-                <a href="#" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-primary hover:text-white">
+                <Link href={'/dashboard/profile'} className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-primary hover:text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
                     <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd"></path>
                     </svg>
                     <span>Profile</span>
-                </a>
+                </Link>
                 <a href="#" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-primary hover:text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
                     <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm11.378-3.917c-.89-.777-2.366-.777-3.255 0a.75.75 0 01-.988-1.129c1.454-1.272 3.776-1.272 5.23 0 1.513 1.324 1.513 3.518 0 4.842a3.75 3.75 0 01-.837.552c-.676.328-1.028.774-1.028 1.152v.75a.75.75 0 01-1.5 0v-.75c0-1.279 1.06-2.107 1.875-2.502.182-.088.351-.199.503-.331.83-.727.83-1.857 0-2.584zM12 18a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd"></path>
@@ -49,7 +60,7 @@ export default function ProfileDropdown({status, name, images, email}) {
             {status === 'authenticated' && (
                 <button 
                     className="flex justify-center gap-3 rounded-md bg-red-600 py-2 px-3 font-semibold text-white hover:bg-red-500 focus:ring-2 focus:ring-red-400"
-                    onClick={()=> signOut()}
+                    onClick={handleLogout}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
                         <path fillRule="evenodd" d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm10.72 4.72a.75.75 0 011.06 0l3 3a.75.75 0 010 1.06l-3 3a.75.75 0 11-1.06-1.06l1.72-1.72H9a.75.75 0 010-1.5h10.94l-1.72-1.72a.75.75 0 010-1.06z" clipRule="evenodd"></path>
@@ -59,7 +70,7 @@ export default function ProfileDropdown({status, name, images, email}) {
             )}
             {status !== 'authenticated' && (
                 <Link href={'/login'}>
-                    <button className="flex justify-center gap-3 rounded-md bg-green-600 py-2 px-3 font-semibold text-white hover:bg-green-500 focus:ring-2 focus:ring-red-400">
+                    <button className="flex justify-center gap-3 rounded-md bg-green-600 py-2 px-3 font-semibold text-white hover:bg-green-500 focus:ring-2 focus:ring-green-400">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
                             <path fillRule="evenodd" d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm10.72 4.72a.75.75 0 011.06 0l3 3a.75.75 0 010 1.06l-3 3a.75.75 0 11-1.06-1.06l1.72-1.72H9a.75.75 0 010-1.5h10.94l-1.72-1.72a.75.75 0 010-1.06z" clipRule="evenodd"></path>
                         </svg>

@@ -1,6 +1,6 @@
 "use client";
 import { words } from "@/libs/data";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Search from "../icons/Search";
 
 const SearchMenuBtn: React.FC = () => {

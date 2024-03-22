@@ -21,11 +21,11 @@ const Header: React.FC = () => {
     const userData = session?.user;
 
     let userName = userData?.name || userData?.email;
+    const firstLetter = userName?.charAt(0);
     if (userName && userName.includes(' ')) {
         userName = userName.split(' ')[0];
     }
     
-    console.log(userData);
     const images = userData?.image;
     const email = userData?.email;
 
@@ -67,7 +67,7 @@ const Header: React.FC = () => {
                     </Link>
                     {/* MOBILE-MENU */}
                     <div className="md:hidden">
-                        <button onClick={toggleMenu} className="my-1 items-center">
+                        <button onClick={toggleMenu} className="my-1 items-center border-none">
                             { menuOpen ? <Close /> : <HamburgerMenu /> }
                         </button>
                     </div>
@@ -83,13 +83,21 @@ const Header: React.FC = () => {
                 >
                     <nav>
                         <ul className="flex lg:items-center flex-col lg:flex-row gap-5 lg:gap-10">
+                            <li>
+                                <Link 
+                                    href={'/'} 
+                                    className={`hover:text-black hover:ease-in-out flex items-center justify-between gap-3 ${path === '/' ? 'text-black border-b-4 border-primary' : 'text-gray-600 '}`}
+                                >
+                                    Beranda
+                                </Link>
+                            </li>
                             { navItems.map((item) => (
                                 <li key={item.id} className="group relative lg:py-2">
                                     <Link 
                                         href={item.path}
                                         className={`
                                             hover:text-black hover:ease-in-out flex items-center justify-between gap-3
-                                            ${path === item.path ? 'text-black border-b-4 border-primary' : 'text-gray-600 '}
+                                            ${path === item.path || path.includes(item.path) ? 'text-black border-b-4 border-primary' : 'text-gray-600 '}
                                         `}
                                     >
                                         <span>{item.title}</span>
@@ -104,15 +112,12 @@ const Header: React.FC = () => {
                             <div className="bg-tertiary profile-hover cursor-pointer text-primary hover:text-white hover:bg-secondary">
                                 <Search />
                             </div>
-                            <div className="md:hidden">
-                                
-                            </div>
                             <div className="flex justify-center items-center">
                                 <button 
                                     className="bg-gray-100 profile-hover cursor-pointer text-black hover:text-white hover:bg-gray-300 focus:ring focus:bg-gray-300 focus:text-white" 
                                     onClick={toggleProfile}
                                 >
-                                    <User />
+                                    { status === 'authenticated' ? <span className="px-2">{firstLetter}</span> : <User />}
                                 </button>
                                 { profileOpen &&
                                     <ProfileDropdown status={status} name={userName} images={images} email={email} />

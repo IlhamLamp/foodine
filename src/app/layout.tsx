@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { AppProvider } from "@/components/AppContext";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({children}: Readonly<{
     <html lang="en" className="scroll-smooth">
       <body className={poppins.className}>
         <AppProvider>
+          <Toaster />
           <Header />
           {children}
         </AppProvider>
