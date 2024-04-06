@@ -1,6 +1,7 @@
 "use client";
-import DeleteButton from "@/components/Buttons/DeleteButon";
-import { BackArrow, Backward, Blocked, Forward } from "@/components/icons/Arrow";
+import Pagination from "@/components/Buttons/Pagination";
+import CategoryItem from "@/components/Dashboard/Categories/CategoryItem";
+import { BackArrow} from "@/components/icons/Arrow";
 import UseProfile from "@/components/UseProfile";
 import { Category, MenuItems } from "@/types/menu";
 import Link from "next/link";
@@ -169,34 +170,7 @@ export default function CategoriesPage( {searchParams} : {
             <div>
                 <h2 className="mt-4 text-sm text-secondary">List category:</h2>
                 {categories?.length > 0 && categories.map(c => (
-                    <div
-                        key={c._id}
-                        className="bg-canvas rounded-xl p-2 px-4 flex gap-1 mb-2 border-none items-center"
-                    >
-                        <div className="grow flex flex-row mx-auto">
-                            <span className="font-semibold">{c.name}</span>
-                            <div className="flex flex-row gap-2 mx-auto ">
-                                {menuItems.filter(item => item.category?.toString() === c._id).map(item => (
-                                    <div key={item._id}>
-                                        <span className="text-gray-400">{item.name},</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="flex gap-1">
-                            <button 
-                                type="button"
-                                onClick={() => {
-                                    setEditCategory(c);
-                                    setCategoryName(c.name);
-                                }}
-                                className="bg-tertiary border-none"
-                            >
-                                Edit
-                            </button>
-                            <DeleteButton label={'Delete'} onDelete={() => handleDeleteClick(c._id)} />
-                        </div>
-                    </div>
+                    <CategoryItem key={c._id} category={c} menuItems={menuItems} setEditCategory={setEditCategory} setCategoryName={setCategoryName} onDelete={() => handleDeleteClick(c._id)} />
                 ))}
             </div>
             {isPageOutOfRange ? (
@@ -207,38 +181,7 @@ export default function CategoriesPage( {searchParams} : {
                     </div>
                 </div>
             ) : (
-                <div className="flex justify-center items-center mt-5">
-                    <div className="flex border-[1px] gap-4 rounded-[10px] border-primary h-14 items-center">
-                        { page === 1 ? (
-                            <div className="opacity-60 cursor-not-allowed flex items-center bg-primary size-full p-3 rounded-l-lg" aria-disabled="true">
-                                <span className="text-white"><Blocked /></span>
-                            </div>
-                        ) : (
-                            <Link className="flex items-center bg-primary text-canvas font-semibold hover:opacity-50 size-full p-3 rounded-l-lg" href={`?page=${prevPage}`} aria-label="Previous page"><Backward /></Link>
-                        )}
-
-                        {pageNumbers.map((pageNumber, index) => (
-                            <Link
-                                key={index}
-                                className={ page === pageNumber
-                                    ? "bg-primary font-bold px-2 rounded-md text-white"
-                                    : "hover:bg-primary px-1 rounded-md hover:text-white"
-                                }
-                                href={`?page=${pageNumber}`}
-                            >
-                                {pageNumber}
-                            </Link>
-                        ))}
-
-                        { page === totalPages ? (
-                            <div className="opacity-60 cursor-not-allowed flex items-center bg-primary size-full p-3 rounded-r-lg" aria-disabled="true">
-                                <span className="text-white"><Blocked /></span>
-                            </div>
-                        ) : (
-                            <Link className="flex items-center bg-primary text-canvas font-semibold hover:opacity-50 size-full p-3 rounded-r-lg" href={`?page=${nextPage}`} aria-label="Next page"><Forward /></Link>
-                        )}
-                    </div>
-                </div>
+                <Pagination page={page} totalPages={totalPages} prevPage={prevPage} nextPage={nextPage} pageNumbers={pageNumbers} />
             )}
         </div>
     )
