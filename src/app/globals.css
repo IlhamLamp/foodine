@@ -20,26 +20,30 @@ input[type="text"]:disabled {
   @apply bg-gray-100 border-0 cursor-not-allowed text-gray-300;
 }
 
-input[type="map"] {
-  @apply hover:ring ring-primary hover:bg-secondary hover:text-white
+input[type="map"] { 
+  @apply border-none bg-tertiary text-primary hover:bg-primary hover:text-white;
 }
 
 button, .button {
-    @apply flex justify-center gap-2 w-full text-gray-700 font-semibold;
-    @apply border border-gray-300 rounded-xl px-6 py-2;
+  @apply flex justify-center gap-2 w-full text-gray-700 font-semibold;
+  @apply border border-gray-300 rounded-xl px-6 py-2;
 }
   
 button[type="submit"], .submit {
-    @apply border-0 bg-primary text-canvas;
-    @apply hover:bg-secondary hover:text-white;
+  @apply border-0 bg-primary text-canvas;
+  @apply hover:bg-secondary hover:text-white;
 
 }
 button[type="submit"]:disabled, .submit:disabled {
-    @apply cursor-not-allowed bg-red-400;
+  @apply cursor-not-allowed bg-red-400;
 }
 
 .profile-hover {
-    @apply rounded-full p-2.5 transition ease-in delay-100;
+  @apply rounded-full p-2.5 transition ease-in delay-100;
+}
+
+.btn-hover {
+  @apply transition ease-in delay-100;
 }
 
 div.tabsUserProfile > * {

@@ -4,6 +4,7 @@ import EditableImage from "@/components/layout/EditableImage";
 import { useState } from "react";
 import UserContactInformation from "./UserContactInformation";
 import { UserLocation } from "@/types/user-information";
+import { HideEye, ShowEye } from "@/components/icons/Eye";
 
 export default function UserForm({ user, onSave }) {
 
@@ -11,6 +12,7 @@ export default function UserForm({ user, onSave }) {
     const [image, setImage] = useState<string>(user?.image || '');
     const [email, setEmail] = useState<string>(user?.email || '');
     const [password, setPassword] = useState<string>(user?.password || '');
+    const [confirmationPassword, setConfirmationPassword] = useState<string>(user?.password || '');
     const [phone, setPhone] = useState<string>(user?.phone || '');
     const [location, setLocation] = useState<UserLocation>(user?.location || '');
     const [province, setProvince] = useState<string>(user?.province || '');
@@ -33,6 +35,25 @@ export default function UserForm({ user, onSave }) {
         if (propName === 'address') setAddress(value);
     }
 
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmationPassword, setShowConfirmationPassword] = useState<boolean>(false);
+    const passwordToggle = () => {
+        setShowPassword(!showPassword);
+    }
+    const passwordConfirmationToggle = () => {
+        setShowConfirmationPassword(!showConfirmationPassword);
+    }
+
+    const handleFormSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+        ev.preventDefault();
+        // validation
+        if (password !== confirmationPassword) {
+            alert("Passwords do not match");
+            return; 
+        }
+        onSave(ev, { name, image, email, password, phone, location, province, regencies, district, villages, postalCode, address })
+    }
+
     return (
         <div className="flex gap-4 mt-6">
             <div className="p-2 rounded-lg relative max-w-[300px]">
@@ -40,9 +61,7 @@ export default function UserForm({ user, onSave }) {
             </div>
             <form 
                 className="grow"
-                onSubmit={(ev) => 
-                    onSave(ev, { name, image, email, password, phone, location, province, regencies, district, villages, postalCode, address })
-                } 
+                onSubmit={handleFormSubmit} 
             >
                 <div className="grid grid-cols-2 gap-2">
                     <div>
@@ -57,11 +76,27 @@ export default function UserForm({ user, onSave }) {
                 <div className="grid grid-cols-2 gap-2">
                     <div>
                         <label>Password</label>
-                        <input type="password" value={password} onChange={(ev) => setPassword(ev.target.value)} placeholder="Password" />
+                        <div className="relative">
+                            <input type={(showPassword === false) ? 'password' : 'text'} value={password} onChange={(ev) => setPassword(ev.target.value)} placeholder="Password" />
+                            <div className="absolute top-2 right-4 cursor-pointer text-primary">
+                                { (showPassword === false) 
+                                    ? <div onClick={passwordToggle}><ShowEye/></div> 
+                                    : <div onClick={passwordToggle}><HideEye/></div> 
+                                }
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <label>Konfirmasi Password</label>
-                        <input type="password" value={password} onChange={(ev) => setPassword(ev.target.value)} placeholder="Password" />
+                        <div className="relative">
+                            <input type={(showConfirmationPassword === false) ? 'password' : 'text'} value={confirmationPassword} onChange={(ev) => setConfirmationPassword(ev.target.value)} placeholder="Konfirmasi Password" />
+                            <div className="absolute top-2 right-4 cursor-pointer text-primary">
+                                { (showConfirmationPassword === false) 
+                                    ? <div onClick={passwordConfirmationToggle}><ShowEye/></div>
+                                    : <div onClick={passwordConfirmationToggle}><HideEye/></div> 
+                                }
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <UserContactInformation
@@ -80,7 +115,7 @@ export default function UserForm({ user, onSave }) {
                         </label>
                     </div>
                 )}
-                <button type="submit">Save</button>
+                <button type="submit" className="btn-hover">Save</button>
             </form>
         </div>
     )

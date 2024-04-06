@@ -1,7 +1,6 @@
 "use client";
 import UserForm from "@/components/Dashboard/Profile/UserForm";
 import UnauthorizedPage from "@/components/layout/UnauthorizedPage";
-import UserTabs from "@/components/layout/UserTabs";
 import { UserInformation } from "@/types/user-information";
 import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
@@ -50,7 +49,7 @@ const ProfilePage: React.FC = () => {
                 await toast.promise(savingPromise, {
                     loading: 'Saving...',
                     success: 'Profile Saved!',
-                    error: 'Error',
+                    error: 'Password must be at least 5 character',
                 });
                 return response;
             })
@@ -61,7 +60,7 @@ const ProfilePage: React.FC = () => {
     }
 
     if (status === 'loading' || !profileFetched) {
-        return 'Loading...!'
+        return 'Loading user info...!'
     }
 
     if (status === 'unauthenticated') {
@@ -69,15 +68,12 @@ const ProfilePage: React.FC = () => {
     }
 
     return(
-        <section className="mt-24 mb-6 mx-auto">
-            <UserTabs isAdmin={isAdmin} />
-            <div className="max-w-5xl mx-auto">
-                <UserForm user={user} onSave={handleProfileInfoUpdate}/>
-                { status !== "authenticated" && (
-                    <UnauthorizedPage />
-                )}
-            </div>
-        </section>
+        <div id="profile">
+            <UserForm user={user} onSave={handleProfileInfoUpdate}/>
+            { status !== "authenticated" && (
+                <UnauthorizedPage />
+            )}
+        </div>
     )
 }
 

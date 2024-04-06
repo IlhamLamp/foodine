@@ -12,7 +12,7 @@ export default function EditableImage({ link, setLink }) {
     const publicId = containChildRoute[containChildRoute.length - 1];
 
     // upload path
-    const finalPath = containChildRoute[1];
+    const finalPath = containChildRoute[2];
 
     // IMAGE UPLOADING
     async function handleFileChange(ev: any) {
@@ -21,13 +21,11 @@ export default function EditableImage({ link, setLink }) {
             const files = ev.target.files;
             if (files?.length === 1) {
                 const data = new FormData();
+                data.set('path', finalPath);
                 data.set('file', files[0]);
                 data.set('id', publicId);
 
-                //
-                const uploadURL = `/api/dashboard/${finalPath}/upload`
-                // 
-
+                // Validation
                 const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
                 const maxFileSize = 5 * 1024 * 1024; // 5 MB
 
@@ -41,7 +39,7 @@ export default function EditableImage({ link, setLink }) {
                     return toast.error("File size exceeds the maximum limit (5 MB).");
                 }
 
-                const uploadPromise = fetch(uploadURL, {
+                const uploadPromise = fetch('/api/upload', {
                     method: 'POST',
                     body: data,
                 }).then(async response => {
@@ -82,7 +80,7 @@ export default function EditableImage({ link, setLink }) {
             )}        
             <label className={isUploading ? 'cursor-not-allowed' : 'cursor-pointer'}>
                 <input type="file" className="hidden" onChange={handleFileChange} />
-                <span className="block border bg-tertiary rounded-lg p-2 text-center text-bgPrimary">Change Image</span>
+                <span className="block border bg-secondary hover:bg-tertiary rounded-lg p-2 text-center text-white hover:text-primary font-semibold btn-hover">Change Image</span>
             </label>
         </>   
     )

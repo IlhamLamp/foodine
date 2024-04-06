@@ -16,15 +16,17 @@ export async function ReverseGeocoding (latitude: string | number | null, longit
     }
 }
 
-export function GetAddress (data: any) {
+export function GetAddress(data: any): string | null {
     try {
-        if (!data || !data.results || !data.results[0]) {
-            return new Error("Invalid data format or missing address information");
-        }
-
-        const address = data.results[0].formatted;
-        return address;
-    } catch (error: any) {
-        return new Error(error.message);
+      if (!data || !data.results || !data.results[0]) {
+        return null;
+      }
+  
+      const d = data.results[0];
+      const address = `${d.road}, ${d.formatted}`;
+      return address;
+    } catch (error) {
+      console.error("Error getting address:", error.message);
+      return null;
     }
-}
+  }

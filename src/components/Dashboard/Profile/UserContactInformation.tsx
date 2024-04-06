@@ -8,7 +8,7 @@ import MapPin from "@/components/icons/MapPin";
 export default function UserContactInformation({ userContactInformationProps, setUserContactInformationProps }) {
 
     const { phone, location, province, regencies, district, villages, postalCode, address } = userContactInformationProps;
-    const { status, data: session } = useSession();
+    const { status } = useSession();
 
     const [provList, setProvList] = useState<Province[]>([]);
     const [regenciesList, setRegenciesList] = useState<Regencies[]>([]);
@@ -23,17 +23,17 @@ export default function UserContactInformation({ userContactInformationProps, se
     const [showLatitude, setShowLatitude] = useState<string | number>('');
     const [showLongitude, setShowLongitude] = useState<string | number>('');
 
-    const [position, setPosition] = useState<string>('');
+    const [position, setPosition] = useState<string | number>('');
 
     useEffect(() => {
         ReverseGeocoding(location?.latitude || showLatitude, location?.longitude || showLongitude)
-          .then(data => {
+        .then(data => {
             const address = GetAddress(data);
             setPosition(address);
-          })
-          .catch(error => {
+        })
+        .catch(error => {
             console.error('Error fetching address:', error.message);
-          });
+        });
     }, []);
 
     useEffect(() => {
@@ -50,7 +50,7 @@ export default function UserContactInformation({ userContactInformationProps, se
             .then(response => response.json())
             .then(regencies => setRegenciesList(regencies));   
         }
-    }, [selectedProvinceId])
+    }, [status, selectedProvinceId])
 
     useEffect(() => {
         if (status === 'authenticated' && selectedRegenciesId !== null) {
@@ -58,7 +58,7 @@ export default function UserContactInformation({ userContactInformationProps, se
             .then(response => response.json())
             .then(districts => setDistrictsList(districts));
         }
-    }, [selectedRegenciesId])
+    }, [status, selectedRegenciesId])
 
     useEffect(() => {
         if (status === 'authenticated' && selectedDistrictId !== null) {
@@ -66,7 +66,7 @@ export default function UserContactInformation({ userContactInformationProps, se
             .then(response => response.json())
             .then(villages => setVillagesList(villages));
         }
-    }, [selectedDistrictId])
+    }, [status, selectedDistrictId])
 
     const handleProvinceChange = (ev: any) => {
         const selectedValue = ev.target.value;
@@ -96,14 +96,23 @@ export default function UserContactInformation({ userContactInformationProps, se
         setUserContactInformationProps('villages', selectedValue);
     }
 
-    navigator.geolocation.getCurrentPosition(position => {
-        const {latitude, longitude} = position.coords;
-        setShowLatitude(latitude.toString());
-        setShowLongitude(longitude.toString());
-    })
+    if (showPopupMap) {
+    }
 
     const handlePopupMap = () => {
         setShowPopupMap(!showPopupMap)
+
+        if (!location?.latitude && !location.langitude) {
+            try {
+                navigator?.geolocation.getCurrentPosition(position => {
+                    const { coords: { latitude, longitude }} = position;
+                    setShowLatitude(latitude.toString());
+                    setShowLongitude(longitude.toString());
+                })
+            } catch (error: any) {
+                console.error("Error getting geolocation:", error)
+            }
+        }
     }
 
     const handleSaveLocation = () => {
@@ -116,7 +125,10 @@ export default function UserContactInformation({ userContactInformationProps, se
     return (
         <>
             { showPopupMap && (
-                <PopupMap handlePopup={handlePopupMap} handleSaveLocation={handleSaveLocation} latitude={showLatitude} longitude={showLongitude} />
+                <PopupMap 
+                    handlePopup={handlePopupMap} handleSaveLocation={handleSaveLocation}
+                    latitude={showLatitude || location?.latitude} longitude={showLongitude || location?.longitude}
+                 />
             )}
             <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -135,8 +147,8 @@ export default function UserContactInformation({ userContactInformationProps, se
                         value={position || ''}
                         onClick={handlePopupMap}
                         onChange={handleSaveLocation}
-                        placeholder="Tekan Disini Untuk Melihat"
-                        className="cursor-pointer"
+                        placeholder="Tekan Disini Untuk Menandai"
+                        className="cursor-pointer btn-hover"
                     />
                 </div>
             </div>

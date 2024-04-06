@@ -14,7 +14,7 @@ export async function PUT(req: NextRequest) {
   try {
     connect();
     const data = await req.json();
-    const { _id, name, image, ...otherUserInfo } = data;
+    const { _id, name, image, password, ...otherUserInfo } = data;
 
     let filter = {};
     if (_id) {
@@ -26,10 +26,16 @@ export async function PUT(req: NextRequest) {
     }
 
     const user = await User.findOne(filter) as UserWithEmail;
-    await User.updateOne(filter, {name, image});
+
+    // validation
+    if (!password?.length || password.length < 5) {
+      return NextResponse.json({error: "Password must be at least 5 characters"}, {status: 400});
+    }
+
+    await User.updateOne(filter, {name, image, password});
     await UserInfo.findOneAndUpdate({email: user?.email}, otherUserInfo, {upsert:true});
 
-    return NextResponse.json(true);
+    return NextResponse.json({ msg: "Success update profile!" }, {status: 200});
   } catch (error: any) {
     console.log(error);
   }

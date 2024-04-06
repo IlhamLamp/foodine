@@ -16,8 +16,8 @@ export default function ProfileDropdown({status, name, images, email}) {
     return (
         <div className="absolute right-0 mt-0 top-14 flex w-60 flex-col gap-3 rounded-xl bg-tertiary p-4 text-black shadow-xl border-2 border-tertiary invisible lg:visible">
             <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg border-2 border-gray-50">
-                    <img className="w-auto object-cover" src={images || `/images/profile.png`} alt="Profile" />
+                <div className="flex w-12 h-12 items-center justify-center overflow-hidden rounded-lg border-2 border-gray-50">
+                    <img className="w-auto h-full scale-125" src={images || `/images/profile.png`} alt="Profile" />
                 </div>
                 <div>
                     <div className="flex gap-1 text-sm font-semibold">

@@ -1,18 +1,33 @@
 import { useEffect, useState } from "react";
 
-const UseProfile = () => {
-    const [data, setData] = useState({admin: false});
-    const [loading, setLoading] = useState(true);
+interface ProfileData {
+    admin: boolean;
+}
+
+const UseProfile = (): { data: ProfileData; loading: boolean} => {
+    const [data, setData] = useState<ProfileData>({admin: false});
+    const [loading, setLoading] = useState<boolean>(true);
+
     useEffect(() => {
-        setLoading(true);
-        fetch('/api/dashboard/profile').then(response => {
-            response.json().then(data => {
-                setData(data);
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch('/api/dashboard/profile');
+                if (!response.ok) {
+                    throw new Error(`API request failed with status ${response?.status}`);
+                }
+                const profileData = await response?.json();
+                setData(profileData);
+                console.log(data);
+            } catch (error) {
+                console.error('Error fetching profile data:', error);
+            } finally {
                 setLoading(false);
-            });
-        })
+            }
+        };
+        fetchData();
     }, []);
-    return {loading, data};
+    return { data, loading};
 }
 
 export default UseProfile;
