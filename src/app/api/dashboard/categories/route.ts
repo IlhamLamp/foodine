@@ -2,9 +2,10 @@ import { connect } from "@/libs/dbConnect";
 import { Category } from "@/models/Category";
 import { NextRequest, NextResponse } from "next/server";
 
+connect();
+
 export async function POST(req: NextRequest) {
     try {
-        connect();
         const { name } = await req.json();
         const categoryDoc = await Category.create({ name });
         return Response.json(categoryDoc);
@@ -15,7 +16,6 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
-        connect();
         const {_id, name} = await req.json();
         await Category.updateOne({_id}, {name});
         return NextResponse.json(true);
@@ -24,14 +24,13 @@ export async function PUT(req: NextRequest) {
     }
 }
 
-export async function GET(req: any) {
+export async function GET(req: NextRequest) {
     const url = new URL(req?.url);
     const searchParams = new URLSearchParams(url?.searchParams);
     const recentPage = parseInt(searchParams.get('page'), 10);
     const perPage = parseInt(searchParams.get('per_page'), 10);
     
     try {
-        connect();
         if (isNaN(recentPage) || recentPage < 1) {
             throw new Error('Invalid page number');
         }
@@ -52,7 +51,6 @@ export async function GET(req: any) {
 
 export async function DELETE(req: any) {
     try {
-        connect();
         const url = new URL(req?.url);
         const _id = url.searchParams.get('_id');
         await Category.deleteOne({_id});

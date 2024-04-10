@@ -11,12 +11,13 @@ type ExtraPrice = {
 }
 
 export type MenuItems = {
-    _id: string;
-    image: string;
-    name: string;
-    description: string;
-    category: ObjectId | null;
-    basePrice: Number;
-    sizes: [ExtraPrice];
-    flavour: [ExtraPrice];
+    _id?: string;
+    image?: string;
+    name?: string;
+    description?: string;
+    category?: ObjectId | null;
+    basePrice?: Number;
+    sizes?: [ExtraPrice];
+    stock?: Number;
+    active?: Boolean;
 }

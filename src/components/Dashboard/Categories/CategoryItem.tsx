@@ -12,20 +12,24 @@ interface CategoryItemProps {
 const CategoryItem: React.FC<CategoryItemProps> = ({
     category, menuItems, setEditCategory, setCategoryName, onDelete
 }) => {
+
+    const filteredMenuItems = menuItems.filter(item => item.category?.toString() === category._id);
+    const totalMenuItems = filteredMenuItems.length;
+
     return (
         <div
             key={category._id}
             className="bg-canvas rounded-xl p-2 px-4 flex gap-1 mb-2 border-none items-center"
         >
             <div className="grow flex flex-row mx-auto">
-                <span className="font-semibold">{category.name}</span>
-                <div className="flex flex-row gap-2 mx-auto ">
-                    {menuItems.filter(item => item.category?.toString() === category._id).map(item => (
-                        <span key={item._id} className="text-gray-400 text-sm">{item.name},</span>
-                    ))}
+                <div className="w-1/4">
+                    <span className="font-semibold">{category.name}</span>
+                </div>
+                <div className="flex flex-row gap-2 mx-auto items-center">
+                    <span className="text-gray-400 text-sm italic">({totalMenuItems})&nbsp;Menus are used...</span>
                 </div>
             </div>
-            <div className="flex gap-1">
+            <div className="w-1/4 flex gap-1">
                 <button type="button" className="bg-tertiary border-none" onClick={() => {
                     setEditCategory(category);
                     setCategoryName(category.name);

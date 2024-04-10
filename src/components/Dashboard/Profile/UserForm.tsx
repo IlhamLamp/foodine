@@ -59,10 +59,7 @@ export default function UserForm({ user, onSave }) {
             <div className="p-2 rounded-lg relative max-w-[300px]">
                 <EditableImage link={image} setLink={setImage}/>
             </div>
-            <form 
-                className="grow"
-                onSubmit={handleFormSubmit} 
-            >
+            <form className="grow" onSubmit={handleFormSubmit}>
                 <div className="grid grid-cols-2 gap-2">
                     <div>
                         <label>Nama Lengkap</label>

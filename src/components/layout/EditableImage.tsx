@@ -19,49 +19,53 @@ export default function EditableImage({ link, setLink }) {
         try {
             setIsUploading(true);
             const files = ev.target.files;
-            if (files?.length === 1) {
-                const data = new FormData();
-                data.set('path', finalPath);
-                data.set('file', files[0]);
-                data.set('id', publicId);
 
-                // Validation
-                const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
-                const maxFileSize = 5 * 1024 * 1024; // 5 MB
-
-                if (!allowedTypes.includes(files[0].type)) {
-                    setIsUploading(false);
-                    return toast.error("Invalid file type. Only images are allowed.")
-                }
-
-                if (files[0].size > maxFileSize) {
-                    setIsUploading(false);
-                    return toast.error("File size exceeds the maximum limit (5 MB).");
-                }
-
-                const uploadPromise = fetch('/api/upload', {
-                    method: 'POST',
-                    body: data,
-                }).then(async response => {
-                    if (response.ok) {
-                        return response.json().then(link => {
-                            console.log(link);
-                            setLink(link);
-                        })
-                    }
-                })
-
-                await toast.promise(uploadPromise, {
-                    loading: 'Uploading...',
-                    success: 'Upload complete.',
-                    error: 'Upload error',
-                });
-
-                toast.success('Please wait a moment while the changes are applied.', {
-                    duration: 8000,
-                    icon: '😇',
-                })
+            if (files?.length !== 1) {
+                return toast.error("Error uploading file");
             }
+
+            const data = new FormData();
+            data.set('path', finalPath);
+            data.set('file', files[0]);
+            data.set('id', publicId);
+
+            // Validation
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
+            const maxFileSize = 5 * 1024 * 1024; // 5 MB
+
+            if (!allowedTypes.includes(files[0].type)) {
+                setIsUploading(false);
+                return toast.error("Invalid file type. Only images are allowed.")
+            }
+
+            if (files[0].size > maxFileSize) {
+                setIsUploading(false);
+                return toast.error("File size exceeds the maximum limit (5 MB).");
+            }
+
+            const uploadPromise = fetch('/api/upload', {
+                method: 'POST',
+                body: data,
+            }).then(async response => {
+                if (response.ok) {
+                    return response.json().then(link => {
+                        console.log(link);
+                        setLink(link);
+                    })
+                }
+            })
+
+            await toast.promise(uploadPromise, {
+                loading: 'Uploading...',
+                success: 'Upload complete.',
+                error: 'Upload error',
+            });
+
+            toast.success('Please wait a moment while the changes are applied.', {
+                duration: 8000,
+                icon: '😇',
+            })
+
             setIsUploading(false);
         } catch (error: any) {
             console.log("Error", error.message);

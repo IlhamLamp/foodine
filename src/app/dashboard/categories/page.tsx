@@ -45,7 +45,7 @@ export default function CategoriesPage( {searchParams} : {
     }, [searchParams]);
 
     function fetchMenuItems() {
-        fetch('/api/dashboard/menu-items')
+        fetch('/api/dashboard/menu-items/all')
         .then(res => {
             res.json().then(data => (
                 setMenuItems(data)
@@ -134,14 +134,14 @@ export default function CategoriesPage( {searchParams} : {
     }
 
     return (
-        <div id="categories">
+        <div id="categories" className="mt-2">
             <form className="" onSubmit={handleCategorySubmit}>
                 <div className="flex gap-2 items-end">
                     <div className="grow">
                         <label>
                             {editCategory ? 'Update category name' : 'New category name'}
                             {editCategory && (
-                                <>: <b>{editCategory.name}</b></>
+                                <>:&nbsp;<b>{editCategory.name}</b></>
                             )}
                         </label>
                         <input

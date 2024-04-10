@@ -10,9 +10,10 @@ interface UserWithEmail {
   email: string;
 }
 
+connect();
+
 export async function PUT(req: NextRequest) {
   try {
-    connect();
     const data = await req.json();
     const { _id, name, image, password, ...otherUserInfo } = data;
 
@@ -43,8 +44,6 @@ export async function PUT(req: NextRequest) {
 
 export async function GET(req: any) {
   try {
-    connect();
-
     const url = new URL(req?.url);
     const _id = url.searchParams.get('_id');
 

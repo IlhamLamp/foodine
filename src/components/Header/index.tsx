@@ -84,10 +84,7 @@ const Header: React.FC = () => {
                     <nav>
                         <ul className="flex lg:items-center flex-col lg:flex-row gap-5 lg:gap-10">
                             <li>
-                                <Link 
-                                    href={'/'} 
-                                    className={`hover:text-black hover:ease-in-out flex items-center justify-between gap-3 ${path === '/' ? 'text-black border-b-4 border-primary' : 'text-gray-600 '}`}
-                                >
+                                <Link href={'/'} className={`hover:text-black hover:ease-in-out flex items-center justify-between gap-3 ${path === '/' ? 'text-black border-b-4 border-primary' : 'text-gray-600 '}`}>
                                     Beranda
                                 </Link>
                             </li>
