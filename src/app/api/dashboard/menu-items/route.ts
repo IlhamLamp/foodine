@@ -21,7 +21,6 @@ export async function GET(req: NextRequest) {
     const recentPage = parseInt(searchParams.get('page'), 10);
     const perPage = parseInt(searchParams.get('per_page'), 10);
     const category = searchParams.get('category');
-    console.log(category);
     
     try {
         if (isNaN(recentPage) || recentPage < 1) {
@@ -32,7 +31,6 @@ export async function GET(req: NextRequest) {
             // Fetch all menu items (unchanged)
             const menuItem = await MenuItem.find({}).skip(skip).limit(perPage);
             const totalItem = await MenuItem.countDocuments({});
-            console.log(totalItem);
             return NextResponse.json({
                 menuItem,
                 totalItem,
@@ -41,8 +39,16 @@ export async function GET(req: NextRequest) {
             // handle pagination based on category
             const menuItem = await MenuItem.find({ category: category }).skip(skip).limit(perPage);
             const totalItem = await MenuItem.countDocuments({ category: category }); // Count filtered items
-            console.log(menuItem);
-            return NextResponse.json({ menuItem, totalItem });
+            const categoryTotals = await MenuItem.aggregate([ // Calculate category-wise total directly
+                { $group: { _id: '$category', count: { $sum: 1 } } },
+            ]);
+            console.log(categoryTotals);
+            const categoryTotalMap = categoryTotals.reduce((acc, cur) => {
+                acc[cur._id] = cur.count;
+                return acc;
+              }, {}); // Convert aggregation result to map
+            console.log(categoryTotalMap);
+            return NextResponse.json({ menuItem, totalItem, categoryTotalMap });
         }
 
     } catch (error) {

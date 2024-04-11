@@ -20,6 +20,7 @@ export default function MenuItemsPage( {searchParams}: {
     
     const [selectedCategory, setSelectedCategory] = useState<ObjectId | string | null>("All");
     const [selectedCtgName, setSelectedCtgName] = useState<string>('');
+    const [ctgTotalMap, setCtgTotalMap] = useState<string[]>([]);
     
     // pagination
     let page = parseInt(searchParams.page, 10);
@@ -51,6 +52,7 @@ export default function MenuItemsPage( {searchParams}: {
                 res.json().then(data => {
                     setMenuItems(data.menuItem);
                     setTotalItem(data.totalItem);
+                    setCtgTotalMap(data.categoryTotalMap)
                 })
             })
         } else {
@@ -112,13 +114,20 @@ export default function MenuItemsPage( {searchParams}: {
                         <h1 className="mx-auto font-semibold">Filter by Categories</h1>
                         <div key="All" className="my-1">
                             <input type="radio" id="All" name="categories" value={"All"} checked={selectedCategory === "All"} onChange={handleCategoryChange} className="cursor-pointer bg-canvas"/>
-                            <label htmlFor="All" className="cursor-pointer px-2">All({totalItem})</label>
+                            {selectedCategory === "All" ? (
+                                <label htmlFor="All" className="cursor-pointer px-2">All({totalItem})</label>
+                            ) : (<label htmlFor="All" className="cursor-pointer px-2">All</label>
+                            )}
                             <hr/>
                         </div>
                         {categories?.length > 0 && categories.map(c => (
                             <div key={c._id} className="my-1">
                                 <input type="radio" id={c._id} name="categories" value={c._id} checked={selectedCategory === c._id} onChange={handleCategoryChange} className="cursor-pointer bg-canvas"/>
-                                <label htmlFor={c._id} className="cursor-pointer px-2">{c.name}</label>
+                                {ctgTotalMap ? (
+                                    <label htmlFor={c._id} className="cursor-pointer px-2">{c.name}({ctgTotalMap[c._id] || 0})</label>
+                                ) : (
+                                    <label htmlFor={c._id} className="cursor-pointer px-2">{c.name}</label>
+                                )}
                                 <hr/>
                             </div>
                         ))}
