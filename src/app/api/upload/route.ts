@@ -4,12 +4,41 @@ import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { DeleteImage, ExtractPublicId, UploadImage } from "@/libs/uploadHandler";
 import { User } from "@/models/User";
+import { MenuItem } from "@/models/MenuItem";
+import { MenuItems } from "@/types/menu";
 
 interface FormData {
     form: any;
     path: string | null;
     image: any;
     uid: string;
+}
+
+connect();
+
+async function MenuItemUpload(formData: FormData) {
+    try {
+        
+        const data: any = await UploadImage(formData.image, "menu-items");
+        const img_link = data?.secure_url;
+
+        if (formData?.uid !== 'new') {
+            const menuItem: MenuItems = await MenuItem.findById(formData.uid) ?? null;
+
+            if (!menuItem) {
+                return NextResponse.json({msg: "Menu item with id not found"}, {status: 404})
+            }
+            
+            const publicId = ExtractPublicId(menuItem.image);
+            await DeleteImage('menu-items/'+publicId);
+            await MenuItem.updateOne({_id: formData.uid}, {image: img_link});
+            return;
+        }
+        return NextResponse.json(img_link, {status: 200})
+    } catch (error: any) {
+        console.error(error);
+        return NextResponse.json({msg: "Error uploading profile menu"}, {status: 500})
+    }
 }
 
 async function ProfileImageUpload(formData: FormData) {
@@ -32,7 +61,6 @@ async function ProfileImageUpload(formData: FormData) {
 
 export async function POST(req: NextRequest) {
     try {
-        connect();
         const formData = await req.formData();
         const path = formData.get('path') as string;
         const image = formData.get('file') as unknown as File;
@@ -48,12 +76,14 @@ export async function POST(req: NextRequest) {
         switch (path) {
             case 'profile':
                 return ProfileImageUpload(formDataPass);
+            case 'menu-items':
+                return MenuItemUpload(formDataPass); 
             default:
                 console.log("no documents uploaded!");
                 break;
         }
 
     } catch (error: any) {
-
+        return NextResponse.json(error);
     }
 }
