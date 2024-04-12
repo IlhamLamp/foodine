@@ -19,7 +19,7 @@ export default function MenuItemForm ({ onSubmit, menuItem}) {
 
     const [sizes, setSizes] = useState<SizesProps[]>(menuItem?.sizes || []);
     const [stock, setStock] = useState<string>(menuItem?.stock || '');
-    const [active, setActive] = useState<boolean>(menuItem?.active || '');
+    const [active, setActive] = useState<boolean>(menuItem?.active || false);
 
     const textAreaRef = useRef(null);
     useEffect(() => {
@@ -44,8 +44,8 @@ export default function MenuItemForm ({ onSubmit, menuItem}) {
     console.log(categories);
 
     return (
-        <div className="flex max-w-2xl mt-2 mx-auto">
-            <div className="p-2 rounded-lg relative max-w-[300px]">
+        <div className="flex max-w-3xl mt-2 mx-auto">
+            <div className="p-2 rounded-lg max-w-[300px]">
                 <EditableImage link={image} setLink={setImage}/>
             </div>
             <form className="mx-auto" onSubmit={handleFormSubmit}>
@@ -85,7 +85,7 @@ export default function MenuItemForm ({ onSubmit, menuItem}) {
                         <MenuItemPriceProps name={'Sizes'} addLabel={'Add item size'} props={sizes} setProps={setSizes} />
                         <div>
                             <label className="inline-flex items-center cursor-pointer" htmlFor="activeStatus">
-                                <input id="activeStatus" type="checkbox" defaultChecked={active} className="sr-only peer" onClick={(ev: any) => setActive(ev.target.checked)} />
+                                <input id="activeStatus" type="checkbox" defaultChecked={active} className="sr-only peer" onChange={(ev: any) => setActive(ev.target.checked)} />
                                 <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                                 <span className="ms-3 font-medium text-gray-900">{ active ? 'Aktif' : 'Tidak Aktif'}</span>
                             </label>

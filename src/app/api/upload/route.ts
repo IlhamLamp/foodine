@@ -18,9 +18,10 @@ connect();
 
 async function MenuItemUpload(formData: FormData) {
     try {
-        
         const data: any = await UploadImage(formData.image, "menu-items");
         const img_link = data?.secure_url;
+        console.log(formData?.path);
+        console.log(formData?.uid);
 
         if (formData?.uid !== 'new') {
             const menuItem: MenuItems = await MenuItem.findById(formData.uid) ?? null;
@@ -28,11 +29,11 @@ async function MenuItemUpload(formData: FormData) {
             if (!menuItem) {
                 return NextResponse.json({msg: "Menu item with id not found"}, {status: 404})
             }
-            
+
             const publicId = ExtractPublicId(menuItem.image);
             await DeleteImage('menu-items/'+publicId);
             await MenuItem.updateOne({_id: formData.uid}, {image: img_link});
-            return;
+            return NextResponse.json(img_link, {status: 200})    
         }
         return NextResponse.json(img_link, {status: 200})
     } catch (error: any) {

@@ -109,9 +109,9 @@ export default function MenuItemsPage( {searchParams}: {
             </div>
             <div>
                 <h2 className="text-sm text-secondary mt-8">Edit menu item: </h2>
-                <div className="flex flex-row">
-                    <div className="flex flex-col bg-primary text-white rounded-xl p-6">
-                        <h1 className="mx-auto font-semibold">Filter by Categories</h1>
+                <div className="flex flex-row gap-4">
+                    <div className="flex flex-col bg-primary text-white rounded-xl p-6 w-[300px]">
+                        <h1 className="mx-auto my-2 font-semibold">Filter by Categories</h1>
                         <div key="All" className="my-1">
                             <input type="radio" id="All" name="categories" value={"All"} checked={selectedCategory === "All"} onChange={handleCategoryChange} className="cursor-pointer bg-canvas"/>
                             {selectedCategory === "All" ? (
@@ -132,35 +132,37 @@ export default function MenuItemsPage( {searchParams}: {
                             </div>
                         ))}
                     </div>
-                    <div className="mx-auto">
+                    <div className="mx-auto w-full">
                         {selectedCategory !== "All" ? <span>Filtered Category: {selectedCtgName}</span> : ''}
-                        <div className="grid grid-cols-3 gap-2 mx-auto">
+                        <div className="grid grid-cols-3 gap-2">
+                            {/* NO MORE PAGES */}
                             {menuItems?.length === 0 && (
-                                <div className="mx-auto text-center flex flex-col col-start-1 col-end-4">
+                                <div className="mx-auto text-center flex flex-col col-start-1 col-end-4 col-">
                                     <h1 className="text-xl">No more pages...</h1>
                                     <div className="my-3 mx-auto">
                                         <Link href={`?page=1`} className="flex flex-row bg-primary hover:bg-secondary text-white hover:text-canvas p-4 rounded-2xl"><BackArrow /></Link>
                                     </div>
                                 </div>
                             )}
+                            {/* ITEM MAP */}
                             { selectedCategory !== "All" ? (
                                 menuItems?.length > 0 && menuItems.filter(item => item.category === selectedCategory).map(item => (
-                                    <Link href={'/menu-items/edit/'+item._id} className="button mb-1 flex-col bg-canvas border-none" key={item._id} >
+                                    <Link href={'/dashboard/menu-items/edit/'+item._id} className={`button mb-1 flex-col border-none ${item.active ? "bg-canvas" : 'bg-gray-300'}`} key={item._id} >
                                         <div className="relative mx-auto text-center">
                                             <Image src={item.image || "/images/image-not-found.png"} alt={''} width={100} height={100} className="rounded-lg" />
                                         </div>
-                                        <div className="text-center">
+                                        <div className="text-center text-md">
                                             {item.name}
                                         </div>
                                     </Link>
                                 ))
                             ) : (
                                 menuItems?.length > 0 && menuItems.map(item => (
-                                    <Link href={'/menu-items/edit/'+item._id} className="button mb-1 flex-col bg-canvas border-none" key={item._id} >
+                                    <Link href={'/dashboard/menu-items/edit/'+item._id} className={`button mb-1 flex-col border-none ${item.active ? "bg-canvas" : 'bg-gray-300'}`} key={item._id} >
                                         <div className="relative mx-auto text-center">
                                             <Image src={item.image || "/images/image-not-found.png"} alt={''} width={100} height={100} className="rounded-lg" />
                                         </div>
-                                        <div className="text-center">
+                                        <div className="text-center text-md">
                                             {item.name}
                                         </div>
                                     </Link>

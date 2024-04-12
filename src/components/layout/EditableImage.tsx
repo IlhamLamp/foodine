@@ -87,6 +87,7 @@ export default function EditableImage({ link, setLink }) {
                 <span className="block border bg-secondary hover:bg-tertiary rounded-lg p-2 text-center text-white hover:text-primary font-semibold btn-hover">Change Image</span>
             </label>
             <span>{publicId}</span>
+            <span>{finalPath}</span>
         </>   
     )
 }
