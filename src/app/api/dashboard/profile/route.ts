@@ -38,7 +38,8 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({ msg: "Success update profile!" }, {status: 200});
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
+    return NextResponse.json({ error: 'An error occurred' }, { status: 500 }); 
   }
 }
 
@@ -65,6 +66,7 @@ export async function GET(req: any) {
     return NextResponse.json({...user, ...userInfo}, {status: 200});
 
   } catch (error: any) {
-    console.log(error);
+    console.error(error);
+    return NextResponse.json({ error: 'An error occurred' }, { status: 500 }); 
   }
 }

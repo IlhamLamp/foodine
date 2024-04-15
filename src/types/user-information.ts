@@ -31,13 +31,22 @@ export type UserInformation = {
     image: string;
     email: string;
     password: string;
-    phone: string;
-    location: UserLocation;
-    province: string;
-    regencies: string;
-    district: string;
-    villages: string;
-    postalCode: string;
-    address: string;
-    admin: boolean;
+    phone?: string;
+    location?: UserLocation;
+    province?: string;
+    regencies?: string;
+    district?: string;
+    villages?: string;
+    postalCode?: string;
+    address?: string;
+    admin?: boolean;
+}
+
+export type BasicUser = {
+    _id?: string;
+    name?: string;
+    image?: string;
+    email?: string;
+    password?: string;
+    createdAt?: Date;
 }

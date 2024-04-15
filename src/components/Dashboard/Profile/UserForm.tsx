@@ -14,7 +14,10 @@ export default function UserForm({ user, onSave }) {
     const [password, setPassword] = useState<string>(user?.password || '');
     const [confirmationPassword, setConfirmationPassword] = useState<string>(user?.password || '');
     const [phone, setPhone] = useState<string>(user?.phone || '');
-    const [location, setLocation] = useState<UserLocation>(user?.location || '');
+    const [location, setLocation] = useState<UserLocation>( user?.location || {
+        latitude: "",
+        longitude: "",
+    });
     const [province, setProvince] = useState<string>(user?.province || '');
     const [regencies, setRegencies] = useState<string>(user?.regencies || '');
     const [district, setDistrict] = useState<string>(user?.district || '');

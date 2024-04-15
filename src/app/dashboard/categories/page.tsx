@@ -9,9 +9,9 @@ import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function CategoriesPage( {searchParams} : {
+export default function CategoriesPage( {searchParams} : Readonly<{
     searchParams: {page: string}
-}) {
+}>) {
 
     const { loading, data } = UseProfile();
     const [categoryName, setCategoryName] = useState<string>('');
@@ -21,8 +21,8 @@ export default function CategoriesPage( {searchParams} : {
     const [menuItems, setMenuItems] = useState<MenuItems[]>([]);
 
     // pagination
-    let page = parseInt(searchParams.page, 10);
-    page = !page || page < 1 ? 1 : page;
+    const page = parseInt(searchParams.page, 10) || 1;
+    // page = !page || page < 1 ? 1 : page;
     const perPage = 5;
 
     const totalPages = Math.ceil(totalCategories / perPage);

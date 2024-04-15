@@ -8,7 +8,7 @@ const UserLocation = new Schema({
 const UserInfoSchema = new Schema({
   email: {type: String, required: true},
   phone: {type: String},
-  location: {type: UserLocation},
+  location: {type: UserLocation, allowEmpty: true},
   province: {type: String},
   regencies: {type: String},
   district: {type: String},

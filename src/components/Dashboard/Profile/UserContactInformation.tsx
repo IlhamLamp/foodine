@@ -26,15 +26,17 @@ export default function UserContactInformation({ userContactInformationProps, se
     const [position, setPosition] = useState<string | number>('');
 
     useEffect(() => {
-        ReverseGeocoding(location?.latitude || showLatitude, location?.longitude || showLongitude)
-        .then(data => {
-            const address = GetAddress(data);
-            setPosition(address);
-        })
-        .catch(error => {
-            console.error('Error fetching address:', error.message);
-        });
-    }, []);
+        if ((location?.latitude !== "" && location?.longitude !== "") || (showLatitude && showLongitude)) {
+            ReverseGeocoding(location?.latitude || showLatitude, location?.longitude || showLongitude)
+            .then(data => {
+                const address = GetAddress(data);
+                setPosition(address);
+            })
+            .catch(error => {
+                console.error('Error fetching address:', error.message);
+            });
+        }
+    }, [location]);
 
     useEffect(() => {
         if (status === 'authenticated') {
@@ -96,12 +98,8 @@ export default function UserContactInformation({ userContactInformationProps, se
         setUserContactInformationProps('villages', selectedValue);
     }
 
-    if (showPopupMap) {
-    }
-
     const handlePopupMap = () => {
-        setShowPopupMap(!showPopupMap)
-
+        setShowPopupMap(!showPopupMap);
         if (!location?.latitude && !location.langitude) {
             try {
                 navigator?.geolocation.getCurrentPosition(position => {

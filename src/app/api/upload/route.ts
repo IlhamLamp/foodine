@@ -6,6 +6,7 @@ import { DeleteImage, ExtractPublicId, UploadImage } from "@/libs/uploadHandler"
 import { User } from "@/models/User";
 import { MenuItem } from "@/models/MenuItem";
 import { MenuItems } from "@/types/menu";
+import { UserInformation } from "@/types/user-information";
 
 interface FormData {
     form: any;
@@ -16,12 +17,27 @@ interface FormData {
 
 connect();
 
+async function UsersFromAdminUpload(formData: FormData) {
+    const user: UserInformation = await User.findById(formData.uid);
+    try {
+        const data: any = await UploadImage(formData.image, "profile-image");
+        const img_link = data?.secure_url;
+        if (user && user.image) {
+            const publicId = ExtractPublicId(user.image);
+            await DeleteImage('profile-image/' + publicId)
+            await User.updateOne({email: user.email}, {image: img_link})
+        }
+        return NextResponse.json(img_link, {status:200});
+    } catch (error: any) {
+        console.error(error);
+        return NextResponse.json({msg: "Error uploading profile menu"}, {status: 500})
+    }
+}
+
 async function MenuItemUpload(formData: FormData) {
     try {
         const data: any = await UploadImage(formData.image, "menu-items");
         const img_link = data?.secure_url;
-        console.log(formData?.path);
-        console.log(formData?.uid);
 
         if (formData?.uid !== 'new') {
             const menuItem: MenuItems = await MenuItem.findById(formData.uid) ?? null;
@@ -79,6 +95,8 @@ export async function POST(req: NextRequest) {
                 return ProfileImageUpload(formDataPass);
             case 'menu-items':
                 return MenuItemUpload(formDataPass); 
+            case 'users':
+                return UsersFromAdminUpload(formDataPass);
             default:
                 console.log("no documents uploaded!");
                 break;
