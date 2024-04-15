@@ -3,9 +3,10 @@ import { User } from "@/models/User";
 import { connect } from "@/libs/dbConnect";
 import bcrypt from 'bcrypt';
 
+connect();
+
 export async function POST(req: NextRequest) {
     try {
-        connect();
         const body = await req.json();
         const { email, password } = body;
 
@@ -18,17 +19,18 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({error: "Password must be at least 5 characters"}, {status: 400});
         }
 
+        // extract name
+        const extractedName = email.split('@')[0] || '';
+
         // hash password
         const salt = bcrypt.genSaltSync(10);
         const hashedPassword = bcrypt.hashSync(password, salt);
 
         const newUser = await User.create({
-            name: '',
+            name: extractedName,
             email,
             password: hashedPassword,
             image: '',
-            phone: '',
-            address: '',
         })
         return NextResponse.json(newUser, {status: 201});
     } catch (error: any) {

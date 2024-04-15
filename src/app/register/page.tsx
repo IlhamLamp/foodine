@@ -8,8 +8,6 @@ const RegisterPage: React.FC = () => {
 
     const name = '';
     const image = '';
-    const phone = '';
-    const address = '';
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [creatingUser, setCreatingUser] = useState<boolean>(false);
@@ -23,7 +21,7 @@ const RegisterPage: React.FC = () => {
         setUserCreated(false);
         
         try {
-            const registerForm: Profile = { name, email, password, image, phone, address };
+            const registerForm: Profile = { name, email, password, image };
             const response = await fetch('/api/register', {
                 method: 'POST',
                 body: JSON.stringify(registerForm),
