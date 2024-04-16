@@ -8,7 +8,7 @@ export default function UserTabs({ isAdmin }) {
 
     return (
         <div className="flex mx-auto gap-2 tabsUserProfile justify-center">
-            <Link href={'/dashboard/profile'} className={path === '/dashboard/profile' ? 'active' : ''} >Profile</Link>
+            <Link href={'/dashboard/profile'} className={path.includes('/dashboard/profile') ? 'active' : ''} >Profile</Link>
             { isAdmin && (
                 <>
                     <Link href={'/dashboard/categories?page=1'} className={path === '/dashboard/categories' ? 'active' : ''}>Categories</Link>

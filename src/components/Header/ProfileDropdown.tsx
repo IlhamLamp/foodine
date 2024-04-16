@@ -50,7 +50,7 @@ export default function ProfileDropdown({status, name, images, email}) {
                     <User />
                     <span>Profile</span>
                 </Link>
-                <Link href={'/'} className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-primary hover:text-white">
+                <Link href={'/dashboard/profile/reset-password'} className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-primary hover:text-white">
                     <Keys />
                     <span>Change Passoword</span>
                 </Link>

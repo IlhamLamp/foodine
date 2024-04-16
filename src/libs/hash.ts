@@ -7,4 +7,9 @@ function PasswordHash(password: string): string {
     return hashedPassword;
 }
 
-export { PasswordHash }
+function PasswordCheck(passwordTarget: string, oldPassword: string): boolean {
+    const isValid = bcrypt.compareSync(passwordTarget, oldPassword)
+    return isValid;
+}
+
+export { PasswordHash, PasswordCheck }

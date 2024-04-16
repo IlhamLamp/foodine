@@ -9,9 +9,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export default function MenuItemsPage( {searchParams}: {
+export default function MenuItemsPage( {searchParams}: Readonly<{
     searchParams: { page: string },
-} ) {
+}> ) {
 
     const { loading, data } = UseProfile();
     const [menuItems, setMenuItems] = useState<MenuItems[]>([]);

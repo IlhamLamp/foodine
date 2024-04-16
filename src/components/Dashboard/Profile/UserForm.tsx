@@ -4,15 +4,12 @@ import EditableImage from "@/components/layout/EditableImage";
 import { useState } from "react";
 import UserContactInformation from "./UserContactInformation";
 import { UserLocation } from "@/types/user-information";
-import { HideEye, ShowEye } from "@/components/icons/Eye";
 
 export default function UserForm({ user, onSave }) {
 
     const [name, setName] = useState<string>(user?.name || ''); 
     const [image, setImage] = useState<string>(user?.image || '');
     const [email, setEmail] = useState<string>(user?.email || '');
-    const [password, setPassword] = useState<string>(user?.password || '');
-    const [confirmationPassword, setConfirmationPassword] = useState<string>(user?.password || '');
     const [phone, setPhone] = useState<string>(user?.phone || '');
     const [location, setLocation] = useState<UserLocation>( user?.location || {
         latitude: "",
@@ -38,23 +35,9 @@ export default function UserForm({ user, onSave }) {
         if (propName === 'address') setAddress(value);
     }
 
-    const [showPassword, setShowPassword] = useState<boolean>(false);
-    const [showConfirmationPassword, setShowConfirmationPassword] = useState<boolean>(false);
-    const passwordToggle = () => {
-        setShowPassword(!showPassword);
-    }
-    const passwordConfirmationToggle = () => {
-        setShowConfirmationPassword(!showConfirmationPassword);
-    }
-
     const handleFormSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
-        // validation
-        if (password !== confirmationPassword) {
-            alert("Passwords do not match");
-            return; 
-        }
-        onSave(ev, { name, image, email, password, phone, location, province, regencies, district, villages, postalCode, address })
+        onSave(ev, { name, image, email, phone, location, province, regencies, district, villages, postalCode, address })
     }
 
     return (
@@ -71,32 +54,6 @@ export default function UserForm({ user, onSave }) {
                     <div>
                         <label>Email</label>
                         <input type="email" disabled={true} value={email} />
-                    </div>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                    <div>
-                        <label>Password</label>
-                        <div className="relative">
-                            <input type={(showPassword === false) ? 'password' : 'text'} value={password} onChange={(ev) => setPassword(ev.target.value)} placeholder="Password" />
-                            <div className="absolute top-2 right-4 cursor-pointer text-primary">
-                                { (showPassword === false) 
-                                    ? <div onClick={passwordToggle}><ShowEye/></div> 
-                                    : <div onClick={passwordToggle}><HideEye/></div> 
-                                }
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <label>Konfirmasi Password</label>
-                        <div className="relative">
-                            <input type={(showConfirmationPassword === false) ? 'password' : 'text'} value={confirmationPassword} onChange={(ev) => setConfirmationPassword(ev.target.value)} placeholder="Konfirmasi Password" />
-                            <div className="absolute top-2 right-4 cursor-pointer text-primary">
-                                { (showConfirmationPassword === false) 
-                                    ? <div onClick={passwordConfirmationToggle}><ShowEye/></div>
-                                    : <div onClick={passwordConfirmationToggle}><HideEye/></div> 
-                                }
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <UserContactInformation

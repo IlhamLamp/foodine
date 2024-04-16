@@ -9,16 +9,17 @@ import { User } from "@/models/User";
 import bcrypt from "bcrypt";
 
 export const authOptions: AuthOptions = {
-    secret: process.env.SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     adapter: MongoDBAdapter(clientPromise),
     providers: [
       GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        allowDangerousEmailAccountLinking: true,
       }),
       FacebookProvider({
-        clientId: process.env.FACEBOOK_ID,
-        clientSecret: process.env.FACEBOOK_SECRET
+        clientId: process.env.FACEBOOK_ID ,
+        clientSecret: process.env.FACEBOOK_SECRET,
       }),
       CredentialsProvider({
         name: 'Credentials',
@@ -50,9 +51,55 @@ export const authOptions: AuthOptions = {
         }
       })
     ],
-    // session: {
-    //   strategy: "jwt",
-    // },
+    session: {
+      strategy: "jwt",
+    },
+    callbacks: {
+      async signIn({ user, account}: { user: any; account: any}) {
+        if (account.provider !== "google") {
+          return user;
+        }
+        console.log(user);
+        console.log(account);
+        try {
+          const { name, email } = user;
+          await connect();
+
+          const existingUser = await User.findOne({ email });
+          if (existingUser) {
+            return existingUser;
+          }
+
+          const newUser = new User({ name, email });
+          const savedUser = await newUser.save();
+
+          if (savedUser) {
+            return savedUser;
+          } else {
+            console.error("Error creating user");
+            throw new Error("Failed to create user during Google sign-in");
+          }
+        } catch (error) {
+          console.error("Error signing in with Google:", error);
+          throw error;
+        }
+      },
+      async jwt({token, user}) {
+        if (user) {
+          token.email = user.email;
+          token.name = user.name;
+        }
+        return token;
+      },
+      async session({session, token}:{session: any, token: any}) {
+        if (session.user) {
+          session.user.email = token.email;
+          session.user.name = token.name;
+        }
+        console.log("this session ->", session);
+        return session;
+      },
+    },
     pages: {
       signIn: "/login"
     },

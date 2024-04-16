@@ -3,9 +3,10 @@ import { User } from "@/models/User";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
+connect();
+
 export async function POST(req: NextRequest) {
     try {
-        connect();
         const body = await req.json();
         const { email, password } = body;
         const user = await User.findOne({ email });
@@ -16,8 +17,6 @@ export async function POST(req: NextRequest) {
         if (passwordMatch) {
             return NextResponse.json({ message: 'Login successful' }, {status: 200});
         }
-        
-        console.log("Dari sign in: ", user)
         return user;
 
   } catch (error) {

@@ -28,11 +28,6 @@ export async function PUT(req: NextRequest) {
 
     const user = await User.findOne(filter) as UserWithEmail;
 
-    // validation
-    if (!password?.length || password.length < 5) {
-      return NextResponse.json({error: "Password must be at least 5 characters"}, {status: 400});
-    }
-
     await User.updateOne(filter, {name, image, password});
     await UserInfo.findOneAndUpdate({email: user?.email}, otherUserInfo, {upsert:true});
 

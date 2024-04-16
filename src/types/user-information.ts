@@ -30,7 +30,7 @@ export type UserInformation = {
     name: string;
     image: string;
     email: string;
-    password: string;
+    password?: string;
     phone?: string;
     location?: UserLocation;
     province?: string;

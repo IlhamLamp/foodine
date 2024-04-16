@@ -8,7 +8,7 @@ const ProviderLoginButton: React.FC = () => {
                 or login with provider
             </div>
             <div className="flex flex-col gap-2">
-                <button type="button" onClick={() => signIn('google', {callbackUrl: '/'})} className="flex gap-4 justify-center">
+                <button type="button" onClick={() => signIn('google')} className="flex gap-4 justify-center">
                     <Image src="/images/google.png" width={24} height={24} alt="google" />
                     Login with Google
                 </button>
