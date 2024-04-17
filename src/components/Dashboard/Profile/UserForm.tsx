@@ -37,7 +37,7 @@ export default function UserForm({ user, onSave }) {
 
     const handleFormSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
         ev.preventDefault();
-        onSave(ev, { name, image, email, phone, location, province, regencies, district, villages, postalCode, address })
+        onSave(ev, { name, image, email, phone, location, province, regencies, district, villages, postalCode, address, admin })
     }
 
     return (

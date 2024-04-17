@@ -12,6 +12,7 @@ export default function EditUsersPage() {
 
     const { id } = useParams();
     const {loading, data} = UseProfile();
+
     const [user, setUser] = useState<UserInformation>(null);
     const router = useRouter();
 
@@ -26,6 +27,14 @@ export default function EditUsersPage() {
             });
         });
     }, [id]);
+
+    if (loading) {
+        return 'Loading user info...'
+    }
+
+    if (!data.admin) {
+        return 'Not an admin!'
+    }
 
     async function handleProfileInfoUpdate(ev: any, data: any) {
         try {
@@ -50,14 +59,6 @@ export default function EditUsersPage() {
         } catch (error: any) {
             console.log(error);
         }
-    }
-
-    if (loading) {
-        return 'Loading user info...'
-    }
-
-    if (!data.admin) {
-        return 'Not an admin!'
     }
 
     return (

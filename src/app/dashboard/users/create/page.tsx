@@ -8,13 +8,13 @@ import { useRouter } from "next/navigation";
 export default function CreateUsersPage() {
 
     const {loading, data} = UseProfile();
+
     const BasicUser: BasicUser = {};
     const router = useRouter();
 
     const handleBackButton = () => {
         router.push('/dashboard/users')
     }
-    
 
     if (loading) {
         return 'Loading user info...'
@@ -23,6 +23,7 @@ export default function CreateUsersPage() {
     if (!data.admin) {
         return 'Not an admin!'
     }
+    
     return (
         <div id="new-user">
             <div className="w-[50px] rounded-full">

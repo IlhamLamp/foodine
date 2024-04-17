@@ -1,15 +1,17 @@
 "use client";
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import UseProfile from "../UseProfile";
 
-export default function UserTabs({ isAdmin }) {
+export default function UserTabs() {
 
     const path = usePathname();
+    const {data} = UseProfile();
 
     return (
         <div className="flex mx-auto gap-2 tabsUserProfile justify-center">
             <Link href={'/dashboard/profile'} className={path.includes('/dashboard/profile') ? 'active' : ''} >Profile</Link>
-            { isAdmin && (
+            { data.admin && (
                 <>
                     <Link href={'/dashboard/categories?page=1'} className={path === '/dashboard/categories' ? 'active' : ''}>Categories</Link>
                     <Link href={'/dashboard/menu-items?page=1'} className={path.includes('/dashboard/menu-items') ? 'active' : ''}>Menu Items</Link>

@@ -52,5 +52,5 @@ export async function DELETE(req: NextRequest) {
         await DeleteImage('profile-image/' + publicId)
     }
     await User.deleteOne({_id});
-    return NextResponse.json({ msg: 'Succes Delete User'}, { status: 200 })
+    return NextResponse.json({ msg: 'Success Delete User'}, { status: 200 })
 }

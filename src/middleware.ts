@@ -7,6 +7,7 @@ export async function middleware(req: NextRequest) {
         req: req,
         secret: process.env.NEXTAUTH_SECRET,
     });
+    console.log(token);
 
     const publicPaths = path === "/login" || path === "/register";
     const isAuthorizedPath = path.startsWith("/dashboard");
@@ -20,12 +21,8 @@ export async function middleware(req: NextRequest) {
     if (token && isAuthorizedPath) {
         return NextResponse.next();
     }
-
-    // Handle unauthorized access attempts to authorized routes (optional)
-    // return NextResponse.json({ message: "Unauthorized access. Please log in." }, { status: 401 });
-    // return 
 }
 
 export const config = {
-    matcher: ["/login", "/register", "/dashboard/:path", "/dashboard/:path*"],
+    matcher: ["/login", "/register", "/dashboard"],
 }

@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 export default function ResetPasswordPage() {
 
     const { loading } = UseProfile();
+
     const router = useRouter();
     const [user, setUser] = useState<BasicUser>(null);
     const [isValid, setIsValid] = useState<boolean>(false);

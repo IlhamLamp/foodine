@@ -14,6 +14,7 @@ export default function MenuItemsPage( {searchParams}: Readonly<{
 }> ) {
 
     const { loading, data } = UseProfile();
+
     const [menuItems, setMenuItems] = useState<MenuItems[]>([]);
     const [totalItem, setTotalItem] = useState<number>(0);
     const [categories, setCategories] = useState<Category[]>([]);

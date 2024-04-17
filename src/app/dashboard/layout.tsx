@@ -15,12 +15,12 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <section className="mt-24 mb-6 mx-auto">
-            <UserTabs isAdmin={true}/>
-            <div className="max-w-5xl mx-auto">
-                {children}
-            </div>
-        </section>
-    )
+  return (
+    <section className="mt-24 mb-6 mx-auto">
+        <UserTabs />
+        <div className="max-w-5xl mx-auto">
+            {children}
+        </div>
+    </section>
+  )
 }

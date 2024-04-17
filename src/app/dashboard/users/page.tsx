@@ -17,10 +17,10 @@ export default function UsersPage ({ searchParams} : Readonly<{
     };
 }>) {
     const { loading, data } = UseProfile();
+
     const [users, setUsers] = useState<BasicUser[]>([]);
     const [totalUsers, setTotalUsers] = useState<number>(0);
 
-    
     // pagination
     const query = searchParams?.query || "";
     const page = Number(searchParams?.page) || 1;
@@ -42,7 +42,7 @@ export default function UsersPage ({ searchParams} : Readonly<{
 
     useEffect(() => {
         fetchUsers(page, query);
-    }, [searchParams, query]);
+    }, [searchParams, page]);
 
     function fetchUsers(pageNumber: number = 1, query: string = "") {
         const queryParams = new URLSearchParams({

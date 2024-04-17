@@ -22,7 +22,6 @@ export default function CategoriesPage( {searchParams} : Readonly<{
 
     // pagination
     const page = parseInt(searchParams.page, 10) || 1;
-    // page = !page || page < 1 ? 1 : page;
     const perPage = 5;
 
     const totalPages = Math.ceil(totalCategories / perPage);
@@ -49,9 +48,9 @@ export default function CategoriesPage( {searchParams} : Readonly<{
         .then(res => {
             res.json().then(data => (
                 setMenuItems(data)
-            ))
-        })
-    }
+            ));
+        });
+    };
 
     function fetchCategories(pageNumber: number = 1) {
         fetch(`/api/dashboard/categories?page=${pageNumber}&per_page=${perPage}`)

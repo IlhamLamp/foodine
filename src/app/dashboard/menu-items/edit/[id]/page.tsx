@@ -17,17 +17,21 @@ export default function EditMenuItemPage() {
     const router = useRouter();
 
     useEffect(() => {
-        fetch('/api/dashboard/menu-items/all').then(res => {
-            res.json().then(items => {
-                const item = items.find((i: {_id: string | string[];}) => i._id === id);
-                setMenuItem(item);
-            })
-        })
+        fetchMenuItems();
     }, [id])
 
     const handleBackButton = () => {
         router.push('/dashboard/menu-items')
     }
+
+    function fetchMenuItems() {
+        fetch('/api/dashboard/menu-items/all').then(res => {
+            res.json().then(items => {
+                const item = items.find((i: {_id: string | string[];}) => i._id === id);
+                setMenuItem(item);
+            });
+        });
+    };
     
     async function handleFormSubmit(ev: any, data: any) {
         try {

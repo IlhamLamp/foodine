@@ -6,11 +6,10 @@ import { MenuItems } from "@/types/menu";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-
-
 export default function NewMenuItemPage() {
 
     const {loading, data} = UseProfile();
+
     const MenuItem: MenuItems = {};
     const router = useRouter();
 

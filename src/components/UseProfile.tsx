@@ -18,7 +18,6 @@ const UseProfile = (): { data: ProfileData; loading: boolean} => {
                 }
                 const profileData = await response?.json();
                 setData(profileData);
-                console.log(data);
             } catch (error) {
                 console.error('Error fetching profile data:', error);
             } finally {

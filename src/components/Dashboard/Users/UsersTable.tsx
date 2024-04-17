@@ -4,6 +4,7 @@ import moment from "moment";
 import DeleteButton from "@/components/Buttons/DeleteButon";
 import { Trash } from "@/components/icons/Symbol";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function UsersTable ({ users, prevPage, perPage, page } : Readonly<{
     users: BasicUser[];
@@ -11,6 +12,8 @@ export default function UsersTable ({ users, prevPage, perPage, page } : Readonl
     perPage: number;
     page: number;
 }>) {
+
+    const router = useRouter();
 
     const handleDeleteClick = async (id: string) => {
 
@@ -24,6 +27,7 @@ export default function UsersTable ({ users, prevPage, perPage, page } : Readonl
                     method: 'DELETE'
                 });
                 if (response.ok) {
+                    router.refresh();
                     resolve();
                 } else {
                     reject();
