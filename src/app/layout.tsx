@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { AppProvider } from "@/components/AppContext";
 import { Toaster } from "react-hot-toast";
+import ShoppingCart from "@/components/Buttons/CartButton";
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -27,7 +28,10 @@ export default function RootLayout({children}: Readonly<{
         <AppProvider>
           <Toaster />
           <Header />
-          {children}
+          <main>
+            {children}
+          </main>
+          <ShoppingCart />
         </AppProvider>
       </body>
     </html>

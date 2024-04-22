@@ -11,10 +11,10 @@ const navItems: Navbar[] = [
     title: "Rekomendasi",
     path: "/rekomendasi",
   },
-  {
-    id: 3,
-    title: "Dashboard",
-    path: "/dashboard",
-  }
+  // {
+  //   id: 3,
+  //   title: "Dashboard",
+  //   path: "/dashboard",
+  // }
 ];
 export default navItems;

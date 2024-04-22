@@ -75,7 +75,7 @@ const LoginPage: React.FC = () => {
                 <ProviderLoginButton />
                 <div className="text-center my-4 text-gray-500 border-t">
                     Don't have an account?{' '}
-                    <Link className="underline" href={'/register'}>Register here &raquo;</Link>
+                    <Link className="underline text-primary font-bold" href={'/register'}>Register here &raquo;</Link>
                 </div>
             </form>
         </section>

@@ -68,7 +68,7 @@ export default function MenuItemForm ({ onSubmit, menuItem}) {
                         </div>
                         <div>
                             <label>Harga</label>
-                            <input type="text" value={basePrice} onChange={(ev) => setBasePrice(ev.target.value)} placeholder="5000" />
+                            <input type="text" value={basePrice} onChange={(ev) => setBasePrice(ev.target.value)} placeholder="5000" required={true}/>
                         </div>
                         <div>
                             <label>Stok</label>

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Close from "../icons/Close";
 import HamburgerMenu from "../icons/HamburgerMenu";
 import Link from "next/link";
@@ -100,7 +100,14 @@ const Header: React.FC = () => {
                                         <span>{item.title}</span>
                                     </Link>
                                 </li>
-                            ))}  
+                            ))}
+                            { userData && (
+                                <li>
+                                    <Link href={'/dashboard'} className={`hover:text-black hover:ease-in-out flex items-center justify-between gap-3 ${path.includes('/dashboard') ? 'text-black border-b-4 border-primary' : 'text-gray-600 '}`}>
+                                        Dashboard
+                                    </Link>
+                                </li>  
+                            )}
                         </ul>
                     </nav>
                     {/* PROFILE */}

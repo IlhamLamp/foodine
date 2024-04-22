@@ -28,8 +28,12 @@ const RegisterPage: React.FC = () => {
                 headers: {'Content-Type': 'application/json'},
             });
 
+            console.log(response);
+
             if (response.ok) {
                 setUserCreated(true);
+                setEmail('');
+                setPassword('');
             } else {
                 setError(true);
             }
@@ -59,6 +63,12 @@ const RegisterPage: React.FC = () => {
                     Please try again later
                 </div>
             )}
+            {creatingUser && password.length < 5 && (
+                <div className="my-4 text-center">
+                    Password must be at least <br />
+                    5 characters.
+                </div>
+            )}
             <form className="block max-w-sm mx-auto mt-3" onSubmit={handleFormSubmit}>
                 <input type="email" placeholder="email" 
                     value={email}
@@ -76,7 +86,7 @@ const RegisterPage: React.FC = () => {
                 <ProviderLoginButton />
                 <div className="text-center my-4 text-gray-500 border-t">
                     Existing account?{' '}
-                    <Link className="underline" href={'/login'}>Login here &raquo;</Link>
+                    <Link className="underline text-primary font-bold" href={'/login'}>Login here &raquo;</Link>
                 </div>
             </form>
         </section>

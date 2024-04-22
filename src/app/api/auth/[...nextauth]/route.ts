@@ -96,7 +96,7 @@ export const authOptions: AuthOptions = {
           session.user.email = token.email;
           session.user.name = token.name;
         }
-        console.log("this session ->", session);
+        // console.log("this session ->", session);
         return session;
       },
     },

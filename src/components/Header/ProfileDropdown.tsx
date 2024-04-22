@@ -24,11 +24,13 @@ export default function ProfileDropdown({status, name, images, email}) {
                 <div>
                     <div className="flex gap-1 text-sm font-semibold">
                         <span>{name || `Silahkan login`}</span>
-                        <span className="text-sky-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"></path>
-                            </svg>
-                        </span>
+                        { status === 'authenticated' && (
+                            <span className="text-sky-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-5 w-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"></path>
+                                </svg>
+                            </span>
+                        )}
                     </div>
                     <div className="text-xs text-slate-400">{email}</div>
                 </div>
@@ -45,16 +47,18 @@ export default function ProfileDropdown({status, name, images, email}) {
                 </div>
             </div>
             <div className="border-t border-slate-500/30"></div>
-            <div className="flex flex-col">
-                <Link href={'/dashboard/profile'} className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-primary hover:text-white">
-                    <User />
-                    <span>Profile</span>
-                </Link>
-                <Link href={'/dashboard/profile/reset-password'} className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-primary hover:text-white">
-                    <Keys />
-                    <span>Change Passoword</span>
-                </Link>
-            </div>
+            { status === 'authenticated' && (
+                <div className="flex flex-col">
+                    <Link href={'/dashboard/profile'} className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-primary hover:text-white">
+                        <User />
+                        <span>Profile</span>
+                    </Link>
+                    <Link href={'/dashboard/profile/reset-password'} className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-primary hover:text-white">
+                        <Keys />
+                        <span>Change Passoword</span>
+                    </Link>
+                </div>
+            )}
             {status === 'authenticated' && (
                 <button 
                     className="flex justify-center gap-3 rounded-md bg-red-600 py-2 px-3 font-semibold text-white hover:bg-red-500 focus:ring-2 focus:ring-red-400"

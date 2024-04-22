@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { Key } from "react";
 
 export type Category = {
     _id: string;
@@ -6,8 +7,9 @@ export type Category = {
 }
 
 type ExtraPrice = {
-    name: String;
-    price: Number;
+    _id?: string | number | Key;
+    name: string;
+    price: number;
 }
 
 export type MenuItems = {
@@ -16,8 +18,8 @@ export type MenuItems = {
     name?: string;
     description?: string;
     category?: ObjectId | null;
-    basePrice?: Number;
+    basePrice?: number;
     sizes?: [ExtraPrice];
-    stock?: Number;
-    active?: Boolean;
+    stock?: number;
+    active?: boolean;
 }
