@@ -1,14 +1,19 @@
+import { CartContext } from "@/components/AppContext";
 import Close from "@/components/icons/Close";
 import { MenuItems } from "@/types/menu";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import toast from "react-hot-toast";
 
 const MenuPopup: React.FC<{btnClose: any, item?: MenuItems}> = ({ btnClose, item }) => {
 
     const { image, name, description, category, basePrice, sizes, stock, active } = item;
     const [selectedSize, setSelectedSize] = useState(sizes?.[0] || null);
+    const { addToCart } = useContext(CartContext);
 
     const handleAddToCartButtonClick = () => {
-
+        addToCart(item, selectedSize);
+        btnClose();
+        toast.success('Added to cart')
     }
 
     // Price
@@ -25,7 +30,7 @@ const MenuPopup: React.FC<{btnClose: any, item?: MenuItems}> = ({ btnClose, item
                 </span>
                 <div className="flex flex-col">
                     <div className="flex flex-row gap-2 justify-center md:col-span-2">
-                        <img src={item.image} alt={name} width={200} height={200} className="mx-auto"/>
+                        <img src={image} alt={name} width={200} height={200} className="mx-auto"/>
                         <div className="flex flex-col mx-2">
                             <h2 className="text-lg font-bold text-start">{name}</h2>
                             <p className="text-justify text-gray-500 text-sm">{description}</p>
