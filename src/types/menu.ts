@@ -19,7 +19,7 @@ export type MenuItems = {
     description?: string;
     category?: ObjectId | null;
     basePrice?: number;
-    sizes?: [ExtraPrice];
+    sizes?: ExtraPrice[];
     stock?: number;
     active?: boolean;
 }

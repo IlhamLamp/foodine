@@ -41,8 +41,6 @@ export default function MenuItemForm ({ onSubmit, menuItem}) {
         onSubmit(ev, { image, name, description, category, basePrice, sizes, stock, active });
     }
 
-    console.log(categories);
-
     return (
         <div className="flex max-w-3xl mt-2 mx-auto">
             <div className="p-2 rounded-lg max-w-[300px]">

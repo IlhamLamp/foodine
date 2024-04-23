@@ -1,21 +1,21 @@
 "use client";
+import { CartItems } from "@/types/cart";
 import { MenuItems } from "@/types/menu";
 import { SessionProvider } from "next-auth/react";
 import { createContext, useEffect, useMemo, useState } from "react";
-
-type CartItem = MenuItems & { quantity?: number};
-
+import toast from "react-hot-toast";
 interface CartContextType {
-    cartProducts: any[];
+    cartProducts: CartItems[];
     setCartProducts: React.Dispatch<React.SetStateAction<any[]>>;
-    addToCart: (product: CartItem, sizes?: any) => void;
+    addToCart: (product: MenuItems, sizes?: any) => void;
+    removeFromCart: (productId: string, sizeName: string) => void;
     clearCart: () => void;
     // removeCartProduct: (indexToRemove: any) => void;
 }
 
 export const CartContext = createContext<CartContextType | null>(null);
 
-export const cartProductPrice = (cartProduct: CartItem): number => {
+export const cartProductPrice = (cartProduct: CartItems): number => {
     const price = cartProduct.basePrice;
     const sizePrice = cartProduct.sizes?.[0]?.price;
     const total = price + sizePrice;
@@ -24,7 +24,7 @@ export const cartProductPrice = (cartProduct: CartItem): number => {
 
 export function AppProvider({ children }) {
 
-    const [cartProducts, setCartProducts] = useState<CartItem[]>([]);
+    const [cartProducts, setCartProducts] = useState<CartItems[]>([]);
     const ls = typeof window !== 'undefined' ? window.localStorage : null;
 
     // get local storage cart
@@ -34,7 +34,7 @@ export function AppProvider({ children }) {
         }
     }, []);
 
-    const saveCartProductsToLocalStorage = (cartProducts: CartItem[]) => {
+    const saveCartProductsToLocalStorage = (cartProducts: CartItems[]) => {
         if (ls) {
             ls.setItem('cart', JSON.stringify(cartProducts));
         }
@@ -45,7 +45,20 @@ export function AppProvider({ children }) {
         saveCartProductsToLocalStorage([]);
     }
 
-    const addToCart = (product: CartItem, sizes: any) => {
+    const removeFromCart = (productId: string, sizeName: string) => {
+        setCartProducts(prevProducts => 
+            prevProducts.map(product => 
+                (product._id === productId && product.sizes?.name === sizeName && product.quantity > 0)
+                ? { ...product, quantity: Math.max(0, product.quantity - 1)}
+                : product
+            ).filter(product => product.quantity !== 0)
+        );
+        toast('Product removed!', {
+            icon: '😢'
+        });
+    }
+
+    const addToCart = (product: MenuItems, sizes: any) => {
         setCartProducts(prevProducts => {
             const existingProductIndex = prevProducts.findIndex((p: any) => p._id === product._id && p.sizes.name === sizes.name);
             if (existingProductIndex !== -1) {
@@ -68,9 +81,9 @@ export function AppProvider({ children }) {
     }
 
     // To avoid additional rerenders wrap the value in a useMemo hook. Use the useCallback() hook if the value is a function.
-    const objCart = useMemo(() => ({ cartProducts, setCartProducts, addToCart, clearCart }), [
+    const objCart = useMemo(() => ({ cartProducts, setCartProducts, addToCart, clearCart, removeFromCart }), [
         cartProducts, setCartProducts,
-        addToCart, clearCart
+        addToCart, clearCart, removeFromCart
     ]);
 
     return (
