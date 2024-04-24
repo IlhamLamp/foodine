@@ -5,7 +5,7 @@ interface ProfileData {
 }
 
 const UseProfile = (): { data: ProfileData; loading: boolean} => {
-    const [data, setData] = useState<ProfileData>({admin: false});
+    const [data, setData] = useState<ProfileData>({ admin: false});
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -17,6 +17,7 @@ const UseProfile = (): { data: ProfileData; loading: boolean} => {
                     throw new Error(`API request failed with status ${response?.status}`);
                 }
                 const profileData = await response?.json();
+                console.log(profileData);
                 setData(profileData);
             } catch (error) {
                 console.error('Error fetching profile data:', error);

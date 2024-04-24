@@ -40,7 +40,7 @@ const CartProductTable: React.FC<{ cartProduct: CartItems[] }> = ({ cartProduct 
                     ))}
                     { cartProduct.length === 0 && (
                         <tr>
-                            <td colSpan={4} className="text-center">ITEM NOT FOUND</td>
+                            <td colSpan={4} className="text-center pt-14">ITEM NOT FOUND</td>
                         </tr>
                     )}
                 </tbody>

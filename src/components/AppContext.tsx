@@ -10,7 +10,6 @@ interface CartContextType {
     addToCart: (product: MenuItems, sizes?: any) => void;
     removeFromCart: (productId: string, sizeName: string) => void;
     clearCart: () => void;
-    // removeCartProduct: (indexToRemove: any) => void;
 }
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -32,7 +31,7 @@ export function AppProvider({ children }) {
         if (ls && ls.getItem('cart')) {
             setCartProducts( JSON.parse( ls.getItem('cart') ) );
         }
-    }, []);
+    }, []); 
 
     const saveCartProductsToLocalStorage = (cartProducts: CartItems[]) => {
         if (ls) {
@@ -69,12 +68,14 @@ export function AppProvider({ children }) {
                     quantity: updatedProducts[existingProductIndex].quantity + 1
                 };
                 saveCartProductsToLocalStorage(updatedProducts);
+                console.log("updated product => ", updatedProducts);
                 return updatedProducts;
             } else {
                 // Produk belum ada dalam keranjang, tambahkan sebagai produk baru
                 const cartProduct = { ...product, sizes, quantity: 1 };
                 const newProducts = [...prevProducts, cartProduct];
                 saveCartProductsToLocalStorage(newProducts);
+                console.log("new product => ", newProducts);
                 return newProducts;
             }
         })

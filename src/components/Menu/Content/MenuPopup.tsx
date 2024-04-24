@@ -21,7 +21,7 @@ const MenuPopup: React.FC<{btnClose: any, item?: MenuItems}> = ({ btnClose, item
     if (selectedPrice) {
        selectedPrice += selectedSize?.price;
     }
-
+    
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center">
             <div className="bg-white p-4 rounded-lg max-w-xl justify-center max-h-fit relative" onClick={ev => ev.stopPropagation()}>

@@ -10,9 +10,7 @@ interface MenuQuery {
 
 export async function GET(req: NextRequest) {
     const url = new URL(req?.url);
-    console.log(url);
     const searchParams = new URLSearchParams(url?.searchParams);
-    console.log(searchParams);
     const category = searchParams.get('category');
     const searchQuery = searchParams.get('search')?.trim() || "";
 
@@ -22,7 +20,6 @@ export async function GET(req: NextRequest) {
         if (searchQuery !== "") {
             query.name = { $regex: new RegExp(searchQuery, 'i')};
             const searchResult = await MenuItem.find(query);
-            console.log(category);
             return NextResponse.json(searchResult);
         }
 
