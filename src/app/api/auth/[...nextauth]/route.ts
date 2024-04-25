@@ -20,6 +20,7 @@ export const authOptions: AuthOptions = {
       FacebookProvider({
         clientId: process.env.FACEBOOK_ID ,
         clientSecret: process.env.FACEBOOK_SECRET,
+        allowDangerousEmailAccountLinking: true,
       }),
       CredentialsProvider({
         name: 'Credentials',
@@ -96,7 +97,6 @@ export const authOptions: AuthOptions = {
           session.user.email = token.email;
           session.user.name = token.name;
         }
-        // console.log("this session ->", session);
         return session;
       },
     },

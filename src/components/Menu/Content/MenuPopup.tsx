@@ -1,4 +1,4 @@
-import { CartContext } from "@/components/AppContext";
+import { CartContext} from "@/components/AppContext";
 import Close from "@/components/icons/Close";
 import { MenuItems } from "@/types/menu";
 import { useContext, useState } from "react";
@@ -13,7 +13,7 @@ const MenuPopup: React.FC<{btnClose: any, item?: MenuItems}> = ({ btnClose, item
     const handleAddToCartButtonClick = () => {
         addToCart(item, selectedSize);
         btnClose();
-        toast.success('Added to cart')
+        toast.success('Added to cart');
     }
 
     // Price
