@@ -10,16 +10,16 @@ const CartItemCounter: React.FC<{ productId: string, sizeName: string }> = ({ pr
     };
 
     const handleIncrement = () => {
-        const product = cartProducts.find(item => item._id === productId && item.sizes.name === sizeName);
+        const dataCart = cartProducts.find(item => item.product._id === productId && item.sizes.name === sizeName);
         if (product) {
-            addToCart(product, product.sizes);
+            addToCart(dataCart.product, product.sizes);
             toast('Product Added!', {
                 icon: '😄'
             })
         }
     };
 
-    const product = cartProducts.find(item => item._id === productId && item.sizes.name === sizeName);
+    const product = cartProducts.find(item => item.product._id === productId && item.sizes.name === sizeName);
     const quantity = product ? product.quantity : 0;
 
     return (

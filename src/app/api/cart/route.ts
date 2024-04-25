@@ -42,13 +42,19 @@ export async function PUT(req: NextRequest) {
 
         // Periksa apakah email ada dalam data
         const { email, items } = data;
+
         if (!email || !Array.isArray(items)) {
             return NextResponse.json({ msg: 'Invalid request data' }, { status: 400 });
         }
 
+        const formattedCart = items.map(p => ({
+            productId: p.product._id,
+            quantity: p.quantity,
+            sizes: p.sizes
+        }));
+
         // Perbarui keranjang belanja
-        const cart = await Cart.findOneAndUpdate({ email }, { email, items }, { new: true });
-        console.log("isi dari cart => ", cart);
+        const cart = await Cart.findOneAndUpdate({ email }, { email, items: formattedCart }, { new: true });
         return NextResponse.json({ msg: 'Cart updated successfully'}, {status: 201});
     } catch(error) {
         console.error(error);

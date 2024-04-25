@@ -1,20 +1,12 @@
 import { Cart } from "@/models/Cart";
 import { MenuItem } from "@/models/MenuItem";
-import { CartItems } from "@/types/cart";
 import { MenuItems } from "@/types/menu";
 import { NextRequest, NextResponse } from "next/server";
 
-
-type ProductSize = {
-    _id?: string | number;
-    name: string;
-    price: number;
-}
-
-interface CartProducts {
-    product: MenuItems,
-    quantity: Number,
-    sizes: ProductSize,
+interface ItemTypes {
+    productId: string;
+    quantity: number;
+    sizes: any;
 }
 
 export async function GET(req: NextRequest) {
@@ -33,16 +25,20 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ msg: 'Cart not found' }, { status: 404 });
         }
 
-        const mappedItems = await Promise.all(cart.items.map(async (item: CartItems) => {
-            const menuItem: MenuItems = await MenuItem.findById(item._id);
+        const mappedItems = await Promise.all(cart.items.map(async (item: ItemTypes) => {
+            const menuItem: MenuItems = await MenuItem.findById(item.productId);
+            if (!menuItem) {
+                // Handle jika MenuItem tidak ditemukan
+                return null;
+            }
+
+            const matchedSize = menuItem.sizes.find((size) => size._id === item.sizes);
             return {
                 product: menuItem,
                 quantity: item.quantity,
-                sizes: item.sizes,
+                sizes: matchedSize,
             }
         }))
-
-        console.log("isi mapped =>", mappedItems)
 
         return NextResponse.json({items: mappedItems}, {status: 200})
     } catch (error) {

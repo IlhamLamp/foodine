@@ -16,7 +16,7 @@ interface CartContextType {
 export const CartContext = createContext<CartContextType | null>(null);
 export const ProfileContext = createContext<UserInformation | null>(null);
 
-export const cartProductPrice = (cartProduct: CartItems): number => {
+export const cartProductPrice = (cartProduct: MenuItems): number => {
     const price = cartProduct.basePrice;
     const sizePrice = cartProduct.sizes?.[0]?.price;
     const total = price + sizePrice;
@@ -98,7 +98,7 @@ export function AppProvider({ children }) {
     const removeFromCart = (productId: string, sizeName: string) => {
         setCartProducts(prevProducts => 
             prevProducts.map(product => 
-                (product._id === productId && product.sizes?.name === sizeName && product.quantity > 0)
+                (product.product._id === productId && product.sizes?.name === sizeName && product.quantity > 0)
                 ? { ...product, quantity: Math.max(0, product.quantity - 1)}
                 : product
             ).filter(product => product.quantity !== 0)
@@ -110,10 +110,11 @@ export function AppProvider({ children }) {
 
     const addToCart = async (product: MenuItems, sizes: any) => {
         setCartProducts(prevProducts => {
-            const existingProductIndex = prevProducts.findIndex((p: any) => p._id === product._id && p.sizes.name === sizes.name);
+            const existingProductIndex = prevProducts.findIndex((p: CartItems) => p.product._id === product._id && p.sizes.name === sizes.name);
             if (existingProductIndex !== -1) {
                 // Produk sudah ada dalam keranjang, tingkatkan kuantitasnya
                 const updatedProducts = [...prevProducts];
+                console.log("upd prd =>", updatedProducts)
                 updatedProducts[existingProductIndex] = {
                     ...updatedProducts[existingProductIndex],
                     quantity: updatedProducts[existingProductIndex].quantity + 1
@@ -126,7 +127,7 @@ export function AppProvider({ children }) {
                 return updatedProducts;
             } else {
                 // Produk belum ada dalam keranjang, tambahkan sebagai produk baru
-                const cartProduct = { ...product, sizes, quantity: 1 };
+                const cartProduct = {product, sizes, quantity: 1 };
                 const newProducts = [...prevProducts, cartProduct];
                 if (!userData && !cartLoaded) {
                     saveCartProductsToLocalStorage(newProducts);
@@ -141,13 +142,14 @@ export function AppProvider({ children }) {
     useEffect(() => {
         // Panggil savingCartToDB setiap kali cartProducts berubah
         if (userData && userData.email && cartLoaded) {
+            console.log("before =>", cartProducts)
             savingCartToDB();
+            console.log("after =>", cartProducts)
         }
     }, [cartProducts, userData]);    
 
     async function savingCartToDB() {
-        const cartCopy = [...cartProducts];
-        const data = {email: userData.email, items: cartCopy}
+        const data = {email: userData.email, items: cartProducts}
         const response = await fetch('/api/cart', {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },

@@ -20,22 +20,22 @@ const CartProductTable: React.FC<{ cartProduct: CartItems[] }> = ({ cartProduct 
                     </tr>
                 </thead>
                 <tbody>
-                    { cartProduct.length > 0 && cartProduct.map(c => (
-                        <tr key={c._id + c.sizes.name} className="border-b">
+                    { cartProduct.length > 0 && cartProduct.map((c, i) => (
+                        <tr key={c.product._id + i} className="border-b">
                             <td className="py-4">
                                 <div className="flex flex-row items-center">
-                                    <img className="h-16 w-16 mr-4" src={c.image} alt={c.name} />
+                                    <img className="h-16 w-16 mr-4" src={c.product.image} alt={c.product.name} />
                                     <div className="flex flex-col">
-                                        <span className="font-semibold">{c.name}</span>
+                                        <span className="font-semibold">{c.product.name}</span>
                                         <span className="text-sm text-gray-500">{c.sizes?.name}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td className="py-4">Rp. {countPrice(c.basePrice, c.sizes?.price)}</td>
+                            <td className="py-4">Rp. {countPrice(c.product.basePrice, c.sizes?.price)}</td>
                             <td className="py-4">
-                                <CartItemCounter productId={c._id} sizeName={c.sizes.name} />
+                                <CartItemCounter productId={c.product._id} sizeName={c.sizes.name} />
                             </td>
-                            <td className="py-4 font-semibold">Rp. {countPrice(c.basePrice, c.sizes?.price, c.quantity)}</td>
+                            <td className="py-4 font-semibold">Rp. {countPrice(c.product.basePrice, c.sizes?.price, c.quantity)}</td>
                         </tr>
                     ))}
                     { cartProduct.length === 0 && (
@@ -45,6 +45,7 @@ const CartProductTable: React.FC<{ cartProduct: CartItems[] }> = ({ cartProduct 
                     )}
                 </tbody>
             </table>
+            {JSON.stringify(cartProduct)}
         </div>
     )
 }

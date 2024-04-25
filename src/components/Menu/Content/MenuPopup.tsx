@@ -11,6 +11,7 @@ const MenuPopup: React.FC<{btnClose: any, item?: MenuItems}> = ({ btnClose, item
     const { addToCart } = useContext(CartContext);
 
     const handleAddToCartButtonClick = () => {
+        console.log(selectedSize);
         addToCart(item, selectedSize);
         btnClose();
         toast.success('Added to cart');
