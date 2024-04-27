@@ -69,20 +69,13 @@ export function CartProvider({ children }) {
             }
         }
         fetchUserCart();
-    }, [userData])
-
-    // useEffect(() => {
-    //     if (userData && userData.email && cartLoaded) {
-    //         console.log("how much");
-    //         savingCartToDB();
-    //     }
-    // }, [cartProducts])
+    }, [userData]);
 
     useEffect(() => {
         if (!userData && !cartLoaded && ls) {
             ls.setItem('cart', JSON.stringify(cartProducts));
         }
-    }, [cartProducts, userData, cartLoaded, ls])
+    }, [cartProducts, userData, cartLoaded, ls]);
 
     async function savingCartToDB() {
         const data = {email: userData.email, items: cartProducts}
@@ -97,19 +90,11 @@ export function CartProvider({ children }) {
           }
     }
 
-    // store item to local storage
-    // const saveCartProductsToLocalStorage = (cartProducts: CartItems[]) => {
-    //     if (!userData && !cartLoaded && ls) {
-    //         ls.setItem('cart', JSON.stringify(cartProducts));
-    //     }
-    // }
-
     const clearCart = () => {
         setCartProducts([]);
-        // saveCartProductsToLocalStorage([]);
     }
 
-    const removeFromCart = (productId: string, sizeName: string) => {
+    const removeFromCart = async (productId: string, sizeName: string) => {
         setCartProducts(prevProducts => 
             prevProducts.map(product => 
                 (product.product._id === productId && product.sizes?.name === sizeName && product.quantity > 0)
@@ -132,31 +117,25 @@ export function CartProvider({ children }) {
                     ...updatedProducts[existingProductIndex],
                     quantity: updatedProducts[existingProductIndex].quantity + 1
                 };
-                if (userData && userData.email && cartLoaded) {
-                    setCartProducts(updatedProducts);
-                    savingCartToDB();
-                } 
-                // else {
-                //     saveCartProductsToLocalStorage(updatedProducts);
-                // }
-
                 return updatedProducts;
             } else {
                 // Produk belum ada dalam keranjang, tambahkan sebagai produk baru
                 const cartProduct = {product, sizes, quantity: 1 };
                 const newProducts = [...prevProducts, cartProduct];
-
-                if (userData && userData.email && cartLoaded) {
-                    setCartProducts(newProducts);
-                    savingCartToDB();
-                } 
-                // else {
-                //     saveCartProductsToLocalStorage(newProducts);
-                // }
                 return newProducts;
             };
         });
+
+        if (userData && userData.email && cartLoaded) {
+            await savingCartToDB();
+        }
     }
+
+    useEffect(() => {
+        if (userData && userData.email && cartLoaded) {
+            savingCartToDB();
+        }
+    }, [cartProducts, userData, cartLoaded])
 
     // To avoid additional rerenders wrap the value in a useMemo hook. Use the useCallback() hook if the value is a function.
     const cartMemo = useMemo(() => ({ cartProducts, setCartProducts, addToCart, clearCart, removeFromCart }), [
