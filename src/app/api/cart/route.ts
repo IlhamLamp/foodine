@@ -11,24 +11,26 @@ export async function POST(req: NextRequest) {
 
         // Periksa apakah email ada dalam data
         const { email, items } = data;
+        console.log("dari server ", data)
         if (!email || !Array.isArray(items)) {
             return NextResponse.json({ msg: 'Invalid request data' }, { status: 400 });
         }
 
-        // Membuat array item untuk disimpan dalam schema Cart
-        // const cartItems = items.map(item => ({
-        //     _id: item._id,
-        //     quantity: item.quantity || 1, 
-        //     sizes: item.sizes || "",
-        // }));
+        if (items.length > 0) {
+            // Membuat array item untuk disimpan dalam schema Cart
+            const cartItems = items.map(item => ({
+                productId: item.product._id,
+                quantity: item.quantity || 1, 
+                sizes: item.sizes || "",
+            }));
 
-        // Menyimpan data dalam schema Cart
-        // const cart = await Cart.findOneAndUpdate({ email },
-        //     { email, $push: { items: { $each: cartItems } } }, 
-        //     { upsert: true, new: true },
-        // );
+            // Menyimpan data dalam schema Cart
+            await Cart.create({email, items: cartItems});
+        } else {
+            await Cart.create({email, items});
+        }
 
-        return NextResponse.json({ msg: 'Cart updated successfully' }, {status: 201});
+        return NextResponse.json({ msg: 'Cart created successfully' }, {status: 201});
 
     } catch(error) {
         console.error(error);
@@ -54,7 +56,7 @@ export async function PUT(req: NextRequest) {
         }));
 
         // Perbarui keranjang belanja
-        const cart = await Cart.findOneAndUpdate({ email }, { email, items: formattedCart }, { new: true });
+        await Cart.findOneAndUpdate({ email }, { email, items: formattedCart }, { new: true });
         return NextResponse.json({ msg: 'Cart updated successfully'}, {status: 201});
     } catch(error) {
         console.error(error);

@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import { AppProvider } from "@/components/AppContext";
 import { Toaster } from "react-hot-toast";
 import ShoppingCart from "@/components/Buttons/CartButton";
+import { CartProvider } from "@/components/CartContext";
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -26,12 +27,14 @@ export default function RootLayout({children}: Readonly<{
     <html lang="en" className="scroll-smooth">
       <body className={poppins.className}>
         <AppProvider>
-          <Toaster />
-          <Header />
-          <main>
-            {children}
-          </main>
-          <ShoppingCart />
+          <CartProvider>
+            <Toaster />
+            <Header />
+            <main>
+              {children}
+            </main>
+            <ShoppingCart />
+          </CartProvider>
         </AppProvider>
       </body>
     </html>

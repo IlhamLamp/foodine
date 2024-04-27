@@ -1,4 +1,4 @@
-import { CartContext } from "@/components/AppContext";
+import { CartContext } from "@/components/CartContext";
 import { useContext } from "react";
 import toast from "react-hot-toast";
 

@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import User from "../icons/User";
 import { Keys } from "../icons/Symbol";
 import { useContext } from "react";
-import { CartContext } from "../AppContext";
+import { CartContext } from "../CartContext";
 
 export default function ProfileDropdown({status, name, images, email}) {
 
@@ -42,7 +42,7 @@ export default function ProfileDropdown({status, name, images, email}) {
             <div className="border-t border-slate-500/30"></div>
             <div className="flex justify-around">
                 <Link href={'/cart'} className="flex flex-col items-center justify-center">
-                    <span className="text-3xl font-semibold">{cartProducts.length}</span>
+                    <span className="text-3xl font-semibold">{cartProducts?.length || 0}</span>
                     <span className="text-sm text-slate-400">Cart</span>
                 </Link>
                 <div className="flex flex-col items-center justify-center">

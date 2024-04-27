@@ -1,6 +1,6 @@
 "use client";
-import { CartContext } from "@/components/AppContext";
 import CartProductTable from "@/components/Cart/CartProductTable";
+import { CartContext } from "@/components/CartContext";
 import { useContext } from "react";
 
 const CartPage: React.FC = () => {
@@ -13,7 +13,7 @@ const CartPage: React.FC = () => {
                 <div className="w-full sm:w-3/4 bg-white px-10">
                     <div className="flex justify-between border-b pb-8">
                         <h1 className="font-semibold text-2xl">Shopping Cart</h1>
-                        <h2 className="font-semibold text-2xl">{cartProducts.length} item</h2>
+                        <h2 className="font-semibold text-2xl">{cartProducts?.length || 0} item</h2>
                     </div>
 
                     <CartProductTable cartProduct={cartProducts} />
