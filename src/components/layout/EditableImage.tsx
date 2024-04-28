@@ -86,8 +86,6 @@ export default function EditableImage({ link, setLink }) {
                 <input type="file" className="hidden" onChange={handleFileChange} />
                 <span className="block border bg-secondary hover:bg-tertiary rounded-lg p-2 text-center text-white hover:text-primary font-semibold btn-hover">Change Image</span>
             </label>
-            <span>{publicId}</span>
-            <span>{finalPath}</span>
         </>   
     )
 }

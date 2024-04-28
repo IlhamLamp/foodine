@@ -58,7 +58,7 @@ export default function MenuItemPriceProps({ name, addLabel, props, setProps}) {
                             <button
                                 type="button"
                                 onClick={() => removeProp(index)}
-                                className="bg-white mb-2 px-2"
+                                className="btn-hover bg-red-400 hover:bg-red-300 text-white mb-2 px-2"
                             >
                                 <Trash />
                             </button>
@@ -68,7 +68,7 @@ export default function MenuItemPriceProps({ name, addLabel, props, setProps}) {
                 <button
                     type="button"
                     onClick={addProp}
-                    className="bg-canvas items-center"
+                    className="btn-hover bg-canvas hover:bg-amber-100 items-center"
                 >
                     <PlusCircle/>
                     <span>{addLabel}</span>

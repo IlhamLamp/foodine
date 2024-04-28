@@ -11,7 +11,7 @@ const CartProductTable: React.FC<{ cartProduct: CartItems[] }> = ({ cartProduct 
     return (
         <div className="flex bg-white rounded-lg py-6 mb-4">
             <table className="w-full">
-                <thead>
+                <thead className="relative">
                     <tr>
                         <th className="text-left font-semibold text-gray-500">Product Details</th>
                         <th className="text-left font-semibold text-gray-500">Price</th>
@@ -45,7 +45,6 @@ const CartProductTable: React.FC<{ cartProduct: CartItems[] }> = ({ cartProduct 
                     )}
                 </tbody>
             </table>
-            {JSON.stringify(cartProduct)}
         </div>
     )
 }

@@ -44,8 +44,6 @@ export function CartProvider({ children }) {
                     if (getCart.ok) {
                         const cartData = await getCart.json();
                         if (cartData) {
-                            console.log(cartData);
-                            console.log(cartData.items);
                             setCartProducts(cartData.items || []);
                             setCartLoaded(true);
                         }
