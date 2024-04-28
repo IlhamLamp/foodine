@@ -6,7 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 interface ItemTypes {
     productId: string;
     quantity: number;
-    sizes: any;
+    selectedSizes: string;
+    totalPrices: number;
 }
 
 export async function GET(req: NextRequest) {
@@ -27,12 +28,13 @@ export async function GET(req: NextRequest) {
 
         const mappedItems = await Promise.all(cart.items.map(async (item: ItemTypes) => {
             const menuItem: MenuItems = await MenuItem.findById(item.productId);
+
             if (!menuItem) {
                 // Handle jika MenuItem tidak ditemukan
                 return null;
             }
 
-            const matchedSize = menuItem.sizes.find((size) => size._id === item.sizes);
+            const matchedSize = menuItem.sizes.find((size) => size._id.toString() === item.selectedSizes);
             return {
                 product: menuItem,
                 quantity: item.quantity,

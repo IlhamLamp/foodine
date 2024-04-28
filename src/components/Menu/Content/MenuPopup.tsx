@@ -21,6 +21,8 @@ const MenuPopup: React.FC<{btnClose: any, item?: MenuItems}> = ({ btnClose, item
     if (selectedPrice) {
        selectedPrice += selectedSize?.price;
     }
+
+    console.log(selectedSize);
     
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center">

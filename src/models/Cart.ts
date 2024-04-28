@@ -3,7 +3,8 @@ import mongoose, { model, models, Schema } from "mongoose";
 const CartItemSchema = new Schema({
     productId: { type: mongoose.Types.ObjectId, required: true, ref: 'MenuItem'},
     quantity: {type: Number},
-    sizes: {type: String},
+    selectedSizes: {type: String},
+    totalPrice: {type: Number},
 })
 
 const CartSchema = new Schema({

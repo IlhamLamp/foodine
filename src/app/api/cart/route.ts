@@ -1,5 +1,6 @@
 import { connect } from "@/libs/dbConnect";
 import { Cart } from "@/models/Cart";
+import { CartItems } from "@/types/cart";
 import { NextRequest, NextResponse } from "next/server";
 
 connect();
@@ -21,7 +22,8 @@ export async function POST(req: NextRequest) {
             const cartItems = items.map(item => ({
                 productId: item.product._id,
                 quantity: item.quantity || 1, 
-                sizes: item.sizes || "",
+                selectedSizes: item.selectedSizes || "",
+                totalPrices: item.totalPrices || 0,
             }));
 
             // Menyimpan data dalam schema Cart
@@ -49,10 +51,11 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ msg: 'Invalid request data' }, { status: 400 });
         }
 
-        const formattedCart = items.map(p => ({
+        const formattedCart = items.map((p: CartItems) => ({
             productId: p.product._id,
             quantity: p.quantity,
-            sizes: p.sizes
+            selectedSizes: p.sizes._id,
+            totalPrice: (p.product.basePrice + p.sizes.price) * p.quantity,
         }));
 
         // Perbarui keranjang belanja
