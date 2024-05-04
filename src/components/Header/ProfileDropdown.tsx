@@ -8,7 +8,7 @@ import { CartContext } from "../CartContext";
 
 export default function ProfileDropdown({status, name, images, email}) {
 
-    const { cartProducts } = useContext(CartContext)
+    const { countQty } = useContext(CartContext)
 
     const handleLogout = () => {
         const logout = signOut();
@@ -42,7 +42,7 @@ export default function ProfileDropdown({status, name, images, email}) {
             <div className="border-t border-slate-500/30"></div>
             <div className="flex justify-around">
                 <Link href={'/cart'} className="flex flex-col items-center justify-center">
-                    <span className="text-3xl font-semibold">{cartProducts?.length || 0}</span>
+                    <span className="text-3xl font-semibold">{countQty() || 0}</span>
                     <span className="text-sm text-slate-400">Cart</span>
                 </Link>
                 <div className="flex flex-col items-center justify-center">

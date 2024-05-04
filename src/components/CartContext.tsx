@@ -12,14 +12,8 @@ interface CartContextType {
     addToCart: (product: MenuItems, sizes?: any) => void;
     removeFromCart: (productId: string, sizeName: string) => void;
     clearCart: () => void;
-}
-
-
-export const cartProductPrice = (cartProduct: MenuItems): number => {
-    const price = cartProduct.basePrice;
-    const sizePrice = cartProduct.sizes?.[0]?.price;
-    const total = price + sizePrice;
-    return total;
+    countQty: () => number;
+    totalPrice: () => number;
 }
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -87,7 +81,7 @@ export function CartProvider({ children }) {
         if (!response.ok) {
             console.error('Error updating cart in database:', await response.text());
             return toast.error('Error updating cart in database');
-          }
+        }
     }
 
     const clearCart = () => {
@@ -131,16 +125,35 @@ export function CartProvider({ children }) {
         }
     }
 
+    const countQty = () => {
+        const totalQuantity = cartProducts.reduce((acc, item) => acc + item.quantity, 0);
+        return totalQuantity;
+    }
+
+    const totalPrice = () => {
+        const totalPrices = cartProducts.map((item) => {
+            const selectedSize = item.sizes._id;
+            const productSize = item.product.sizes.find(size => size._id === selectedSize);
+            const productPrice = productSize ? productSize.price + item.product.basePrice : item.product.basePrice; 
+            const quantity = item.quantity;
+            const totalPricePerItem = productPrice * quantity;
+            return totalPricePerItem;
+        });
+        const totalCartPrice = totalPrices.reduce((acc, price) => acc + price, 0);
+        return totalCartPrice;  
+    }
+
     useEffect(() => {
         if (userData && userData.email && cartLoaded) {
             savingCartToDB();
         }
-    }, [cartProducts, userData, cartLoaded])
+    }, [cartProducts, userData, cartLoaded]);
 
     // To avoid additional rerenders wrap the value in a useMemo hook. Use the useCallback() hook if the value is a function.
-    const cartMemo = useMemo(() => ({ cartProducts, setCartProducts, addToCart, clearCart, removeFromCart }), [
+    const cartMemo = useMemo(() => ({ cartProducts, setCartProducts, addToCart, clearCart, removeFromCart, countQty, totalPrice }), [
         cartProducts, setCartProducts,
-        addToCart, clearCart, removeFromCart
+        addToCart, clearCart, removeFromCart,
+        countQty, totalPrice
     ]);
     
     return (

@@ -1,29 +1,44 @@
+import { useContext } from "react";
+import { CartContext } from "../CartContext";
+import { PiPackageFill } from "react-icons/pi";
+import { countPrice, formatPrice } from "@/libs/formattedCurrency";
+
 const CheckoutProductDetails: React.FC = () => {
+
+    const { cartProducts, countQty } = useContext(CartContext);
+
+    const showPrice = (price: number): string => {
+        const result = formatPrice(price);
+        return result;
+    }
+
     return (
-        <div className="md:flex items-strech py-8 md:py-10 lg:py-8 border-t border-gray-50">
-            <div className="md:w-4/12 2xl:w-1/4 w-full">
-                <img src="https://i.ibb.co/6gzWwSq/Rectangle-20-1.png" alt="Black Leather Purse" className="h-full object-center object-cover md:block hidden" />
-                <img src="https://i.ibb.co/TTnzMTf/Rectangle-21.png" alt="Black Leather Purse" className="md:hidden w-full h-full object-center object-cover" />
-            </div>
-            <div className="md:pl-3 md:w-8/12 2xl:w-3/4 flex flex-col justify-center">
-                <p className="text-xs leading-3 text-gray-800 md:pt-0 pt-4">RF293</p>
-                <div className="flex items-center justify-between w-full">
-                    <p className="text-base font-black leading-none text-gray-800">Luxe card holder</p>
-                    <select aria-label="Select quantity" className="py-2 px-1 border border-gray-200 mr-6 focus:outline-none">
-                        <option>01</option>
-                        <option>02</option>
-                        <option>03</option>
-                    </select>
-                </div>
-                <p className="text-xs leading-3 text-gray-600 pt-2">Height: 10 inches</p>
-                <p className="text-xs leading-3 text-gray-600 py-4">Color: Black</p>
-                <p className="w-96 text-xs leading-3 text-gray-600">Composition: 100% calf leather</p>
-                <div className="flex items-center justify-between pt-5">
-                    <div className="flex itemms-center">
-                        <p className="text-xs leading-3 underline text-gray-800 cursor-pointer">Add to favorites</p>
-                        <p className="text-xs leading-3 underline text-red-500 pl-5 cursor-pointer">Remove</p>
+        <div className="w-full bg-white">
+            <div className="px-6 py-4">
+                <div className="flex flex-row justify-between">
+                    <div className="flex flex-row gap-2">
+                        <PiPackageFill className="w-6 h-6 text-primary" />
+                        <span className="text-lg font-medium text-primary">Produk Dipesan {countQty() ? countQty() : '' }</span>
                     </div>
-                        <p className="text-base font-black leading-none text-gray-800">,000</p>
+                    <div><span className="font-semibold">Total</span></div>
+                </div>
+                <div className="flex flex-col px-2 pt-2 gap-2">
+                    {cartProducts && cartProducts.length > 0 && cartProducts.map(((item, index) => (
+                        <div key={item.product._id + index} className="flex flex-row gap-2 border-b">
+                            <div><img src={item.product.image || ''} alt={item.product.name} className="w-[100px] h-[100px]" /></div>
+                            <div className="w-full flex flex-col justify-between">
+                                <div>
+                                    <h1 className="font-semibold text-lg">{item.product.name || ''}</h1>
+                                    <p className="text-xs">{item.sizes.name || ''}</p>
+                                </div>
+                                <div className="flex flex-row justify-between">
+                                    <span className="text-sm">{showPrice(item.sizes.price + item.product.basePrice) || 0}</span>
+                                    <span className="text-sm">Qty: {item.quantity || 0}</span>
+                                    <span className="text-md font-semibold">{showPrice(countPrice(item.product.basePrice, item.sizes?.price, item.quantity))}</span>
+                                </div>
+                            </div>
+                        </div>
+                    )))}
                 </div>
             </div>
         </div>

@@ -1,17 +1,18 @@
 import { CartItems } from "@/types/cart";
 import CartItemCounter from "./Button/CartItemCounter";
+import { countPrice } from "@/libs/formattedCurrency";
 
 const CartProductTable: React.FC<{ cartProduct: CartItems[] }> = ({ cartProduct }) => {
 
-    function countPrice(basePrice: number, sizePrice: number, quantity: number = 1): number {
-        const total = ( basePrice + sizePrice ) * quantity;
-        return total;
-    }
+    // function countPrice(basePrice: number, sizePrice: number, quantity: number = 1): number {
+    //     const total = ( basePrice + sizePrice ) * quantity;
+    //     return total;
+    // }
 
     return (
-        <div className="flex bg-white rounded-lg py-6 mb-4">
+        <div className="flex bg-white rounded-lg mb-4">
             <table className="w-full">
-                <thead className="relative">
+                <thead>
                     <tr>
                         <th className="text-left font-semibold text-gray-500">Product Details</th>
                         <th className="text-left font-semibold text-gray-500">Price</th>

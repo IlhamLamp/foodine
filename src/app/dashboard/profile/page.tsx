@@ -49,7 +49,7 @@ const ProfilePage: React.FC = () => {
                 await toast.promise(savingPromise, {
                     loading: 'Saving...',
                     success: 'Profile Saved!',
-                    error: 'Password must be at least 5 character',
+                    error: 'Error saving profile',
                 });
                 return response;
             })

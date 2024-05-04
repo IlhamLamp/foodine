@@ -20,7 +20,7 @@ const MenuSearchBar: React.FC = () => {
     const getUserQuery = searchParams.get("search")?.toString() || '';
 
     return (
-        <form action="/menu" className="max-w-[480px] w-full px-4">
+        <form action="/menu" className="max-w-[300px] w-full">
             <div className="relative">
                 <input type="search" name="search" className="w-full border h-12 bg-white py-4 px-8 rounded-full focus:border-primary outline-none" placeholder="Search..." 
                     onChange={(ev) => handleSearch(ev.target.value)} defaultValue={getUserQuery}

@@ -21,7 +21,7 @@ export default function UserForm({ user, onSave }) {
     const [villages, setVillages] = useState<string>(user?.villages || '');
     const [postalCode, setPostalCode] = useState<string>(user?.postalCode || '');
     const [address, setAddress] = useState<string>(user?.address || '');
-    const [admin, setAdmin] = useState<boolean>(user?.admin || '');
+    const [admin, setAdmin] = useState<boolean>(user?.admin || false);
     const { data:loggedInUserData } = UseProfile();
 
     function handleUserContactChange(propName: string, value: any) {

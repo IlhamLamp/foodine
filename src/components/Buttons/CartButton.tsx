@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const ShoppingCart: React.FC = () => {
 
-    const { cartProducts } = useContext(CartContext);
+    const { countQty } = useContext(CartContext);
 
     return (
         <Link href={'/cart'} className={`
@@ -16,7 +16,7 @@ const ShoppingCart: React.FC = () => {
         `}>
             <IoCartOutline className="w-8 h-8" />
             <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full p-3 leading-3">
-                <span>{ cartProducts?.length || 0 }</span>
+                <span>{ countQty() || 0 }</span>
             </span>
         </Link>
     )

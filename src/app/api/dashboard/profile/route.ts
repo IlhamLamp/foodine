@@ -15,7 +15,7 @@ connect();
 export async function PUT(req: NextRequest) {
   try {
     const data = await req.json();
-    const { _id, name, image, password, ...otherUserInfo } = data;
+    const { _id, name, image, ...otherUserInfo } = data;
 
     let filter = {};
     if (_id) {
@@ -28,7 +28,7 @@ export async function PUT(req: NextRequest) {
 
     const user = await User.findOne(filter) as UserWithEmail;
 
-    await User.updateOne(filter, {name, image, password});
+    await User.updateOne(filter, {name, image});
     await UserInfo.findOneAndUpdate({email: user?.email}, otherUserInfo, {upsert:true});
 
     return NextResponse.json({ msg: "Success update profile!" }, {status: 200});
