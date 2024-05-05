@@ -4,11 +4,6 @@ import { countPrice } from "@/libs/formattedCurrency";
 
 const CartProductTable: React.FC<{ cartProduct: CartItems[] }> = ({ cartProduct }) => {
 
-    // function countPrice(basePrice: number, sizePrice: number, quantity: number = 1): number {
-    //     const total = ( basePrice + sizePrice ) * quantity;
-    //     return total;
-    // }
-
     return (
         <div className="flex bg-white rounded-lg mb-4">
             <table className="w-full">

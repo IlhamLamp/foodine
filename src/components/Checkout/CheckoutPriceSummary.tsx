@@ -53,7 +53,7 @@ const CheckoutPriceSummary: React.FC = () => {
                             </div>
                         </div>
                     </div>
-                    <hr />
+                    <hr className="mt-4" />
                     <div className="my-8 flex justify-end">
                         <button className="w-[200px] bg-primary hover:bg-secondary text-white btn-hover">
                             Buat Pesanan
