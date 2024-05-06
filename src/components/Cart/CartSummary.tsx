@@ -16,7 +16,7 @@ const CartSummary: React.FC = () => {
 
     const [paymentMethod, setPaymentMethod] = useState<string>(transaction?.paymentMethod || "COD")
 
-    const { addTransaction } = useContext(TransactionContext);
+    const { addCheckout } = useContext(TransactionContext);
     const distanceInKm = ShowDistanceInKilometer(distance);
 
     // formatted price
@@ -27,7 +27,7 @@ const CartSummary: React.FC = () => {
     const handleCheckout = () => {
 
         if (cartProducts.length !== 0) {
-            addTransaction(paymentMethod);
+            addCheckout(paymentMethod);
             router.push('/checkout');
         } else {
             return toast.error('Please add product before checkout!')

@@ -5,10 +5,11 @@ import { ProfileContext } from "./AppContext";
 import { CartContext } from "./CartContext";
 import { ShippingContext } from "./ShippingContext";
 import toast from "react-hot-toast";
+import { TypesCheckout } from "@/types/checkout";
 
 interface TransactionContextType {
-    transaction: TypesTransaction;
-    addTransaction: (paymentMethod: string) => void;
+    transaction: TypesCheckout;
+    addCheckout: (paymentMethod: string) => void;
 }
 
 export const TransactionContext = createContext<TransactionContextType | null>(null);
@@ -19,24 +20,24 @@ export function TransactionProvider({ children }) {
     const { totalPrice, totalQty } = useContext(CartContext);
     const { distance, costShipping } = useContext(ShippingContext);
 
-    const [transaction, setTransaction] = useState<TypesTransaction | null>(null);
-    const [transactionLoaded, setTransactionLoaded] = useState<boolean>(false);
+    const [transaction, setTransaction] = useState<TypesCheckout | null>(null);
+    const [checkoutLoaded, setCheckoutLoaded] = useState<boolean>(false);
     const serviceFee: number = 0;
 
     useEffect(() => {
-        fetchLatestTransaction();
+        fetchLatestCheckout();
     }, [userData])
 
-    const fetchLatestTransaction = async () => {
+    const fetchLatestCheckout = async () => {
         try {
             if (userData && userData.email) {
 
-                const latestTransaction = await fetch(`/api/transaction/${userData.email}`);
+                const latestCheckout = await fetch(`/api/checkout/${userData.email}`);
                 
-                if (latestTransaction.ok) {
-                    const checkout = await latestTransaction.json();
+                if (latestCheckout.ok) {
+                    const checkout = await latestCheckout.json();
                     setTransaction(checkout);
-                    setTransactionLoaded(true);
+                    setCheckoutLoaded(true);
                 } else {
                     setTransaction(null);
                     console.log("No transaction exist!");
@@ -47,18 +48,18 @@ export function TransactionProvider({ children }) {
         }
     };
 
-    const savingTransactionToDB = async() => {
+    const savingCheckoutToDB = async() => {
         if (transaction) {
             try {
-                const method = transactionLoaded ? 'PUT' : 'POST';
+                const method = checkoutLoaded ? 'PUT' : 'POST';
                 console.log(method);
-                const response = await fetch('/api/transaction', {
-                    method: transactionLoaded ? 'PUT' : 'POST',
+                const response = await fetch('/api/checkout', {
+                    method: checkoutLoaded ? 'PUT' : 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(transaction)
                 });
                 if (response.ok) {
-                    setTransactionLoaded(true);
+                    setCheckoutLoaded(true);
                 } 
             } catch (error) {
                 console.error('Error saving transaction:', error);
@@ -67,11 +68,9 @@ export function TransactionProvider({ children }) {
         }
     }
 
-    const addTransaction = async (paymentMethod: string) => {
+    const addCheckout = async (paymentMethod: string) => {
 
-
-
-        const data: TypesTransaction = {
+        const data: TypesCheckout = {
             email: userData.email,
             totalItemsQty: totalQty,
             totalItemsPrice: totalPrice,
@@ -86,17 +85,17 @@ export function TransactionProvider({ children }) {
         setTransaction(data);
 
         if (userData && userData.email) {
-            await savingTransactionToDB();
+            await savingCheckoutToDB();
         }
     }
 
     useEffect(() => {
         if (userData && userData.email) {
-            savingTransactionToDB();
+            savingCheckoutToDB();
         }
     }, [transaction, userData])
 
-    const transactionMemo = useMemo(() => ({ transaction, addTransaction }), [ transaction, addTransaction])
+    const transactionMemo = useMemo(() => ({ transaction, addCheckout }), [ transaction, addCheckout])
 
     return (
         <TransactionContext.Provider value={transactionMemo}>

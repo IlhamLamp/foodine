@@ -44,7 +44,7 @@ const CheckoutPriceSummary: React.FC = () => {
                                         Total Ongkos Kirim
                                         <GoQuestion 
                                             data-tooltip-id="tooltip-goquestion" 
-                                            data-tooltip-html="<p>< 5 Km = Rp 5.000</p><p>5 - 10 Km = Rp 10.000</p><p>11 - 20 Km = Rp 15.000</p><p>21 - 30 Km = Rp 20.000</p></br><p>>30 Km = Km * Rp 2.000</p>" 
+                                            data-tooltip-html="< 5 Km = Rp 5.000</br>5 - 10 Km = Rp 10.000</br>11 - 20 Km = Rp 15.000</br>21 - 30 Km = Rp 20.000</br>>30 Km = Km * Rp 2.000" 
                                             className="w-4 h-4 btn-hover text-primary hover:text-secondary cursor-pointer" />
                                         :
                                     </span>
