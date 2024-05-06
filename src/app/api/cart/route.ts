@@ -12,7 +12,6 @@ export async function POST(req: NextRequest) {
 
         // Periksa apakah email ada dalam data
         const { email, items } = data;
-        console.log("dari server ", data)
         if (!email || !Array.isArray(items)) {
             return NextResponse.json({ msg: 'Invalid request data' }, { status: 400 });
         }

@@ -6,4 +6,4 @@ type ProductSize = {
     price: number;
 }
 
-export type CartItems = { product: MenuItems, quantity?: number, sizes?: ProductSize }
+export type CartItems = { product: MenuItems, quantity?: number, sizes?: ProductSize, totalPrice?: number }

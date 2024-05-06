@@ -1,12 +1,14 @@
 import Link from "next/link";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { BsCreditCardFill } from "react-icons/bs";
-import { CartContext } from "../CartContext";
 import { formatPrice } from "@/libs/formattedCurrency";
+import { TransactionContext } from "../TransactionContext";
+import { GoQuestion } from "react-icons/go";
+import { Tooltip } from "react-tooltip";
 
 const CheckoutPriceSummary: React.FC = () => {
 
-    const { totalPrice } = useContext(CartContext);
+    const { transaction } = useContext(TransactionContext);
 
     const showPrice = (price: number): string => {
         const result = formatPrice(price);
@@ -22,7 +24,7 @@ const CheckoutPriceSummary: React.FC = () => {
                         <span className="text-lg font-medium text-primary">Metode Pembayaran</span>
                     </div>
                     <div className="flex flex-row justify-between items-center gap-8">
-                        <span className="font-semibold">COD</span>
+                        <span className="font-semibold">{transaction?.paymentMethod}</span>
                         <Link href={'/cart'} className="btn-hover bg-primary hover:bg-secondary text-white rounded-full py-2 px-4 text-sm">
                             Edit
                         </Link>
@@ -34,29 +36,37 @@ const CheckoutPriceSummary: React.FC = () => {
                             <div className="flex-col">
                                 <p className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <span>Subtotal Untuk Produk :</span>
-                                    <span>{showPrice(totalPrice()) || 0}</span>
+                                    <span>{showPrice(transaction?.totalItemsPrice) || 0}</span>
                                 </p>
                                 <p className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
-                                    <span>Total Ongkos Kirim :</span>
-                                    <span>{showPrice(totalPrice()) || 0}</span>
+                                    <Tooltip place="top" id="tooltip-goquestion" />
+                                    <span className="inline-flex gap-1 items-center">
+                                        Total Ongkos Kirim
+                                        <GoQuestion 
+                                            data-tooltip-id="tooltip-goquestion" 
+                                            data-tooltip-html="<p>< 5 Km = Rp 5.000</p><p>5 - 10 Km = Rp 10.000</p><p>11 - 20 Km = Rp 15.000</p><p>21 - 30 Km = Rp 20.000</p></br><p>>30 Km = Km * Rp 2.000</p>" 
+                                            className="w-4 h-4 btn-hover text-primary hover:text-secondary cursor-pointer" />
+                                        :
+                                    </span>
+                                    <span>{showPrice(transaction?.shippingCosts) || 0}</span>
                                 </p>
                                 <p className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <span>Biaya Layanan :</span>
-                                    <span>{showPrice(totalPrice()) || 0}</span>
+                                    <span>{showPrice(transaction?.serviceFee) || 0}</span>
                                 </p>
                             </div>
                         </div>
                         <div className="flex justify-end">
                             <div className="flex flex-row justify-between gap-8">
                                 <span className="text-sm text-gray-500">Total Pembayaran :</span>
-                                <span className="text-2xl text-primary font-semibold">{showPrice(90000) || 0}</span>
+                                <span className="text-2xl text-primary font-semibold">{showPrice(transaction?.totalTransactionPrice) || 0}</span>
                             </div>
                         </div>
                     </div>
                     <hr className="mt-4" />
                     <div className="my-8 flex justify-end">
                         <button className="w-[200px] bg-primary hover:bg-secondary text-white btn-hover">
-                            Buat Pesanan
+                            {transaction?.paymentMethod === "COD" ? 'Buat' : 'Bayar'} Pesanan
                         </button>
                     </div>
                 </div>

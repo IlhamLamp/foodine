@@ -59,7 +59,6 @@ export async function RoutingLocation(userLocation: any) {
 export function ShowDistanceInKilometer(distanceInMeters: number) {
 
   if (!distanceInMeters) {
-    console.log("Error: Invalid distance provided.");
     return null;
   }
 

@@ -1,7 +1,6 @@
 export function formatPrice(price: number) {
 
     if (!price) {
-        console.log("Price not a number");
         return null;
     }
 

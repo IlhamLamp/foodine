@@ -1,11 +1,13 @@
 import { useContext } from "react";
-import { CartContext } from "../CartContext";
 import { PiPackageFill } from "react-icons/pi";
 import { countPrice, formatPrice } from "@/libs/formattedCurrency";
+import { TransactionContext } from "../TransactionContext";
+import { CartContext } from "../CartContext";
 
 const CheckoutProductDetails: React.FC = () => {
 
-    const { cartProducts, countQty } = useContext(CartContext);
+    const { cartProducts } = useContext(CartContext)
+    const { transaction } = useContext(TransactionContext);
 
     const showPrice = (price: number): string => {
         const result = formatPrice(price);
@@ -18,7 +20,7 @@ const CheckoutProductDetails: React.FC = () => {
                 <div className="flex flex-row justify-between">
                     <div className="flex flex-row gap-2">
                         <PiPackageFill className="w-6 h-6 text-primary" />
-                        <span className="text-lg font-medium text-primary">Produk Dipesan {countQty() ? countQty() : '' }</span>
+                        <span className="text-lg font-medium text-primary">Produk Dipesan {transaction?.totalItemsQty ? transaction?.totalItemsQty : '' }</span>
                     </div>
                     <div><span className="font-semibold">Total</span></div>
                 </div>

@@ -1,38 +1,44 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { CartContext } from "../CartContext";
-import { ProfileContext } from "../AppContext";
-import { calculateShippingCost, ShowDistanceInKilometer } from "@/libs/geoPosition";
+import { ShowDistanceInKilometer } from "@/libs/geoPosition";
 import { formatPrice } from "@/libs/formattedCurrency";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { ShippingContext } from "../ShippingContext";
+import { TransactionContext } from "../TransactionContext";
 
 const CartSummary: React.FC = () => {
 
     const router = useRouter();
+    const { cartProducts, totalQty, totalPrice } = useContext(CartContext);
+    const { distance, costShipping } = useContext(ShippingContext);
+    const { transaction } = useContext(TransactionContext);
 
-    const { cartProducts, countQty, totalPrice } = useContext(CartContext);
-    const { distance } = useContext(ProfileContext);
+    const [paymentMethod, setPaymentMethod] = useState<string>(transaction?.paymentMethod || "COD")
+
+    const { addTransaction } = useContext(TransactionContext);
     const distanceInKm = ShowDistanceInKilometer(distance);
-    const costShipping = calculateShippingCost(distance);
 
     // formatted price
-    const formattedTotalPrice = formatPrice(totalPrice());
+    const formattedTotalPrice = formatPrice(totalPrice);
     const formattedShippingCost = formatPrice(costShipping);
-    const formattedTotalCost = formatPrice(totalPrice() + costShipping);
+    const formattedTotalCost = formatPrice(totalPrice + costShipping);
 
     const handleCheckout = () => {
 
-        if (cartProducts.length === 0) {
+        if (cartProducts.length !== 0) {
+            addTransaction(paymentMethod);
+            router.push('/checkout');
+        } else {
             return toast.error('Please add product before checkout!')
         }
-        router.push('/checkout');
     }
 
     return (
         <div id="summary" className="bg-gray-100 shadow-lg p-4 rounded-xl">
             <h1 className="font-semibold text-2xl border-b pb-5">Cart Summary</h1>
             <div className="flex justify-between my-2">
-                <span className="font-semibold text-sm">Items {countQty() || 0}</span>
+                <span className="font-semibold text-sm">Items {totalQty || 0}</span>
                 <span className="font-semibold text-sm">{ formattedTotalPrice || 0}</span>
             </div>
             <div>
@@ -40,9 +46,9 @@ const CartSummary: React.FC = () => {
                     <span>Shipping { distanceInKm || 0}</span>
                     <span>{ formattedShippingCost || 0}</span>
                 </label>
-                <select className="block p-2 bg-gray-200 text-gray-600 w-full text-sm font-semibold">
-                    <option>COD</option>
-                    <option>Transfer</option>
+                <select value={paymentMethod} onChange={(ev) => setPaymentMethod(ev.target.value)} className="block p-2 bg-gray-200 text-gray-600 w-full text-sm font-semibold">
+                    <option key={1} value={"COD"}>COD</option>
+                    <option key={2} value={"TRANSFER"}>TRANSFER</option>
                 </select>
             </div>
             <div className="border-t mt-8">

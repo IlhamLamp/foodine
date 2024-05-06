@@ -7,7 +7,7 @@ interface ItemTypes {
     productId: string;
     quantity: number;
     selectedSizes: string;
-    totalPrices: number;
+    totalPrice: number;
 }
 
 export async function GET(req: NextRequest) {
@@ -39,6 +39,7 @@ export async function GET(req: NextRequest) {
                 product: menuItem,
                 quantity: item.quantity,
                 sizes: matchedSize,
+                totalPrice: item.totalPrice,
             }
         }))
 

@@ -1,20 +1,24 @@
+import { ObjectId } from "mongoose";
+
 type TransactionItem = {
-    productId: string;
+    productId: ObjectId;
     quantity: number;
     selectedSizes: string;
     totalPrice: number;
 }
 
-export type Transaction = {
+export type TypesTransaction = {
     _id?: string;
     transactionId?: string;
     email: string;
-    items: TransactionItem[];
+    items?: TransactionItem[];
+    totalItemsQty: number;
+    totalItemsPrice: number;
     shippingAddress: string;
     shippingCosts: number;
-    deliveryDistance: string;
+    deliveryDistance: number;
     paymentMethod: string;
     serviceFee: number;
-    totalPrice: number;
+    totalTransactionPrice: number;
     status: string; 
 }

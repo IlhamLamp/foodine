@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import ShoppingCart from "@/components/Buttons/CartButton";
 import { CartProvider } from "@/components/CartContext";
 import { TransactionProvider } from "@/components/TransactionContext";
+import { ShippingProvider } from "@/components/ShippingContext";
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -29,14 +30,16 @@ export default function RootLayout({children}: Readonly<{
       <body className={poppins.className}>
         <AppProvider>
           <CartProvider>
-            <TransactionProvider>  
-              <Toaster />
-              <Header />
-              <main>
-                {children}
-              </main>
-              <ShoppingCart />
-            </TransactionProvider>
+            <ShippingProvider>  
+              <TransactionProvider>  
+                <Toaster />
+                <Header />
+                <main>
+                  {children}
+                </main>
+                <ShoppingCart />
+              </TransactionProvider>
+            </ShippingProvider>
           </CartProvider>
         </AppProvider>
       </body>

@@ -6,8 +6,7 @@ import Link from "next/link";
 
 const CheckoutProfileAddress : React.FC = () => {
 
-    const { userData } = useContext(ProfileContext);
-    const userAddress = `${userData?.address || ''},${userData?.villages || ''},${userData?.district || ''},${userData?.regencies || ''},${userData?.province || ''}`
+    const { userData, userAddress } = useContext(ProfileContext);
  
     return (
         <div className="w-full mt-10 bg-white">

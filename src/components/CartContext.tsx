@@ -8,12 +8,12 @@ import { ProfileContext } from "./AppContext";
 
 interface CartContextType {
     cartProducts: CartItems[];
+    totalQty: number;
+    totalPrice: number;
     setCartProducts: React.Dispatch<React.SetStateAction<any[]>>;
     addToCart: (product: MenuItems, sizes?: any) => void;
     removeFromCart: (productId: string, sizeName: string) => void;
     clearCart: () => void;
-    countQty: () => number;
-    totalPrice: () => number;
 }
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -22,8 +22,11 @@ export function CartProvider({ children }) {
 
     const { userData } = useContext(ProfileContext);
 
+    // CART
     const [cartProducts, setCartProducts] = useState<CartItems[]>([]);
     const [cartLoaded, setCartLoaded] = useState<boolean>(false);
+    const [totalQty, setTotalQty] = useState<number>(0);
+    const [totalPrice, setTotalPrice] = useState<number>(0);
 
     const ls = typeof window !== 'undefined' ? window.localStorage : null;
 
@@ -125,12 +128,12 @@ export function CartProvider({ children }) {
         }
     }
 
-    const countQty = () => {
+    const countTotalQty = () => {
         const totalQuantity = cartProducts.reduce((acc, item) => acc + item.quantity, 0);
-        return totalQuantity;
+        return setTotalQty(totalQuantity);
     }
 
-    const totalPrice = () => {
+    const countTotalPrice = () => {
         const totalPrices = cartProducts.map((item) => {
             const selectedSize = item.sizes._id;
             const productSize = item.product.sizes.find(size => size._id === selectedSize);
@@ -140,20 +143,21 @@ export function CartProvider({ children }) {
             return totalPricePerItem;
         });
         const totalCartPrice = totalPrices.reduce((acc, price) => acc + price, 0);
-        return totalCartPrice;  
+        return setTotalPrice(totalCartPrice);  
     }
 
     useEffect(() => {
         if (userData && userData.email && cartLoaded) {
             savingCartToDB();
+            countTotalQty();
+            countTotalPrice();
         }
     }, [cartProducts, userData, cartLoaded]);
 
     // To avoid additional rerenders wrap the value in a useMemo hook. Use the useCallback() hook if the value is a function.
-    const cartMemo = useMemo(() => ({ cartProducts, setCartProducts, addToCart, clearCart, removeFromCart, countQty, totalPrice }), [
-        cartProducts, setCartProducts,
-        addToCart, clearCart, removeFromCart,
-        countQty, totalPrice
+    const cartMemo = useMemo(() => ({ cartProducts, totalQty, totalPrice, setCartProducts, addToCart, clearCart, removeFromCart, }), [
+        cartProducts, totalQty, totalPrice, 
+        setCartProducts, addToCart, clearCart, removeFromCart,
     ]);
     
     return (
