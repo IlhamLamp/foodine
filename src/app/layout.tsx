@@ -29,8 +29,8 @@ export default function RootLayout({children}: Readonly<{
     <html lang="en" className="scroll-smooth">
       <body className={poppins.className}>
         <AppProvider>
-          <CartProvider>
-            <ShippingProvider>  
+          <ShippingProvider>  
+            <CartProvider>
               {/* <TransactionProvider>   */}
                 <Toaster />
                 <Header />
@@ -39,8 +39,8 @@ export default function RootLayout({children}: Readonly<{
                 </main>
                 <ShoppingCart />
               {/* </TransactionProvider> */}
-            </ShippingProvider>
-          </CartProvider>
+            </CartProvider>
+          </ShippingProvider>
         </AppProvider>
       </body>
     </html>

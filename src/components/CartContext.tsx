@@ -4,6 +4,7 @@ import { MenuItems } from "@/types/menu";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ProfileContext } from "./AppContext";
+import { ShippingContext } from "./ShippingContext";
 
 interface CartContextType {
     cartProducts: TypesCart;
@@ -17,7 +18,8 @@ interface CartContextType {
 export const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }) {
-    const { userData } = useContext(ProfileContext);
+    const { userData, userAddress } = useContext(ProfileContext);
+    const { costShipping, distance } = useContext(ShippingContext);
     // CART
     const [cartProducts, setCartProducts] = useState<TypesCart>(defaultCart);
     const [cartLoaded, setCartLoaded] = useState<boolean>(false);
@@ -78,10 +80,16 @@ export function CartProvider({ children }) {
 
     async function savingCartToDB() {
         if (cartProducts) {
+            const payload: TypesCart = {
+                ...cartProducts, totalItemsQty: totalQty, totalItemsPrice: totalPrice,
+                deliveryDistance: distance, shippingAddress: userAddress, shippingCosts: costShipping,
+                totalTransactionPrice: (totalPrice + costShipping),
+            };
+            
             const response = await fetch('/api/cart', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cartProducts)
+                body: JSON.stringify(payload)
             });
             if (!response.ok) {
                 console.error('Error updating cart in database:', await response.text());
@@ -138,16 +146,16 @@ export function CartProvider({ children }) {
         });
 
         if (userData && userData.email && cartLoaded) {
-            await savingCartToDB();
+            await updateData();
         }
     }
 
-    const countTotalQty = () => {
+    const countTotalQty = async () => {
         const totalQuantity = cartProducts.items.reduce((acc, item) => acc + item.quantity, 0);
-        return setTotalQty(totalQuantity);
+        setTotalQty(totalQuantity);
     }
 
-    const countTotalPrice = () => {
+    const countTotalPrice = async () => {
         const totalPrices = cartProducts.items.map((item) => {
             const selectedSize = item.selectedSizes._id;
             const productSize = item.product.sizes.find(size => size._id === selectedSize);
@@ -157,16 +165,20 @@ export function CartProvider({ children }) {
             return totalPricePerItem;
         });
         const totalCartPrice = totalPrices.reduce((acc, price) => acc + price, 0);
-        return setTotalPrice(totalCartPrice);  
+        setTotalPrice(totalCartPrice);  
+    }
+
+    const updateData = async () => {
+        if (userData && userData.email && cartLoaded) {
+            await countTotalQty();
+            await countTotalPrice();
+            await savingCartToDB();
+        }
     }
 
     useEffect(() => {
-        if (userData && userData.email && cartLoaded) {
-            savingCartToDB();
-            countTotalQty();
-            countTotalPrice();
-        }
-    }, [cartProducts, userData, cartLoaded]);
+        updateData();
+    }, [cartProducts, userData, cartLoaded, totalQty, totalPrice]);
 
     // To avoid additional rerenders wrap the value in a useMemo hook. Use the useCallback() hook if the value is a function.
     const cartMemo = useMemo(() => ({ cartProducts, totalQty, totalPrice, addToCart, clearCart, removeFromCart, }), [

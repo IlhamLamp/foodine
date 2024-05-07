@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
                 return null;
             }
 
-            const matchedSize = menuItem.sizes.find((size) => size._id.toString() === item.selectedSizes);  
+            const matchedSize = menuItem.sizes.find((size) => size._id.toString() === item.selectedSizes._id);  
 
             return {
                 product: menuItem,

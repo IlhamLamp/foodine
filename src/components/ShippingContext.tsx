@@ -14,13 +14,13 @@ export const ShippingContext = createContext<ShippingContextType | null>(null);
 export function ShippingProvider({ children }) {
 
     const { userData } = useContext(ProfileContext);
-    const [distance, setDistance] = useState<number | null>(null);
-    const [costShipping, setCostShipping] = useState<number | null>(null);
+    const [distance, setDistance] = useState<number>(0);
+    const [costShipping, setCostShipping] = useState<number>(0);
 
     useEffect(() => {
-        const getDistance = async (): Promise<number | null> => {
+        const getDistanceAndCostShipping = async (): Promise<void> => {
             try {
-                if (!userData) return null;
+                if (!userData) return;
                 const data = await RoutingLocation(userData?.location);
                 if (data?.features && data.features[0]?.properties) {
                     const resDistance = data.features[0].properties.distance;
@@ -29,14 +29,12 @@ export function ShippingProvider({ children }) {
                     setCostShipping(resCostShipping);
                 } else {
                     console.error("Error: Unable to retrieve distance data from the response.");
-                    return null;
                 }
             } catch (error) {
-                console.error('Error getting distance to shop!')
-                return error;
+                console.error('Error getting distance to shop!', error)
             }
         };
-        getDistance();
+        getDistanceAndCostShipping();
     }, [userData]);
 
     const shippingMemo = useMemo(() => ({ distance, costShipping }), [ distance, costShipping ])

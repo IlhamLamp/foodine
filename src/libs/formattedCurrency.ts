@@ -13,7 +13,7 @@ export function formatPrice(price: number) {
 
 export const countPrice = (basePrice: number, sizePrice: number, quantity: number = 1): number => {
 
-    if (!basePrice || sizePrice) {
+    if (!basePrice || !sizePrice) {
         return null;
     }
 

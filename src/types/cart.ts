@@ -59,8 +59,8 @@ export const defaultCart: TypesCart = {
     shippingAddress: '', 
     shippingCosts: 0, 
     deliveryDistance: 0, 
-    paymentMethod: '', 
+    paymentMethod: 'COD', 
     serviceFee: 0, 
     totalTransactionPrice: 0, 
-    status: '' 
+    status: 'unpaid' 
 };
