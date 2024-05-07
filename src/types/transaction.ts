@@ -1,6 +1,6 @@
 import { ObjectId } from "mongoose";
 
-type TransactionItem = {
+type CheckoutItem = {
     productId: ObjectId;
     quantity: number;
     selectedSizes: string;
@@ -11,14 +11,16 @@ export type TypesTransaction = {
     _id?: string;
     transactionId?: string;
     email: string;
-    items?: TransactionItem[];
+    items?: CheckoutItem[];
     totalItemsQty: number;
     totalItemsPrice: number;
     shippingAddress: string;
     shippingCosts: number;
     deliveryDistance: number;
+    deliveryStatus: string;
     paymentMethod: string;
     serviceFee: number;
     totalTransactionPrice: number;
-    status: string; 
+    status: string;
+    returnProduct: boolean;
 }

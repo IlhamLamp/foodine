@@ -10,6 +10,7 @@ import { TypesCheckout } from "@/types/checkout";
 interface TransactionContextType {
     transaction: TypesCheckout;
     addCheckout: (paymentMethod: string) => void;
+    addOrderTransaction: () => void;
 }
 
 export const TransactionContext = createContext<TransactionContextType | null>(null);
@@ -21,6 +22,7 @@ export function TransactionProvider({ children }) {
     const { distance, costShipping } = useContext(ShippingContext);
 
     const [transaction, setTransaction] = useState<TypesCheckout | null>(null);
+    const [orderTransaction, setOrderTransaction] = useState<TypesTransaction | null>(null);
     const [checkoutLoaded, setCheckoutLoaded] = useState<boolean>(false);
     const serviceFee: number = 0;
 
@@ -89,13 +91,27 @@ export function TransactionProvider({ children }) {
         }
     }
 
+    const addOrderTransaction = async () => {
+        if (transaction) {
+            console.log(transaction);
+            const data: TypesTransaction = {
+                ...transaction,
+                transactionId: transaction.transactionId,
+                items: transaction.items,
+                deliveryStatus: "pending",
+                returnProduct: false,
+            };
+            console.log(data);
+        }
+    }
+
     useEffect(() => {
         if (userData && userData.email) {
             savingCheckoutToDB();
         }
     }, [transaction, userData])
 
-    const transactionMemo = useMemo(() => ({ transaction, addCheckout }), [ transaction, addCheckout])
+    const transactionMemo = useMemo(() => ({ transaction, addCheckout, addOrderTransaction }), [ transaction, addCheckout, addOrderTransaction])
 
     return (
         <TransactionContext.Provider value={transactionMemo}>

@@ -8,11 +8,15 @@ import { Tooltip } from "react-tooltip";
 
 const CheckoutPriceSummary: React.FC = () => {
 
-    const { transaction } = useContext(TransactionContext);
+    const { transaction, addOrderTransaction } = useContext(TransactionContext);
 
     const showPrice = (price: number): string => {
         const result = formatPrice(price);
         return result;
+    }
+
+    const handleTransaction = () => {
+        addOrderTransaction();
     }
 
     return (
@@ -65,7 +69,7 @@ const CheckoutPriceSummary: React.FC = () => {
                     </div>
                     <hr className="mt-4" />
                     <div className="my-8 flex justify-end">
-                        <button className="w-[200px] bg-primary hover:bg-secondary text-white btn-hover">
+                        <button className="w-[200px] bg-primary hover:bg-secondary text-white btn-hover" onClick={handleTransaction}>
                             {transaction?.paymentMethod === "COD" ? 'Buat' : 'Bayar'} Pesanan
                         </button>
                     </div>
