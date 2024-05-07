@@ -58,7 +58,7 @@ export function TransactionProvider({ children }) {
                 const response = await fetch('/api/checkout', {
                     method: checkoutLoaded ? 'PUT' : 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(transaction)
+                    body: JSON.stringify(transaction),
                 });
                 if (response.ok) {
                     setCheckoutLoaded(true);
@@ -68,6 +68,24 @@ export function TransactionProvider({ children }) {
                 toast.error('An error occurred while saving transaction, please try again later');
             }
         }
+    }
+
+    const savingTransactionToDB = async() => {
+        if (orderTransaction) {
+            try {
+                const response = await fetch('/api/transaction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderTransaction),
+                });
+                if (response.ok) {
+                    console.log("ok");
+                }
+            } catch (error) {
+                console.error('Error saving transaction:', error);
+                toast.error('An error occurred while saving transaction, please try again later');
+            }
+        } 
     }
 
     const addCheckout = async (paymentMethod: string) => {
@@ -93,15 +111,16 @@ export function TransactionProvider({ children }) {
 
     const addOrderTransaction = async () => {
         if (transaction) {
-            console.log(transaction);
             const data: TypesTransaction = {
                 ...transaction,
-                transactionId: transaction.transactionId,
-                items: transaction.items,
                 deliveryStatus: "pending",
                 returnProduct: false,
             };
-            console.log(data);
+            setOrderTransaction(data);
+        }
+
+        if (userData && userData.email) {
+            await savingTransactionToDB();
         }
     }
 
@@ -110,6 +129,12 @@ export function TransactionProvider({ children }) {
             savingCheckoutToDB();
         }
     }, [transaction, userData])
+
+    useEffect(() => {
+        if (userData && userData.email) {
+            savingTransactionToDB();
+        }
+    }, [orderTransaction, userData])
 
     const transactionMemo = useMemo(() => ({ transaction, addCheckout, addOrderTransaction }), [ transaction, addCheckout, addOrderTransaction])
 
