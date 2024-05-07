@@ -16,22 +16,22 @@ const CartProductTable: React.FC<{ cartProduct: CartItems[] }> = ({ cartProduct 
                     </tr>
                 </thead>
                 <tbody>
-                    { cartProduct.length > 0 && cartProduct.map((c, i) => (
+                    { cartProduct && cartProduct.length > 0 && cartProduct.map((c, i) => (
                         <tr key={c.product._id + i} className="border-b">
                             <td className="py-4">
                                 <div className="flex flex-row items-center">
                                     <img className="h-16 w-16 mr-4" src={c.product.image} alt={c.product.name} />
                                     <div className="flex flex-col">
                                         <span className="font-semibold">{c.product.name}</span>
-                                        <span className="text-sm text-gray-500">{c.sizes?.name}</span>
+                                        <span className="text-sm text-gray-500">{c.selectedSizes.name}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td className="py-4">Rp. {countPrice(c.product.basePrice, c.sizes?.price)}</td>
+                            <td className="py-4">Rp. {countPrice(c.product.basePrice, c.selectedSizes.price)}</td>
                             <td className="py-4">
-                                <CartItemCounter productId={c.product._id} sizeName={c.sizes.name} />
+                                <CartItemCounter productId={c.product._id} selectedSizes={c.selectedSizes} />
                             </td>
-                            <td className="py-4 font-semibold">Rp. {countPrice(c.product.basePrice, c.sizes?.price, c.quantity)}</td>
+                            <td className="py-4 font-semibold">Rp. {countPrice(c.product.basePrice, c.selectedSizes.price, c.quantity)}</td>
                         </tr>
                     ))}
                     { cartProduct.length === 0 && (

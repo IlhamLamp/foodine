@@ -1,25 +1,26 @@
 import { CartContext } from "@/components/CartContext";
+import { ProductSize } from "@/types/cart";
 import { useContext } from "react";
 import toast from "react-hot-toast";
 
-const CartItemCounter: React.FC<{ productId: string, sizeName: string }> = ({ productId, sizeName }) => {
+const CartItemCounter: React.FC<{ productId: string, selectedSizes: ProductSize }> = ({ productId, selectedSizes }) => {
     const { cartProducts, removeFromCart, addToCart } = useContext(CartContext);
 
     const handleDecrement = () => {
-        removeFromCart(productId, sizeName);
+        removeFromCart(productId, selectedSizes);
     };
 
     const handleIncrement = () => {
-        const dataCart = cartProducts.find(item => item.product._id === productId && item.sizes.name === sizeName);
+        const dataCart = cartProducts.items.find(item => item.product._id === productId && item.selectedSizes.name === selectedSizes.name);
         if (product) {
-            addToCart(dataCart.product, product.sizes);
+            addToCart(dataCart.product, product.selectedSizes);
             toast('Product Added!', {
                 icon: '😄'
             })
         }
     };
 
-    const product = cartProducts.find(item => item.product._id === productId && item.sizes.name === sizeName);
+    const product = cartProducts.items.find(item => item.product._id === productId && item.selectedSizes.name === selectedSizes.name);
     const quantity = product ? product.quantity : 0;
 
     return (

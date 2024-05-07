@@ -1,29 +1,25 @@
 "use client";
-
-import { CartItems } from "@/types/cart";
+import { CartItems, defaultCart, ProductSize, TypesCart } from "@/types/cart";
 import { MenuItems } from "@/types/menu";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ProfileContext } from "./AppContext";
 
 interface CartContextType {
-    cartProducts: CartItems[];
+    cartProducts: TypesCart;
     totalQty: number;
     totalPrice: number;
-    setCartProducts: React.Dispatch<React.SetStateAction<any[]>>;
     addToCart: (product: MenuItems, sizes?: any) => void;
-    removeFromCart: (productId: string, sizeName: string) => void;
+    removeFromCart: (productId: string, selectedSizes: ProductSize) => void;
     clearCart: () => void;
 }
 
 export const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }) {
-
     const { userData } = useContext(ProfileContext);
-
     // CART
-    const [cartProducts, setCartProducts] = useState<CartItems[]>([]);
+    const [cartProducts, setCartProducts] = useState<TypesCart>(defaultCart);
     const [cartLoaded, setCartLoaded] = useState<boolean>(false);
     const [totalQty, setTotalQty] = useState<number>(0);
     const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -36,24 +32,28 @@ export function CartProvider({ children }) {
             try {
                 if (userData && userData.email) {
 
-                    const getCart = await fetch(`/api/cart/${userData?.email}`);
+                    const getCart = await fetch(`/api/cart/${userData.email}`);
+
+                    if (!getCart.ok) {
+                        console.log('Creating new cart...');
+                    }
 
                     if (getCart.ok) {
                         const cartData = await getCart.json();
                         if (cartData) {
-                            setCartProducts(cartData.items || []);
+                            setCartProducts(cartData);
                             setCartLoaded(true);
                         }
                     } else {
                         // Jika pengguna belum memiliki keranjang, buat keranjang baru dan post ke database
-                        const cartData = { email: userData.email, items: [] };
+                        const cartData = { ...cartProducts, email: userData.email};
                         const response = await fetch('/api/cart', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(cartData)
+                            body: JSON.stringify(cartData),
                         });
                         if (response.ok) {
-                            setCartProducts([]);
+                            setCartProducts(cartData);
                             setCartLoaded(true);
                         }
                     }
@@ -71,56 +71,70 @@ export function CartProvider({ children }) {
     useEffect(() => {
         if (!userData && !cartLoaded && ls) {
             ls.setItem('cart', JSON.stringify(cartProducts));
+            countTotalQty();
+            countTotalPrice();
         }
     }, [cartProducts, userData, cartLoaded, ls]);
 
     async function savingCartToDB() {
-        const data = {email: userData.email, items: cartProducts}
-        const response = await fetch('/api/cart', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        if (!response.ok) {
-            console.error('Error updating cart in database:', await response.text());
-            return toast.error('Error updating cart in database');
+        if (cartProducts) {
+            const response = await fetch('/api/cart', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cartProducts)
+            });
+            if (!response.ok) {
+                console.error('Error updating cart in database:', await response.text());
+                return toast.error('Error updating cart in database');
+            }
         }
     }
 
     const clearCart = () => {
-        setCartProducts([]);
+        setCartProducts((prevCartProucts) => ({ ...prevCartProucts, items: [] }));
     }
 
-    const removeFromCart = async (productId: string, sizeName: string) => {
-        setCartProducts(prevProducts => 
-            prevProducts.map(product => 
-                (product.product._id === productId && product.sizes?.name === sizeName && product.quantity > 0)
-                ? { ...product, quantity: Math.max(0, product.quantity - 1)}
-                : product
-            ).filter(product => product.quantity !== 0)
-        );
+    const removeFromCart = async (productId: string, selectedSizes: ProductSize) => {
+        setCartProducts((prevCartProducts) => ({
+            ...prevCartProducts,
+            items: prevCartProducts.items.map((item) =>
+                item.product._id === productId && item.selectedSizes.name === selectedSizes.name
+                ? { ...item, quantity: Math.max(0, item.quantity -1 )}
+                : item
+            ).filter(item => item.quantity !== 0)
+        }));
         toast('Product removed!', {
             icon: '😢'
         });
     }
 
-    const addToCart = async (product: MenuItems, sizes: any) => {
-        setCartProducts(prevProducts => {
-            const existingProductIndex = prevProducts.findIndex((p: CartItems) => p.product._id === product._id && p.sizes.name === sizes.name);
-            if (existingProductIndex !== -1) {
+    const addToCart = async (product: MenuItems, sizes: ProductSize) => {
+        setCartProducts((prevCartProducts) => {
+            const existingCartItemIndex = prevCartProducts.items.findIndex(
+                (item) => item.product._id === product._id && item.selectedSizes.name === sizes.name
+            );
+            if (existingCartItemIndex !== -1) {
                 // Produk sudah ada dalam keranjang, tingkatkan kuantitasnya
-                const updatedProducts = [...prevProducts];
-                updatedProducts[existingProductIndex] = {
-                    ...updatedProducts[existingProductIndex],
-                    quantity: updatedProducts[existingProductIndex].quantity + 1
-                };
-                return updatedProducts;
+                const updatedCartItems = prevCartProducts.items.map(item => {
+                    if (item.product._id === product._id && item.selectedSizes.name === sizes.name) {
+                        return { ...item, quantity: item.quantity + 1 };
+                    }
+                    return item;
+                });
+                const updatedCartProducts = { ...prevCartProducts, items: updatedCartItems };
+                return updatedCartProducts;
             } else {
                 // Produk belum ada dalam keranjang, tambahkan sebagai produk baru
-                const cartProduct = {product, sizes, quantity: 1 };
-                const newProducts = [...prevProducts, cartProduct];
-                return newProducts;
-            };
+                const newCartItem: CartItems = {
+                    product,
+                    quantity: 1,
+                    selectedSizes: sizes,
+                    totalPrices: sizes ? product.basePrice + sizes.price : product.basePrice,
+                };
+                const newItems = [...prevCartProducts.items, newCartItem];
+                const newCartProduct = { ...prevCartProducts, items: newItems };
+                return newCartProduct;
+            }
         });
 
         if (userData && userData.email && cartLoaded) {
@@ -129,13 +143,13 @@ export function CartProvider({ children }) {
     }
 
     const countTotalQty = () => {
-        const totalQuantity = cartProducts.reduce((acc, item) => acc + item.quantity, 0);
+        const totalQuantity = cartProducts.items.reduce((acc, item) => acc + item.quantity, 0);
         return setTotalQty(totalQuantity);
     }
 
     const countTotalPrice = () => {
-        const totalPrices = cartProducts.map((item) => {
-            const selectedSize = item.sizes._id;
+        const totalPrices = cartProducts.items.map((item) => {
+            const selectedSize = item.selectedSizes._id;
             const productSize = item.product.sizes.find(size => size._id === selectedSize);
             const productPrice = productSize ? productSize.price + item.product.basePrice : item.product.basePrice; 
             const quantity = item.quantity;
@@ -155,9 +169,9 @@ export function CartProvider({ children }) {
     }, [cartProducts, userData, cartLoaded]);
 
     // To avoid additional rerenders wrap the value in a useMemo hook. Use the useCallback() hook if the value is a function.
-    const cartMemo = useMemo(() => ({ cartProducts, totalQty, totalPrice, setCartProducts, addToCart, clearCart, removeFromCart, }), [
+    const cartMemo = useMemo(() => ({ cartProducts, totalQty, totalPrice, addToCart, clearCart, removeFromCart, }), [
         cartProducts, totalQty, totalPrice, 
-        setCartProducts, addToCart, clearCart, removeFromCart,
+        addToCart, clearCart, removeFromCart,
     ]);
     
     return (

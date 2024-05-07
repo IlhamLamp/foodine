@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 
 const MenuPopup: React.FC<{btnClose: any, item?: MenuItems}> = ({ btnClose, item }) => {
 
-    const { image, name, description, category, basePrice, sizes, stock, active } = item;
+    const { image, name, description, basePrice, sizes } = item;
     const [selectedSize, setSelectedSize] = useState(sizes?.[0] || null);
     const { addToCart } = useContext(CartContext);
 

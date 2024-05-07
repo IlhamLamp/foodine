@@ -38,11 +38,11 @@ const CheckoutPriceSummary: React.FC = () => {
                     <div className="w-full flex flex-col gap-2 text-right">
                         <div className="flex justify-end">
                             <div className="flex-col">
-                                <p className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
+                                <div className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <span>Subtotal Untuk Produk :</span>
                                     <span>{showPrice(transaction?.totalItemsPrice) || 0}</span>
-                                </p>
-                                <p className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
+                                </div>
+                                <div className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <Tooltip place="top" id="tooltip-goquestion" />
                                     <span className="inline-flex gap-1 items-center">
                                         Total Ongkos Kirim
@@ -53,11 +53,11 @@ const CheckoutPriceSummary: React.FC = () => {
                                         :
                                     </span>
                                     <span>{showPrice(transaction?.shippingCosts) || 0}</span>
-                                </p>
-                                <p className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
+                                </div>
+                                <div className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <span>Biaya Layanan :</span>
                                     <span>{showPrice(transaction?.serviceFee) || 0}</span>
-                                </p>
+                                </div>
                             </div>
                         </div>
                         <div className="flex justify-end">

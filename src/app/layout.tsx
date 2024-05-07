@@ -31,14 +31,14 @@ export default function RootLayout({children}: Readonly<{
         <AppProvider>
           <CartProvider>
             <ShippingProvider>  
-              <TransactionProvider>  
+              {/* <TransactionProvider>   */}
                 <Toaster />
                 <Header />
                 <main>
                   {children}
                 </main>
                 <ShoppingCart />
-              </TransactionProvider>
+              {/* </TransactionProvider> */}
             </ShippingProvider>
           </CartProvider>
         </AppProvider>

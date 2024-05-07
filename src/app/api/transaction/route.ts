@@ -43,12 +43,15 @@ export async function POST(req: NextRequest) {
             }
         }));
 
+        // Filter item yang tidak ditemukan
+        const filteredItems = mappedItems.filter(item => item !== null);
+
         const payload = {
             transaction_details: {
                 order_id: userTransactionId,
                 gross_amount: data.totalTransactionPrice,
             },
-            item_details: mappedItems,
+            item_details: filteredItems,
         }
 
         console.log(payload);

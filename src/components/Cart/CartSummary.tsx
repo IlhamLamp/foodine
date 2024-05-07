@@ -12,11 +12,11 @@ const CartSummary: React.FC = () => {
     const router = useRouter();
     const { cartProducts, totalQty, totalPrice } = useContext(CartContext);
     const { distance, costShipping } = useContext(ShippingContext);
-    const { transaction } = useContext(TransactionContext);
+    // const { transaction } = useContext(TransactionContext);
 
-    const [paymentMethod, setPaymentMethod] = useState<string>(transaction?.paymentMethod || "COD")
+    const [paymentMethod, setPaymentMethod] = useState<string>(cartProducts?.paymentMethod || "COD")
 
-    const { addCheckout } = useContext(TransactionContext);
+    // const { addCheckout } = useContext(TransactionContext);
     const distanceInKm = ShowDistanceInKilometer(distance);
 
     // formatted price
@@ -24,15 +24,15 @@ const CartSummary: React.FC = () => {
     const formattedShippingCost = formatPrice(costShipping);
     const formattedTotalCost = formatPrice(totalPrice + costShipping);
 
-    const handleCheckout = () => {
+    // const handleCheckout = () => {
 
-        if (cartProducts.length !== 0) {
-            addCheckout(paymentMethod);
-            router.push('/checkout');
-        } else {
-            return toast.error('Please add product before checkout!')
-        }
-    }
+    //     if (cartProducts.items.length !== 0) {
+    //         addCheckout(paymentMethod);
+    //         router.push('/checkout');
+    //     } else {
+    //         return toast.error('Please add product before checkout!')
+    //     }
+    // }
 
     return (
         <div id="summary" className="bg-gray-100 shadow-lg p-4 rounded-xl">
@@ -56,7 +56,7 @@ const CartSummary: React.FC = () => {
                     <span>Total cost</span>
                     <span>{ formattedTotalCost || 0 }</span>
                 </div>
-                <button className="btn-hover bg-primary font-semibold hover:bg-secondary py-3 text-sm text-white uppercase w-full" onClick={handleCheckout}>
+                <button className="btn-hover bg-primary font-semibold hover:bg-secondary py-3 text-sm text-white uppercase w-full">
                     Checkout
                 </button>
             </div>
