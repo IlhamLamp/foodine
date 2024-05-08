@@ -26,13 +26,6 @@ export type TypesCart = {
     transactionId: string;
     totalItemsQty: number;
     totalItemsPrice: number;
-    shippingAddress: string;
-    shippingCosts: number;
-    deliveryDistance: number;
-    paymentMethod: string;
-    serviceFee: number;
-    totalTransactionPrice: number;
-    status: string;
 }
 
 export type TypesCartDB = {
@@ -41,13 +34,6 @@ export type TypesCartDB = {
     transactionId: string;
     totalItemsQty: number;
     totalItemsPrice: number;
-    shippingAddress: string;
-    shippingCosts: number;
-    deliveryDistance: number;
-    paymentMethod: string;
-    serviceFee: number;
-    totalTransactionPrice: number;
-    status: string;
 }
 
 export const defaultCart: TypesCart = {
@@ -56,11 +42,4 @@ export const defaultCart: TypesCart = {
     transactionId: '', 
     totalItemsQty: 0, 
     totalItemsPrice: 0, 
-    shippingAddress: '', 
-    shippingCosts: 0, 
-    deliveryDistance: 0, 
-    paymentMethod: 'COD', 
-    serviceFee: 0, 
-    totalTransactionPrice: 0, 
-    status: 'unpaid' 
 };

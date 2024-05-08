@@ -1,16 +1,15 @@
 "use client";
 import { CartItems, defaultCart, ProductSize, TypesCart } from "@/types/cart";
 import { MenuItems } from "@/types/menu";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ProfileContext } from "./AppContext";
-import { ShippingContext } from "./ShippingContext";
 
 interface CartContextType {
     cartProducts: TypesCart;
     totalQty: number;
     totalPrice: number;
-    addToCart: (product: MenuItems, sizes?: any) => void;
+    addToCart: (product: MenuItems, sizes?: ProductSize) => void;
     removeFromCart: (productId: string, selectedSizes: ProductSize) => void;
     clearCart: () => void;
 }
@@ -18,13 +17,12 @@ interface CartContextType {
 export const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }) {
-    const { userData, userAddress } = useContext(ProfileContext);
-    const { costShipping, distance } = useContext(ShippingContext);
+    const { userData } = useContext(ProfileContext);
     // CART
     const [cartProducts, setCartProducts] = useState<TypesCart>(defaultCart);
     const [cartLoaded, setCartLoaded] = useState<boolean>(false);
-    const [totalQty, setTotalQty] = useState<number>(0);
-    const [totalPrice, setTotalPrice] = useState<number>(0);
+    const [totalQty, setTotalQty] = useState<number>(cartProducts.totalItemsQty);
+    const [totalPrice, setTotalPrice] = useState<number>(cartProducts.totalItemsPrice);
 
     const ls = typeof window !== 'undefined' ? window.localStorage : null;
 
@@ -80,12 +78,7 @@ export function CartProvider({ children }) {
 
     async function savingCartToDB() {
         if (cartProducts) {
-            const payload: TypesCart = {
-                ...cartProducts, totalItemsQty: totalQty, totalItemsPrice: totalPrice,
-                deliveryDistance: distance, shippingAddress: userAddress, shippingCosts: costShipping,
-                totalTransactionPrice: (totalPrice + costShipping),
-            };
-            
+            const payload: TypesCart = { ...cartProducts, totalItemsQty: totalQty, totalItemsPrice: totalPrice, };
             const response = await fetch('/api/cart', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -178,12 +171,11 @@ export function CartProvider({ children }) {
 
     useEffect(() => {
         updateData();
-    }, [cartProducts, userData, cartLoaded, totalQty, totalPrice]);
+    }, [cartProducts, userData, cartLoaded, totalQty, totalPrice,]);
 
     // To avoid additional rerenders wrap the value in a useMemo hook. Use the useCallback() hook if the value is a function.
     const cartMemo = useMemo(() => ({ cartProducts, totalQty, totalPrice, addToCart, clearCart, removeFromCart, }), [
-        cartProducts, totalQty, totalPrice, 
-        addToCart, clearCart, removeFromCart,
+        cartProducts, totalQty, totalPrice, addToCart, clearCart, removeFromCart,
     ]);
     
     return (

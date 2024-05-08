@@ -1,16 +1,10 @@
-import mongoose, { model, models, Schema } from "mongoose";
-
-const CheckoutItemSchema = new Schema({
-    productId: { type: mongoose.Types.ObjectId, required: true, ref: 'MenuItem'},
-    quantity: {type: Number},
-    selectedSizes: {type: String},
-    totalPrice: {type: Number},
-})
+import { model, models, Schema } from "mongoose";
+import { CartItemSchema } from "./Cart";
 
 const TransactionSchema = new Schema({
     transactionId: { type: String, unique: true, required: true },
     email: { type: String, required: true },
-    items: { type: [CheckoutItemSchema]},
+    items: { type: [CartItemSchema]},
     totalItemsQty: { type: Number },
     totalItemsPrice: { type: Number },
     shippingAddress: { type: String, required: true },

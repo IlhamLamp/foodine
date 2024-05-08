@@ -1,5 +1,6 @@
 import { CartContext } from "@/components/CartContext";
 import Close from "@/components/icons/Close";
+import { ProductSize } from "@/types/cart";
 import { MenuItems } from "@/types/menu";
 import { useContext, useState } from "react";
 import toast from "react-hot-toast";
@@ -7,7 +8,7 @@ import toast from "react-hot-toast";
 const MenuPopup: React.FC<{btnClose: any, item?: MenuItems}> = ({ btnClose, item }) => {
 
     const { image, name, description, basePrice, sizes } = item;
-    const [selectedSize, setSelectedSize] = useState(sizes?.[0] || null);
+    const [selectedSize, setSelectedSize] = useState(sizes?.[0]);
     const { addToCart } = useContext(CartContext);
 
     const handleAddToCartButtonClick = () => {
@@ -40,7 +41,7 @@ const MenuPopup: React.FC<{btnClose: any, item?: MenuItems}> = ({ btnClose, item
                         {sizes?.length > 0 && (
                             <div className="">
                                 <h3 className="text-center text-gray-700">- Pick your size -</h3>
-                                {sizes.map(size => (
+                                {sizes.map((size: ProductSize) => (
                                     <label key={size._id} className="flex bg-tertiary text-gray-800 items-center gap-2 p-2 border rounded-md mb-1">
                                         <input 
                                             type="radio"

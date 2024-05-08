@@ -8,7 +8,7 @@ import { Tooltip } from "react-tooltip";
 
 const CheckoutPriceSummary: React.FC = () => {
 
-    const { transaction, addOrderTransaction } = useContext(TransactionContext);
+    const { transaction, savingTransactionToDB } = useContext(TransactionContext);
 
     const showPrice = (price: number): string => {
         const result = formatPrice(price);
@@ -16,7 +16,7 @@ const CheckoutPriceSummary: React.FC = () => {
     }
 
     const handleTransaction = () => {
-        addOrderTransaction();
+        savingTransactionToDB();
     }
 
     return (
@@ -28,7 +28,7 @@ const CheckoutPriceSummary: React.FC = () => {
                         <span className="text-lg font-medium text-primary">Metode Pembayaran</span>
                     </div>
                     <div className="flex flex-row justify-between items-center gap-8">
-                        <span className="font-semibold">{transaction?.paymentMethod}</span>
+                        <span className="font-semibold">{transaction.paymentMethod}</span>
                         <Link href={'/cart'} className="btn-hover bg-primary hover:bg-secondary text-white rounded-full py-2 px-4 text-sm">
                             Edit
                         </Link>
@@ -40,7 +40,7 @@ const CheckoutPriceSummary: React.FC = () => {
                             <div className="flex-col">
                                 <div className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <span>Subtotal Untuk Produk :</span>
-                                    <span>{showPrice(transaction?.totalItemsPrice) || 0}</span>
+                                    <span>{showPrice(transaction.totalItemsPrice) || 0}</span>
                                 </div>
                                 <div className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <Tooltip place="top" id="tooltip-goquestion" />
@@ -52,11 +52,11 @@ const CheckoutPriceSummary: React.FC = () => {
                                             className="w-4 h-4 btn-hover text-primary hover:text-secondary cursor-pointer" />
                                         :
                                     </span>
-                                    <span>{showPrice(transaction?.shippingCosts) || 0}</span>
+                                    <span>{showPrice(transaction.shippingCosts) || 0}</span>
                                 </div>
                                 <div className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <span>Biaya Layanan :</span>
-                                    <span>{showPrice(transaction?.serviceFee) || 0}</span>
+                                    <span>{showPrice(transaction.serviceFee) || 0}</span>
                                 </div>
                             </div>
                         </div>
@@ -70,7 +70,7 @@ const CheckoutPriceSummary: React.FC = () => {
                     <hr className="mt-4" />
                     <div className="my-8 flex justify-end">
                         <button className="w-[200px] bg-primary hover:bg-secondary text-white btn-hover" onClick={handleTransaction}>
-                            {transaction?.paymentMethod === "COD" ? 'Buat' : 'Bayar'} Pesanan
+                            {transaction.paymentMethod === "COD" ? 'Buat' : 'Bayar'} Pesanan
                         </button>
                     </div>
                 </div>

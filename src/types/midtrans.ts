@@ -4,6 +4,7 @@ type TypeItemDetails = {
     quantity: number;
     name: string;
     selectedSizes?: string;
+    totalPrices?: number;
 }
 
 type TypeAddress = {
@@ -36,4 +37,9 @@ export type TypesMidtransPayload = {
     item_details: TypeItemDetails[];
     customer_details: TypeCustomerDetails;
     shipping_address?: TypeAddress;
+    callbacks: {
+        finish: string;
+        error: string;
+        pending: string;
+    }
 }

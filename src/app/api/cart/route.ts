@@ -39,7 +39,6 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     try {
         const data: TypesCart = await req.json();
-        console.log(data);
         
         // Periksa apakah email ada dalam data
         const { email, items } = data;
@@ -48,14 +47,12 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ msg: 'Invalid request data' }, { status: 400 });
         }
 
-        const formattedCart = items.map((p) => ({
+        const formattedCart = items.map((p: CartItems) => ({
             productId: p.product._id,
             quantity: p.quantity,
             selectedSizes: p.selectedSizes,
             totalPrices: (p.product.basePrice + p.selectedSizes.price) * p.quantity,
         }));
-
-        console.log(formattedCart);
 
         // Perbarui keranjang belanja
         await Cart.findOneAndUpdate({ email }, { ...data, items: formattedCart, }, { new: true });

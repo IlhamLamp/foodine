@@ -1,17 +1,10 @@
-import { ObjectId } from "mongoose";
-
-type CheckoutItem = {
-    productId: ObjectId;
-    quantity: number;
-    selectedSizes: string;
-    totalPrice: number;
-}
+import { CartItems } from "./cart";
 
 export type TypesTransaction = {
     _id?: string;
-    transactionId?: string;
+    transactionId: string;
     email: string;
-    items?: CheckoutItem[];
+    items: CartItems[];
     totalItemsQty: number;
     totalItemsPrice: number;
     shippingAddress: string;

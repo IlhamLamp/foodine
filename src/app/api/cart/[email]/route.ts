@@ -1,5 +1,6 @@
 import { Cart } from "@/models/Cart";
 import { MenuItem } from "@/models/MenuItem";
+import { TypesCartItemsDatabase } from "@/types/cart";
 import { MenuItems } from "@/types/menu";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,7 +20,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ msg: 'Cart not found' }, { status: 404 });
         }
 
-        const mappedItems = await Promise.all(cart.items.map(async (item) => {
+        const mappedItems = await Promise.all(cart.items.map(async (item: TypesCartItemsDatabase) => {
             const menuItem: MenuItems = await MenuItem.findById(item.productId);
 
             if (!menuItem) {

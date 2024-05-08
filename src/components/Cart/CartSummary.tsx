@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { CartContext } from "../CartContext";
 import { ShowDistanceInKilometer } from "@/libs/geoPosition";
 import { formatPrice } from "@/libs/formattedCurrency";
@@ -12,27 +12,25 @@ const CartSummary: React.FC = () => {
     const router = useRouter();
     const { cartProducts, totalQty, totalPrice } = useContext(CartContext);
     const { distance, costShipping } = useContext(ShippingContext);
-    // const { transaction } = useContext(TransactionContext);
+    const { addTransaction, paymentMethod, setPaymentMethod } = useContext(TransactionContext);
 
-    const [paymentMethod, setPaymentMethod] = useState<string>(cartProducts?.paymentMethod || "COD")
-
-    // const { addCheckout } = useContext(TransactionContext);
     const distanceInKm = ShowDistanceInKilometer(distance);
+
 
     // formatted price
     const formattedTotalPrice = formatPrice(totalPrice);
     const formattedShippingCost = formatPrice(costShipping);
     const formattedTotalCost = formatPrice(totalPrice + costShipping);
 
-    // const handleCheckout = () => {
+    const handleCheckout = () => {
 
-    //     if (cartProducts.items.length !== 0) {
-    //         addCheckout(paymentMethod);
-    //         router.push('/checkout');
-    //     } else {
-    //         return toast.error('Please add product before checkout!')
-    //     }
-    // }
+        if (cartProducts.items.length !== 0) {
+            addTransaction(totalPrice, costShipping, totalQty);
+            router.push('/checkout');
+        } else {
+            return toast.error('Please add product before checkout!')
+        }
+    }
 
     return (
         <div id="summary" className="bg-gray-100 shadow-lg p-4 rounded-xl">
@@ -47,8 +45,9 @@ const CartSummary: React.FC = () => {
                     <span>{ formattedShippingCost || 0}</span>
                 </label>
                 <select value={paymentMethod} onChange={(ev) => setPaymentMethod(ev.target.value)} className="block p-2 bg-gray-200 text-gray-600 w-full text-sm font-semibold">
-                    <option key={1} value={"COD"}>COD</option>
-                    <option key={2} value={"TRANSFER"}>TRANSFER</option>
+                    <option key={"COD"} value={"COD"}>COD</option>
+                    <option key={"TRANSFER"} value={"TRANSFER"}>TRANSFER</option>
+                    <option key={"E-WALLET"} value={"E-WALLET"}>E-WALLET</option>
                 </select>
             </div>
             <div className="border-t mt-8">
@@ -56,7 +55,7 @@ const CartSummary: React.FC = () => {
                     <span>Total cost</span>
                     <span>{ formattedTotalCost || 0 }</span>
                 </div>
-                <button className="btn-hover bg-primary font-semibold hover:bg-secondary py-3 text-sm text-white uppercase w-full">
+                <button className="btn-hover bg-primary font-semibold hover:bg-secondary py-3 text-sm text-white uppercase w-full" onClick={handleCheckout}>
                     Checkout
                 </button>
             </div>

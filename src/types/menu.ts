@@ -1,5 +1,4 @@
 import { ObjectId } from "mongodb";
-import { Key } from "react";
 
 export type Category = {
     _id: string;
@@ -7,7 +6,7 @@ export type Category = {
 }
 
 type ExtraPrice = {
-    _id?: string | number | Key;
+    _id?: string | number;
     name: string;
     price: number;
 }
