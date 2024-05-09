@@ -1,22 +1,17 @@
 import Link from "next/link";
-import React, { useContext } from "react";
 import { BsCreditCardFill } from "react-icons/bs";
 import { formatPrice } from "@/libs/formattedCurrency";
-import { TransactionContext } from "../TransactionContext";
 import { GoQuestion } from "react-icons/go";
 import { Tooltip } from "react-tooltip";
+import { TypesTransaction } from "@/types/transaction";
 
-const CheckoutPriceSummary: React.FC = () => {
-
-    const { transaction, savingTransactionToDB } = useContext(TransactionContext);
+const CheckoutPriceSummary: React.FC<{ transaction: TypesTransaction, handleTransaction: () => void}> = (
+    { transaction, handleTransaction }
+) => {
 
     const showPrice = (price: number): string => {
         const result = formatPrice(price);
         return result;
-    }
-
-    const handleTransaction = () => {
-        savingTransactionToDB();
     }
 
     return (

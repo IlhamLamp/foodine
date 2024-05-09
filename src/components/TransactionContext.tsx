@@ -4,14 +4,12 @@ import { createContext, useContext, useMemo, useState } from "react";
 import { ProfileContext } from "./AppContext";
 import { CartContext } from "./CartContext";
 import { ShippingContext } from "./ShippingContext";
-import toast from "react-hot-toast";
 
 interface TransactionContextType {
     paymentMethod: string;
     setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
     transaction: TypesTransaction;
     addTransaction: (totalPrice: number, costShipping: number, totalQty: number) => void;
-    savingTransactionToDB: () => void;
 }
 
 export const TransactionContext = createContext<TransactionContextType | null>(null);
@@ -27,34 +25,20 @@ export function TransactionProvider({ children }) {
 
     const [transaction, setTransaction] = useState<TypesTransaction>({
         ...cartProducts,
+        transactionId: '',
+        name: userData?.name,
         shippingAddress: userAddress,
         shippingCosts: costShipping,
         deliveryDistance: distance,
         serviceFee,
         paymentMethod,
         totalTransactionPrice: 0,
+        snapToken: '',
+        snapRedirectUrl: '',
         status: 'unpaid',
         deliveryStatus: "pending",
         returnProduct: false,
     });
-
-    const savingTransactionToDB = async() => {
-        if (transaction) {
-            try {
-                const response = await fetch('/api/transaction', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(transaction),
-                });
-                if (response.ok) {
-                    console.log("ok");
-                }
-            } catch (error) {
-                console.error('Error saving transaction:', error);
-                toast.error('An error occurred while saving transaction, please try again later');
-            }
-        } 
-    }
 
     const addTransaction = async (totalPrice: number, costShipping: number, totalQty: number,) => {
 
@@ -67,6 +51,8 @@ export function TransactionProvider({ children }) {
 
             const data: TypesTransaction = {
                 ...cartProducts,
+                transactionId: '',
+                name: userData?.name,
                 totalItemsQty: totalQty,
                 totalItemsPrice: totalPrice,
                 shippingAddress: userAddress,
@@ -75,6 +61,8 @@ export function TransactionProvider({ children }) {
                 serviceFee,
                 paymentMethod,
                 totalTransactionPrice: (totalPrice + costShipping),
+                snapToken: '',
+                snapRedirectUrl: '',
                 status: 'unpaid',
                 deliveryStatus: "pending",
                 returnProduct: false,
@@ -83,7 +71,7 @@ export function TransactionProvider({ children }) {
         }
     }
 
-    const transactionMemo = useMemo(() => ({ transaction, addTransaction, paymentMethod, setPaymentMethod, savingTransactionToDB }), [ transaction, addTransaction, paymentMethod, setPaymentMethod, savingTransactionToDB])
+    const transactionMemo = useMemo(() => ({ transaction, addTransaction, paymentMethod, setPaymentMethod }), [ transaction, addTransaction, paymentMethod, setPaymentMethod])
 
     return (
         <TransactionContext.Provider value={transactionMemo}>

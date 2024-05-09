@@ -1,4 +1,4 @@
-type TypeItemDetails = {
+export type TypeMidtransItemDetails = {
     id: string;
     price: number;
     quantity: number;
@@ -7,7 +7,7 @@ type TypeItemDetails = {
     totalPrices?: number;
 }
 
-type TypeAddress = {
+export type TypeMidtransAddress = {
     first_name: string;
     last_name: string;
     email: string;
@@ -23,7 +23,7 @@ type TypeCustomerDetails = {
     last_name: string;
     email: string;
     phone: string;
-    billing_address?: TypeAddress;
+    billing_address?: TypeMidtransAddress;
 }
 
 export type TypesMidtransPayload = {
@@ -34,12 +34,17 @@ export type TypesMidtransPayload = {
     credit_card?: {
         secure: boolean;
     };
-    item_details: TypeItemDetails[];
+    item_details: TypeMidtransItemDetails[];
     customer_details: TypeCustomerDetails;
-    shipping_address?: TypeAddress;
+    shipping_address?: TypeMidtransAddress;
     callbacks: {
         finish: string;
         error: string;
         pending: string;
     }
+}
+
+export type TypesMidtransResponse = {
+    token: string;
+    redirect_url: string;
 }

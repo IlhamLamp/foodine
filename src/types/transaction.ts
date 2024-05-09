@@ -4,6 +4,7 @@ export type TypesTransaction = {
     _id?: string;
     transactionId: string;
     email: string;
+    name: string;
     items: CartItems[];
     totalItemsQty: number;
     totalItemsPrice: number;
@@ -13,6 +14,8 @@ export type TypesTransaction = {
     deliveryStatus: string;
     paymentMethod: string;
     serviceFee: number;
+    snapToken: string;
+    snapRedirectUrl: string;
     totalTransactionPrice: number;
     status: string;
     returnProduct: boolean;

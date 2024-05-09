@@ -23,7 +23,6 @@ export type CartItems = {
 export type TypesCart = {
     email: string;
     items: CartItems[];
-    transactionId: string;
     totalItemsQty: number;
     totalItemsPrice: number;
 }
@@ -31,7 +30,6 @@ export type TypesCart = {
 export type TypesCartDB = {
     email: string;
     items: TypesCartItemsDatabase[];
-    transactionId: string;
     totalItemsQty: number;
     totalItemsPrice: number;
 }
@@ -39,7 +37,6 @@ export type TypesCartDB = {
 export const defaultCart: TypesCart = {
     email: '', 
     items: [], 
-    transactionId: '', 
     totalItemsQty: 0, 
     totalItemsPrice: 0, 
 };

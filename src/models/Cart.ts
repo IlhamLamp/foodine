@@ -16,7 +16,6 @@ export const CartItemSchema = new Schema({
 const CartSchema = new Schema({
     email: { type: String, unique: true },
     items: {type: [CartItemSchema]},
-    transactionId: { type: String, unique: true },
     totalItemsQty: { type: Number },
     totalItemsPrice: { type: Number },
 }, {timestamps: true})

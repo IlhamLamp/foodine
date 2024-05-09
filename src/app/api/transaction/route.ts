@@ -1,21 +1,27 @@
+import { midtransHelper } from "@/helpers/MidtransHelper";
+import { transactionHelper } from "@/helpers/TransactionHelper";
 import { connect } from "@/libs/dbConnect";
 import { userSplittedName } from "@/libs/formattedUser";
-import { generateTransactionId } from "@/libs/transactionHelper";
+import { generateTransactionId, itemsDB } from "@/libs/formattedTransaction";
 import { Transaction } from "@/models/Transaction";
 import { User } from "@/models/User";
 import { UserInfo } from "@/models/UserInfo";
-import { TypesMidtransPayload } from "@/types/midtrans";
+import { TypesMidtransResponse } from "@/types/midtrans";
 import { TypesTransaction } from "@/types/transaction";
 import { BasicUser, UserInformation } from "@/types/user-information";
-import { FRONT_END_URL, MIDTRANS_APP_URL, MIDTRANS_AUTH_STRING} from "@/utils/constant";
+import { MIDTRANS_APP_URL, MIDTRANS_AUTH_STRING} from "@/utils/constant";
 import { NextRequest, NextResponse } from "next/server";
+import { TypesCartItemsDatabase } from "@/types/cart";
 
 connect();
 
 export async function POST(req: NextRequest) {
     try {
         const data: TypesTransaction = await req.json();
-        const { email, items, shippingAddress, shippingCosts, totalTransactionPrice } = data;
+        const { email, items, shippingAddress, shippingCosts } = data;
+
+        const formattedCartItems: TypesCartItemsDatabase[] = await itemsDB(items);
+
         if (!email) {
             return NextResponse.json({ msg: 'Invalid request data'}, {status: 400});
         }
@@ -26,56 +32,9 @@ export async function POST(req: NextRequest) {
         const { first_name, last_name} = userName;
         const userTransactionId = generateTransactionId();
 
-        const mappedItems = await Promise.all([
-            ...items.map(async (item) => ({
-                id: item.product._id,
-                price: item.selectedSizes.price + item.product.basePrice,
-                quantity: item.quantity,
-                name: item.product.name,
-                selectedSizes: item.selectedSizes.name,
-                totalPrices: item.totalPrices,
-            })),
-            {
-                id: 'shipping',
-                price: shippingCosts, 
-                quantity: 1,
-                name: 'Shipping Cost',
-                selectedSizes: '',
-                totalPrices: shippingCosts,
-            },
-        ]);
-
-        const type_address = {
-            first_name,
-            last_name,
-            email,
-            phone: userInfo.phone,
-            address: shippingAddress,
-            city: userInfo.regencies,
-            postal_code: userInfo.postalCode,
-            country_code: 'IDN',
-        }
-
-        const payload: TypesMidtransPayload = {
-            transaction_details: {
-                order_id: userTransactionId,
-                gross_amount: totalTransactionPrice,
-            },
-            item_details: mappedItems,
-            customer_details: {
-                first_name,
-                last_name,
-                email,
-                phone: userInfo.phone,
-                billing_address: type_address,
-            },
-            shipping_address: type_address,
-            callbacks: {
-                finish: `${FRONT_END_URL}/order-status?transaction_id=${userTransactionId}`,
-                error: `${FRONT_END_URL}/order-status?transaction_id=${userTransactionId}`,
-                pending: `${FRONT_END_URL}/order-status?transaction_id=${userTransactionId}`,
-            },
-        };
+        const mappedItems = await midtransHelper.getMappedItems(items, shippingCosts);
+        const getAddress = midtransHelper.getAddress(first_name, last_name, userInfo, shippingAddress);
+        const payload = midtransHelper.createPayload(userTransactionId, data, mappedItems, first_name, last_name, userInfo, getAddress);
 
         const response = await fetch(`${MIDTRANS_APP_URL}/snap/v1/transactions`, {
             method: 'POST',
@@ -87,10 +46,20 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify(payload)
         });
 
-        const midtrans_response_data = await response.json();
-        console.log(midtrans_response_data);
-          
-        return NextResponse.json({ msg: 'Transaction created successfully' }, {status: 201});
+        if (!response.ok) {
+            return NextResponse.json({ msg: 'Failed to create transaction'}, { status: 500 });
+        }
+
+        const midtransResponseData: TypesMidtransResponse = await response.json();
+        const { token, redirect_url } = midtransResponseData;
+        
+        const transactionData = transactionHelper.createTransaction(data, formattedCartItems, userTransactionId, token, redirect_url);
+        const savedTransaction = await Transaction.create(transactionData);
+
+        return NextResponse.json(
+            { msg: 'Transaction created successfully', status: 'success', data: savedTransaction },
+            { status: 201 }
+        );
     } catch (error) {
         console.error(error);
         return NextResponse.json({ msg: 'An error occured'}, {status: 500});

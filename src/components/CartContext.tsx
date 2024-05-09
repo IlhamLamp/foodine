@@ -92,7 +92,7 @@ export function CartProvider({ children }) {
     }
 
     const clearCart = () => {
-        setCartProducts((prevCartProucts) => ({ ...prevCartProucts, items: [] }));
+        setCartProducts((prevCartProucts) => ({ ...prevCartProucts, items: [], totalItemsPrice: 0, totalItemsQty: 0 }));
     }
 
     const removeFromCart = async (productId: string, selectedSizes: ProductSize) => {
@@ -149,14 +149,14 @@ export function CartProvider({ children }) {
     }
 
     const countTotalPrice = async () => {
-        const totalPrices = cartProducts.items.map((item) => {
+        const totalPrices = await Promise.all(cartProducts.items.map(async (item) => {
             const selectedSize = item.selectedSizes._id;
             const productSize = item.product.sizes.find(size => size._id === selectedSize);
             const productPrice = productSize ? productSize.price + item.product.basePrice : item.product.basePrice; 
             const quantity = item.quantity;
             const totalPricePerItem = productPrice * quantity;
             return totalPricePerItem;
-        });
+        }));
         const totalCartPrice = totalPrices.reduce((acc, price) => acc + price, 0);
         setTotalPrice(totalCartPrice);  
     }
