@@ -9,6 +9,7 @@ interface TransactionContextType {
     paymentMethod: string;
     setPaymentMethod: React.Dispatch<React.SetStateAction<string>>;
     transaction: TypesTransaction;
+    clearTransaction: () => void;
     addTransaction: (totalPrice: number, costShipping: number, totalQty: number) => void;
 }
 
@@ -23,7 +24,7 @@ export function TransactionProvider({ children }) {
     const [paymentMethod, setPaymentMethod] = useState<string>("COD");
     const serviceFee: number = 0;
 
-    const [transaction, setTransaction] = useState<TypesTransaction>({
+    const initTransactionValue: TypesTransaction = {
         ...cartProducts,
         transactionId: '',
         name: userData?.name,
@@ -37,8 +38,10 @@ export function TransactionProvider({ children }) {
         snapRedirectUrl: '',
         status: 'unpaid',
         deliveryStatus: "pending",
-        returnProduct: false,
-    });
+        returnProduct: false,   
+    }
+
+    const [transaction, setTransaction] = useState<TypesTransaction>(initTransactionValue);
 
     const addTransaction = async (totalPrice: number, costShipping: number, totalQty: number,) => {
 
@@ -69,9 +72,13 @@ export function TransactionProvider({ children }) {
             };
             setTransaction(data);
         }
+    };
+
+    const clearTransaction = () => {
+        setTransaction(initTransactionValue);
     }
 
-    const transactionMemo = useMemo(() => ({ transaction, addTransaction, paymentMethod, setPaymentMethod }), [ transaction, addTransaction, paymentMethod, setPaymentMethod])
+    const transactionMemo = useMemo(() => ({ transaction, addTransaction, paymentMethod, setPaymentMethod, clearTransaction }), [ transaction, addTransaction, paymentMethod, setPaymentMethod, clearTransaction])
 
     return (
         <TransactionContext.Provider value={transactionMemo}>

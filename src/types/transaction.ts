@@ -1,4 +1,4 @@
-import { CartItems } from "./cart";
+import { CartItems, TypesCartItemsDatabase } from "./cart";
 
 export type TypesTransaction = {
     _id?: string;
@@ -20,3 +20,5 @@ export type TypesTransaction = {
     status: string;
     returnProduct: boolean;
 }
+
+export type TypesTransactionDB = Omit<TypesTransaction, 'items'> & { items: TypesCartItemsDatabase[] };

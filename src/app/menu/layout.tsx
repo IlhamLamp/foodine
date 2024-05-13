@@ -17,7 +17,7 @@ export default function RootLayout({children}: Readonly<{
   return (
     <section className="mt-24 mb-6 mx-auto bg-gray-50">
         <div className="max-w-6xl mx-auto">
-            {children}
+          {children}
         </div>
     </section>
   )

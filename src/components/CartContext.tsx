@@ -93,6 +93,7 @@ export function CartProvider({ children }) {
 
     const clearCart = () => {
         setCartProducts((prevCartProucts) => ({ ...prevCartProucts, items: [], totalItemsPrice: 0, totalItemsQty: 0 }));
+        console.log("Successfully delete cart");
     }
 
     const removeFromCart = async (productId: string, selectedSizes: ProductSize) => {

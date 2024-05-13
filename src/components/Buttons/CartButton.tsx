@@ -4,10 +4,15 @@ import { useContext } from "react";
 import { IoCartOutline } from "react-icons/io5";
 import { CartContext } from "../CartContext";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const ShoppingCart: React.FC = () => {
-
+    const path = usePathname();
     const { totalQty } = useContext(CartContext);
+
+    if (path === '/checkout') {
+        return null;
+    }
 
     return (
         <Link href={'/cart'} className={`

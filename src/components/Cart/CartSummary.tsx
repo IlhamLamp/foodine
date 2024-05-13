@@ -45,9 +45,8 @@ const CartSummary: React.FC = () => {
                     <span>{ formattedShippingCost || 0}</span>
                 </label>
                 <select value={paymentMethod} onChange={(ev) => setPaymentMethod(ev.target.value)} className="block p-2 bg-gray-200 text-gray-600 w-full text-sm font-semibold">
-                    <option key={"COD"} value={"COD"}>COD</option>
-                    <option key={"TRANSFER"} value={"TRANSFER"}>TRANSFER</option>
-                    <option key={"E-WALLET"} value={"E-WALLET"}>E-WALLET</option>
+                    <option key={"COD"} value={"COD"}>Cash On Delivery</option>
+                    <option key={"TRANSFER"} value={"TRANSFER"}>E-Wallet/Transfer/VA</option>
                 </select>
             </div>
             <div className="border-t mt-8">
