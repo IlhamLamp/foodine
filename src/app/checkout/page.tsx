@@ -40,22 +40,26 @@ const CheckoutPage: React.FC = () => {
                     clearTransaction();
                     setSnapShow(true);
                     snapEmbed(response.data.snapToken, 'snap-container', {
-                        onSuccess: (result) => {
+                        onSuccess: async (result) => {
                             // kenapa route nya tidak berubah ya
                             console.log('Sucess', result);
+                            await updateTransaction(response.data.transactionId, 'settlement', result);
                             router.push(`/order-status?transaction_id=${response.data.transactionId}&transaction_status=settlement`);
                             setSnapShow(false);
                         },
-                        onPending: (result) => {
+                        onPending: async (result) => {
                             console.log('Pending', result);
+                            await updateTransaction(response.data.transactionId, 'pending', result);
                             router.push(`/order-status?transaction_id=${response.data.transactionId}&transaction_status=pending`);
                             setSnapShow(false);
                         },
-                        onError: (result) => {
+                        onError: async (result) => {
                             console.log('Failed', result);
+                            await updateTransaction(response.data.transactionId, 'failed', result);
                             router.push(`/order-status?transaction_id=${response.data.transactionId}&transaction_status=failed`);
                         },
-                        onClose: () => {
+                        onClose: async () => {
+                            await updateTransaction(response.data.transactionId, 'failed');
                             router.push(`/order-status?transaction_id=${response.data.transactionId}&transaction_status=failed`);
                             setSnapShow(false);
                         }
@@ -69,6 +73,28 @@ const CheckoutPage: React.FC = () => {
                 return toast.error('An error occurred while saving transaction, please try again later');
             }
         } 
+    }
+
+    const updateTransaction = async (transaction_id: string, status: string, data?: any) => {
+
+        if (!transaction_id) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/transaction`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ transaction_id, status, data }),
+            })
+            if (!response.ok) {
+                console.log('Failed update transaction');
+                return;
+            }
+            console.log(`Transaction ${transaction_id} status updated to ${status}`);
+        } catch (error) {
+            console.error('Error updating transaction: ', error);
+        }
     }
 
 

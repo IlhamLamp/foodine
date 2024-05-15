@@ -3,22 +3,30 @@ import OrderStatusFailed from "@/components/Order/status/order-status-failed";
 import OrderStatusPending from "@/components/Order/status/order-status-pending";
 import OrderStatusSuccess from "@/components/Order/status/order-status-success";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface MidtransSearchParams {
     order_id: string;
     status_code: string;
     transaction_id: string;
-    transaction_status: string;
+    transaction_status: string; 
 }
 
-const OrderStatusPage: React.FC = () => {    
+const OrderStatusPage: React.FC = () => {
 
     const searchParams = useSearchParams();
     const order_id = searchParams.get('order_id');
     const status_code = searchParams.get('status_code');
     const transaction_id = searchParams.get('transaction_id');
     const transaction_status = searchParams.get('transaction_status');
+
+    // const getTransaction = React.useCallback( async (transaction_id: string) => {
+    //     if (!transaction_id) return null;
+    // }, [])
+
+    // useEffect(() => {
+
+    // }, [getTransaction, searchParams])
 
     const renderContent = React.useCallback(() => {
         switch(transaction_status) {
@@ -31,7 +39,7 @@ const OrderStatusPage: React.FC = () => {
             default:
                 return null;
         }
-    }, [transaction_status])
+    }, [searchParams])
 
 
     return (

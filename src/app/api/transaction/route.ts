@@ -7,7 +7,7 @@ import { Transaction } from "@/models/Transaction";
 import { User } from "@/models/User";
 import { UserInfo } from "@/models/UserInfo";
 import { TypesMidtransResponse } from "@/types/midtrans";
-import { TypesTransaction } from "@/types/transaction";
+import { TypesTransaction, TypesTransactionDB } from "@/types/transaction";
 import { BasicUser, UserInformation } from "@/types/user-information";
 import { MIDTRANS_APP_URL, MIDTRANS_AUTH_STRING} from "@/utils/constant";
 import { NextRequest, NextResponse } from "next/server";
@@ -68,9 +68,28 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
+        const reqData = await req.json();
+        const { transaction_id, status, data } = reqData;
+        const { payment_type, transaction_status } = data;
+
+        let deliveryStatus: string;
+
+        if (transaction_status === 'settlement') {
+            deliveryStatus = 'packed';
+        } else if (transaction_status === 'pending') {
+            deliveryStatus = 'pending';
+        } else {
+            deliveryStatus = 'failed';
+        }
+
+        const transaction: TypesTransactionDB = await Transaction.findOneAndUpdate(
+            { transactionId: transaction_id },
+            { $set: { status: transaction_status, paymentMethod: payment_type, deliveryStatus }},
+            { new: true },
+        );
         return NextResponse.json({ msg: 'Transaction updated succesfully' }, {status: 201});
     } catch (error) {
         console.error(error);
         return NextResponse.json({msg: 'An error has occured'}, {status: 500});
-    }
+    }   
 }

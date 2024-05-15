@@ -61,7 +61,7 @@ export class MidtransHelper {
             }, 
         };
         return payload;
-    }
+    };
 }
 
 export const midtransHelper = new MidtransHelper();

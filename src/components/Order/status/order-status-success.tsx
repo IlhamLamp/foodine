@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { FaRegCopy } from "react-icons/fa6";
 import CopyToClipboard from "react-copy-to-clipboard";
+import ShowHistoryButton from "../Button/ShowHistoryButton";
 
 const CustomStepper = dynamic(() => import('../OrderStepper'), {
     ssr: false,
@@ -13,10 +14,11 @@ const OrderStatusSuccess: React.FC<{ transactionID: string }> = ({ transactionID
     const [clipboard, setClipboard] = useState<boolean>(false);
 
     return (
-        <div className="w-full bg-success rounded-xl">
+        <div className="w-full bg-success rounded-xl relative">
             <div className="flex flex-col items-center p-8">
+                <ShowHistoryButton />
                 <div className="flex flex-row gap-2 text-xs text-gray-100 cursor-default">
-                    <span>Your order: { transactionID }</span> 
+                    <span>Order ID: { transactionID }</span> 
                     <span>
                         <CopyToClipboard text={transactionID} onCopy={() => setClipboard(true)}>
                             <FaRegCopy className="cursor-pointer" />

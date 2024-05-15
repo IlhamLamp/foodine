@@ -37,7 +37,7 @@ export function TransactionProvider({ children }) {
         snapToken: '',
         snapRedirectUrl: '',
         status: 'unpaid',
-        deliveryStatus: "pending",
+        deliveryStatus: 'pending',
         returnProduct: false,   
     }
 
@@ -67,7 +67,7 @@ export function TransactionProvider({ children }) {
                 snapToken: '',
                 snapRedirectUrl: '',
                 status: 'unpaid',
-                deliveryStatus: "pending",
+                deliveryStatus: 'pending',
                 returnProduct: false,
             };
             setTransaction(data);

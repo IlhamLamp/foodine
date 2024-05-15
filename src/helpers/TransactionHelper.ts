@@ -1,5 +1,5 @@
 import { TypesCartItemsDatabase } from "@/types/cart";
-import { TypesTransaction } from "@/types/transaction";
+import { TypesTransaction, TypesTransactionDB } from "@/types/transaction";
 
 export class TransactionHelper {
     createTransaction(data: TypesTransaction, items: TypesCartItemsDatabase[], userTransactionId: string, token: string, redirect_url: string) {
@@ -13,17 +13,17 @@ export class TransactionHelper {
             shippingAddress: data.shippingAddress,
             shippingCosts: data.shippingCosts,
             deliveryDistance: data.deliveryDistance,
-            deliveryStatus: "packed",
+            deliveryStatus: data.deliveryStatus,
             paymentMethod: data.paymentMethod,
             serviceFee: data.serviceFee,
             snapToken: token,
             snapRedirectUrl: redirect_url,
             totalTransactionPrice: data.totalTransactionPrice,
-            status: "pending",
+            status: data.status,
             returnProduct: false,
         };
         return response;
-    }
+    };
 }
 
 export const transactionHelper = new TransactionHelper();

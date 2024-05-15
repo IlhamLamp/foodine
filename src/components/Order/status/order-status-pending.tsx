@@ -3,6 +3,7 @@ import { useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { FaRegCopy } from "react-icons/fa6";
 import { MdMoreTime } from "react-icons/md";
+import ShowHistoryButton from "../Button/ShowHistoryButton";
 
 const PendingStepper = dynamic(() => import('../OrderStepper'), {
     ssr: false,
@@ -13,10 +14,11 @@ const OrderStatusPending: React.FC<{ transactionID: string }> = ({ transactionID
     const [clipboard, setClipboard] = useState<boolean>(false);
 
     return (
-        <div className="w-full h-1/2 bg-pending rounded-xl">
+        <div className="w-full h-1/2 bg-pending rounded-xl relative">
             <div className="flex flex-col items-center p-8">
+                <ShowHistoryButton />
                 <div className="flex flex-row gap-2 text-xs text-gray-100 cursor-default">
-                    <span>Your order: { transactionID }</span> 
+                    <span>Order ID: { transactionID }</span> 
                     <span>
                         <CopyToClipboard text={transactionID} onCopy={() => setClipboard(true)}>
                             <FaRegCopy className="cursor-pointer" />
