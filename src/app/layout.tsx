@@ -8,6 +8,7 @@ import ShoppingCart from "@/components/Buttons/CartButton";
 import { CartProvider } from "@/components/CartContext";
 import { TransactionProvider } from "@/components/TransactionContext";
 import { ShippingProvider } from "@/components/ShippingContext";
+import { OrderProvider } from "@/components/OrderContext";
 
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '700'] });
 
@@ -31,13 +32,15 @@ export default function RootLayout({children}: Readonly<{
         <AppProvider>
           <ShippingProvider>  
             <CartProvider>
-              <TransactionProvider>  
-                <Toaster />
-                <Header />
-                <main>
-                  {children}
-                </main>
-                <ShoppingCart />
+              <TransactionProvider>
+                <OrderProvider>
+                  <Toaster />
+                  <Header />
+                  <main>
+                    {children}
+                  </main>
+                  <ShoppingCart />
+                </OrderProvider>
               </TransactionProvider>
             </CartProvider>
           </ShippingProvider>

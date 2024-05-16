@@ -5,10 +5,12 @@ import User from "../icons/User";
 import { Keys } from "../icons/Symbol";
 import { useContext } from "react";
 import { CartContext } from "../CartContext";
+import { OrderContext } from "../OrderContext";
 
 export default function ProfileDropdown({status, name, images, email}) {
 
-    const { totalQty } = useContext(CartContext)
+    const { totalQty } = useContext(CartContext);
+    const { order } = useContext(OrderContext)
 
     const handleLogout = () => {
         const logout = signOut();
@@ -45,10 +47,10 @@ export default function ProfileDropdown({status, name, images, email}) {
                     <span className="text-3xl font-semibold">{totalQty || 0}</span>
                     <span className="text-sm text-slate-400">Cart</span>
                 </Link>
-                <div className="flex flex-col items-center justify-center">
-                    <span className="text-3xl font-semibold">0</span>
+                <Link href={'/dashboard/orders'} className="flex flex-col items-center justify-center">
+                    <span className="text-3xl font-semibold">{ order?.length || 0}</span>
                     <span className="text-sm text-slate-400">Order</span>
-                </div>
+                </Link>
             </div>
             <div className="border-t border-slate-500/30"></div>
             { status === 'authenticated' && (

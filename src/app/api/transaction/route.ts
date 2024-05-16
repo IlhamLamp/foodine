@@ -15,6 +15,15 @@ import { TypesCartItemsDatabase } from "@/types/cart";
 
 connect();
 
+export async function GET(req: NextRequest) {
+    // try {
+    //     const userOrderHistory = await 
+    // } catch (error) {
+    //     console.error(error);
+    //     return NextResponse.json({ error: 'An error occurred' }, { status: 500 }); 
+    // }
+}
+
 export async function POST(req: NextRequest) {
     try {
         const data: TypesTransaction = await req.json();
