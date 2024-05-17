@@ -1,4 +1,5 @@
 "use client";
+import { ProfileContext } from "@/components/AppContext";
 import { CartContext } from "@/components/CartContext";
 import CheckoutPriceSummary from "@/components/Checkout/CheckoutPriceSummary";
 import CheckoutProductDetails from "@/components/Checkout/CheckoutProductDetails";
@@ -21,6 +22,7 @@ const CheckoutPage: React.FC = () => {
     const router = useRouter();
     const [snapShow, setSnapShow] = useState<boolean>(false);
 
+    const { userData, userAddress } = useContext(ProfileContext);
     const { clearCart } = useContext(CartContext);
     const {transaction, clearTransaction } = useContext(TransactionContext);
     const { snapEmbed } = useSnap();
@@ -103,7 +105,7 @@ const CheckoutPage: React.FC = () => {
             { !snapShow && (
                 <div className="max-w-6xl mx-auto">
                     <div className="flex flex-col gap-4">
-                        <CheckoutProfileAddress />
+                        <CheckoutProfileAddress userData={userData} userAddress={userAddress} />
                         <CheckoutProductDetails />
                         <CheckoutPriceSummary transaction={transaction} handleTransaction={handleTransaction} />
                     </div>

@@ -1,12 +1,9 @@
 import Kop from "./Button/Kop";
 import { FaLocationDot } from "react-icons/fa6";
-import { useContext } from "react";
-import { ProfileContext } from "../AppContext";
 import Link from "next/link";
+import { UserInformation } from "@/types/user-information";
 
-const CheckoutProfileAddress : React.FC = () => {
-
-    const { userData, userAddress } = useContext(ProfileContext);
+const CheckoutProfileAddress: React.FC<{ userData: UserInformation, userAddress: string}> = ({ userData, userAddress}) => {
  
     return (
         <div className="w-full mt-10 bg-white">

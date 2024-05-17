@@ -4,7 +4,8 @@ import { CartItemSchema } from "./Cart";
 const TransactionSchema = new Schema({
     transactionId: { type: String, unique: true, required: true },
     email: { type: String, required: true, index: true },
-    name: { type: String},
+    name: { type: String },
+    phone: { type: String },
     items: { type: [CartItemSchema]},
     totalItemsQty: { type: Number },
     totalItemsPrice: { type: Number },

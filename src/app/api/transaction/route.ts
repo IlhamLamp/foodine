@@ -34,11 +34,12 @@ export async function POST(req: NextRequest) {
         if (!email) {
             return NextResponse.json({ msg: 'Invalid request data'}, {status: 400});
         }
-        const user: BasicUser = await User.findOne({ email });
-        const userInfo: UserInformation = await UserInfo.findOne({ email });
+        const user: BasicUser = await User.findOne({ email }).lean();
+        const userInfo: UserInformation = await UserInfo.findOne({ email }).lean();
 
         const userName = userSplittedName(user.name);
         const { first_name, last_name} = userName;
+        // GENERATE
         const userTransactionId = generateTransactionId();
 
         const mappedItems = await midtransHelper.getMappedItems(items, shippingCosts);

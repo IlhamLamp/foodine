@@ -7,6 +7,7 @@ export class TransactionHelper {
             transactionId: userTransactionId,
             email: data.email,
             name: data.name,
+            phone: data.phone,
             items,
             totalItemsQty: data.totalItemsQty,
             totalItemsPrice: data.totalItemsPrice,

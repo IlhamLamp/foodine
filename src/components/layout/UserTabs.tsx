@@ -18,7 +18,7 @@ export default function UserTabs() {
                     <Link href={'/dashboard/users'} className={path.includes('/dashboard/users') ? 'active' : ''}>Users</Link>
                 </>
             )}
-            <Link href={'/dashboard/orders'} className={path === '/dashboard/orders' ? 'active' : ''}>Orders</Link>
+            <Link href={'/dashboard/orders'} className={path.includes('/dashboard/orders') ? 'active' : ''}>Orders</Link>
         </div>
     )
 }

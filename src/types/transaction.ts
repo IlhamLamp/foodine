@@ -5,6 +5,7 @@ export type TypesTransaction = {
     transactionId: string;
     email: string;
     name: string;
+    phone: string;
     items: CartItems[];
     totalItemsQty: number;
     totalItemsPrice: number;
@@ -19,6 +20,8 @@ export type TypesTransaction = {
     totalTransactionPrice: number;
     status: string;
     returnProduct: boolean;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export type TypesTransactionDB = Omit<TypesTransaction, 'items'> & { items: TypesCartItemsDatabase[] };

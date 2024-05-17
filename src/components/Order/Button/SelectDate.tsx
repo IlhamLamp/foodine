@@ -13,7 +13,6 @@ const SelectDate: React.FC = () => {
     const inputProps = {
         placeholder: 'Select Date',
         disabled: false,
-        // onMouseLeave: () => alert('You went to the input but it was disabled')
     }
   
     return (
