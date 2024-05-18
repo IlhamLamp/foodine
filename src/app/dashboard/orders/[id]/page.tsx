@@ -5,6 +5,7 @@ import TransactionProfileAddress from "@/components/Order/History/invoice/Transa
 import { OrderContext } from "@/components/OrderContext";
 import { useParams, useRouter } from "next/navigation";
 import { useContext } from "react";
+import { FaBackspace } from "react-icons/fa";
 
 const OrderByTransactionIdPage: React.FC = () => {
 
@@ -15,7 +16,10 @@ const OrderByTransactionIdPage: React.FC = () => {
     
 
     return (
-        <div id="order-by-transaction-id-page" className="mt-6">
+        <div id="order-by-transaction-id-page">
+            <div className="flex justify-between">
+                <FaBackspace className="w-10 h-10 text-red-400 cursor-pointer" onClick={() => router.back()} />
+            </div>
             <div className="max-w-6xl mx-auto p-6 bg-gray-100 rounded-lg">
                 <div className="flex flex-col gap-4">
                     <TransactionProfileAddress transaction={orderID} />
