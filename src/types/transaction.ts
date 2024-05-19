@@ -25,3 +25,11 @@ export type TypesTransaction = {
 }
 
 export type TypesTransactionDB = Omit<TypesTransaction, 'items'> & { items: TypesCartItemsDatabase[] };
+
+export type TypesTransactionPagination = {
+    error: false;
+    total: number;
+    page: number;
+    per_page: number;
+    data: TypesTransaction[],
+}

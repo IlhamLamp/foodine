@@ -1,6 +1,5 @@
 import { MenuItem } from "@/models/MenuItem";
 import { Transaction } from "@/models/Transaction";
-import { CartItems, TypesCartItemsDatabase } from "@/types/cart";
 import { TypesOrderHistoryDB } from "@/types/order";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -24,7 +23,6 @@ export async function GET(req: NextRequest) {
                 })),   
             }
         })
-        console.log(transformedOrderHistory);
         return NextResponse.json({msg: 'ok', data: transformedOrderHistory}, {status: 200});
     } catch (error) {
         console.error(error);

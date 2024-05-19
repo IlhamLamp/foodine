@@ -12,16 +12,60 @@ import { BasicUser, UserInformation } from "@/types/user-information";
 import { MIDTRANS_APP_URL, MIDTRANS_AUTH_STRING} from "@/utils/constant";
 import { NextRequest, NextResponse } from "next/server";
 import { TypesCartItemsDatabase } from "@/types/cart";
+import { TypesOrderHistoryDB } from "@/types/order";
+import { MenuItem } from "@/models/MenuItem";
 
 connect();
 
+interface UserQuery {
+    transactionId?: { $regex: RegExp};
+}
+
 export async function GET(req: NextRequest) {
-    // try {
-    //     const userOrderHistory = await 
-    // } catch (error) {
-    //     console.error(error);
-    //     return NextResponse.json({ error: 'An error occurred' }, { status: 500 }); 
-    // }
+    const { searchParams } = new URL(req?.url);
+    const page = parseInt(searchParams.get('page'), 10);
+    const per_page = parseInt(searchParams.get('per_page'), 10);
+    const search = searchParams.get('search')?.trim() || "";
+    const status = searchParams.get('status');
+
+    try {
+        if (isNaN(page) || page < 1) {
+            throw new Error('Invalid page number');
+        };
+        const skip = (page - 1) * per_page;
+        const query: UserQuery = {};
+        if (search !== "") {
+            query.transactionId = { $regex: new RegExp(search, 'i')};
+        };
+        const userOrderHistory: TypesOrderHistoryDB = await Transaction.find(query).skip(skip).limit(per_page).lean();
+        const allProductsIds = userOrderHistory.flatMap((transaction) => transaction.items.map((item) => item.productId));
+        const menuItems = await MenuItem.find({ '_id': { '$in': allProductsIds }});
+        const productMap = menuItems.reduce((acc, item) => {
+            acc[item._id.toString()] = item;
+            return acc;
+        }, {});
+        const transformedOrderHistory = userOrderHistory.map((transaction) => {
+            return {
+                ...transaction,
+                items: transaction.items.map((item) => ({
+                    ...item,
+                    product: productMap[item.productId.toString()],
+                })),   
+            }
+        });
+        const total = await Transaction.countDocuments(query);
+        const response = {
+            error: false,
+            total,
+            page,
+            per_page,
+            data: transformedOrderHistory,
+        }
+        return NextResponse.json(response, {status: 200});
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({ error: 'An error occurred' }, { status: 500 }); 
+    }
 }
 
 export async function POST(req: NextRequest) {

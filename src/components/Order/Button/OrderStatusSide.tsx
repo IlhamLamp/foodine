@@ -31,12 +31,12 @@ const OrderStatusSide: React.FC = () => {
             </div>
             { PublicTransactionStatus.map((s) => (
                 <div key={s.status} className={`p-2 text-sm rounded-lg ${selectedDeliveryStatus === s.status ? 'bg-gray-200' : ''}`}>
-                <label htmlFor={s.status} className="cursor-pointer w-full flex flex-row items-center mx-auto">
-                    {selectedDeliveryStatus === s.status ? <span><IoCaretForward /></span> : ''}
-                    {s.status}
-                    <input type="radio" id={s.status} name="status" value={s.status} checked={selectedDeliveryStatus === s.status} onChange={handleSelectedStatus} className="cursor-pointer bg-canvas hidden"/>
-                </label>
-            </div>
+                    <label htmlFor={s.status} className="cursor-pointer w-full flex flex-row items-center mx-auto">
+                        {selectedDeliveryStatus === s.status ? <span><IoCaretForward /></span> : ''}
+                        {s.status}
+                        <input type="radio" id={s.status} name="status" value={s.status} checked={selectedDeliveryStatus === s.status} onChange={handleSelectedStatus} className="cursor-pointer bg-canvas hidden"/>
+                    </label>
+                </div>
             ))}
         </div>
     )

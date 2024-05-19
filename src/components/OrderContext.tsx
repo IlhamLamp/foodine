@@ -16,18 +16,16 @@ export function OrderProvider({ children }) {
 
     useEffect(() => {
         const fetchOrderHistory = async () => {
-            if (userData) {
-                if (!userData.admin) {
-                    const response = await fetch(`/api/transaction/me?email=${userData.email}`); 
-                    if (!response.ok) {
-                        console.log('Failed get user order history');
-                    }
-                    if (response.ok) {
-                        const orderData = await response.json();
-                        setOrder(orderData.data);
-                    }
+            if (userData && userData.email) {
+                const response = await fetch(`/api/transaction/me?email=${userData.email}`); 
+                if (!response.ok) {
+                    console.log('Failed get user order history');
                 }
-            }
+                if (response.ok) {
+                    const orderData = await response.json();
+                    setOrder(orderData.data);
+                }
+            };
         };
         fetchOrderHistory();
     }, [userData]);

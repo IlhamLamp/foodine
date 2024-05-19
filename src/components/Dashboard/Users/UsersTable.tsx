@@ -73,5 +73,5 @@ export default function UsersTable ({ users, prevPage, perPage, page } : Readonl
                 ))}
             </tbody>
         </table>
-  );
+    );
 };
