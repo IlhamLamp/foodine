@@ -19,14 +19,15 @@ connect();
 
 interface UserQuery {
     transactionId?: { $regex: RegExp};
+    status?: string;
 }
 
 export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req?.url);
-    const page = parseInt(searchParams.get('page'), 10);
-    const per_page = parseInt(searchParams.get('per_page'), 10);
+    const page = parseInt(searchParams.get('page'), 10) || 1;
+    const per_page = parseInt(searchParams.get('per_page'), 10) || 5;
     const search = searchParams.get('search')?.trim() || "";
-    const status = searchParams.get('status');
+    const status = searchParams.get('status') || "All";
 
     try {
         if (isNaN(page) || page < 1) {
@@ -37,6 +38,9 @@ export async function GET(req: NextRequest) {
         if (search !== "") {
             query.transactionId = { $regex: new RegExp(search, 'i')};
         };
+        if (status !== "All") {
+            query.status = status;
+        }
         const userOrderHistory: TypesOrderHistoryDB = await Transaction.find(query).skip(skip).limit(per_page).lean();
         const allProductsIds = userOrderHistory.flatMap((transaction) => transaction.items.map((item) => item.productId));
         const menuItems = await MenuItem.find({ '_id': { '$in': allProductsIds }});

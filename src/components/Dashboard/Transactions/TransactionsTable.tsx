@@ -3,7 +3,7 @@ import { formatPrice } from "@/libs/formattedCurrency";
 import { TypesOrderHistory } from "@/types/order";
 import moment from "moment";
 
-const TransactionsTable: React.FC<{ orders: TypesOrderHistory }> = ({ orders }) => {
+const TransactionsTable: React.FC<{ orders: TypesOrderHistory; page: number; prevPage: number; perPage: number;}> = ({ orders, page, prevPage, perPage }) => {
 
     return (
         <table className="w-full text-sm text-left text-gray-500">
@@ -24,7 +24,7 @@ const TransactionsTable: React.FC<{ orders: TypesOrderHistory }> = ({ orders }) 
             <tbody className="text-xs text-center">
                 { orders.map((order, index) => (
                     <tr key={order._id} className="bg-white border-b">
-                    <td className="py-3 px-3">{index}</td>
+                    <td className="py-3 px-3">{page === 1 ? index + 1 : (prevPage * perPage) + (index + 1)}</td>
                     <td className="py-3 px-3">{order.name}</td>
                     <td className="py-3 px-3">{order.email}</td>
                     <td className="py-3 px-3">{formatPrice(order.totalTransactionPrice)}</td>
@@ -33,16 +33,6 @@ const TransactionsTable: React.FC<{ orders: TypesOrderHistory }> = ({ orders }) 
                     <td className="py-3 px-3"><MiniStatusButton status={order.status} /></td>
                     <td className="py-3 px-3">{order.transactionId}</td>
                     <td className="py-3 px-3">{moment(order.createdAt).format('LLL')}</td>
-                    {/* <td className="py-3 px-6">{page === 1 ? index + 1 : (prevPage * perPage) + (index + 1)}</td>
-                    <td className="py-3 px-6">{order.name}</td>
-                    <td className="py-3 px-6">{order.email}</td>
-                    <td className="py-3 px-6">
-                        {moment(order.createdAt).format('LL') || ''}
-                    </td>
-                    <td className="flex mx-auto justify-center w-[100px] gap-1 py-3">
-                        <EditButton id={order._id} />
-                        <DeleteButton label={<Trash />} onDelete={() => handleDeleteClick(user._id)} />
-                    </td> */}
                     </tr>
                 ))}
             </tbody>

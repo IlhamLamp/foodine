@@ -13,7 +13,7 @@ import { IoAddSharp } from "react-icons/io5";
 export default function UsersPage ({ searchParams} : Readonly<{
     searchParams?: {
         query?: string;
-        page?: string
+        page?: number;
     };
 }>) {
     const { loading, data } = UseProfile();
