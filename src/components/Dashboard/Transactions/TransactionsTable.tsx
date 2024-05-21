@@ -2,8 +2,14 @@ import MiniStatusButton from "@/components/Order/Button/MiniStatusButton";
 import { formatPrice } from "@/libs/formattedCurrency";
 import { TypesOrderHistory } from "@/types/order";
 import moment from "moment";
+import { useRouter } from "next/navigation";
+import CopyToClipboard from "react-copy-to-clipboard";
+import toast from "react-hot-toast";
+import { TbEyeSearch, TbTrashXFilled } from "react-icons/tb";
 
 const TransactionsTable: React.FC<{ orders: TypesOrderHistory; page: number; prevPage: number; perPage: number;}> = ({ orders, page, prevPage, perPage }) => {
+
+    const router = useRouter();
 
     return (
         <table className="w-full text-sm text-left text-gray-500">
@@ -31,8 +37,16 @@ const TransactionsTable: React.FC<{ orders: TypesOrderHistory; page: number; pre
                     <td className="py-3 px-3">{order.totalItemsQty}</td>
                     <td className="py-3 px-3">{order.paymentMethod}</td>
                     <td className="py-3 px-3"><MiniStatusButton status={order.status} /></td>
-                    <td className="py-3 px-3">{order.transactionId}</td>
-                    <td className="py-3 px-3">{moment(order.createdAt).format('LLL')}</td>
+                    <td className="py-3 px-3 cursor-pointer">
+                        <CopyToClipboard text={order.transactionId} onCopy={() => toast.success(`${order.transactionId} Copied!`)}>
+                            <span>{order.transactionId}</span>
+                        </CopyToClipboard>
+                    </td>
+                    <td className="py-3 px-3">{moment(order.updatedAt).format('LLL')}</td>
+                    <td className="py-3 px-3 flex mx-auto justify-center items-center gap-2">
+                        <TbEyeSearch className="w-5 h-5 text-slate-800 cursor-pointer" onClick={() => router.push(`/dashboard/transactions/${order.transactionId}`)} />
+                        <TbTrashXFilled className="w-5 h-5 text-red-500 cursor-pointer" />
+                    </td>
                     </tr>
                 ))}
             </tbody>

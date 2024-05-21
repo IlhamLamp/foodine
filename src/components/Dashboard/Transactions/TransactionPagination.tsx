@@ -27,7 +27,7 @@ const TransactionPagination: React.FC<PaginationProps> = ({
         <div className="flex justify-center items-center mx-auto mt-5">
             <div className="flex border-[1px] gap-4 rounded-[10px] border-primary h-14 items-center">
                 { page === 1 ? (
-                    <div className="opacity-60 cursor-not-allowed flex items-center bg-primary size-full p-3 rounded-l-lg" aria-disabled="true">
+                    <div className="cursor-not-allowed flex items-center bg-secondary size-full p-3 rounded-l-lg" aria-disabled="true">
                         <span className="text-white"><Blocked /></span>
                     </div>
                 ) : (
@@ -51,7 +51,7 @@ const TransactionPagination: React.FC<PaginationProps> = ({
                 ))}
 
                 { page === totalPages ? (
-                    <div className="opacity-60 cursor-not-allowed flex items-center bg-primary size-full p-3 rounded-r-lg" aria-disabled="true">
+                    <div className="cursor-not-allowed flex items-center bg-secondary size-full p-3 rounded-r-lg" aria-disabled="true">
                         <span className="text-white"><Blocked /></span>
                     </div>
                 ) : (

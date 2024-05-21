@@ -1,6 +1,9 @@
 "use client";
 import { ProfileContext } from "@/components/AppContext";
+import TrxSortButton from "@/components/Dashboard/Transactions/Button/TrxSortButton";
+import TrxSelectDate from "@/components/Dashboard/Transactions/PopUp/TrxSelectDate";
 import TransactionPagination from "@/components/Dashboard/Transactions/TransactionPagination";
+import TransactionRows from "@/components/Dashboard/Transactions/TransactionRows";
 import TransactionSearchBar from "@/components/Dashboard/Transactions/TransactionSearchBar";
 import TransactionsTable from "@/components/Dashboard/Transactions/TransactionsTable";
 import TransactionStatusDropdown from "@/components/Dashboard/Transactions/TransactionStatusDropdown";
@@ -11,18 +14,28 @@ import { TypesTransactionPagination } from "@/types/transaction";
 import { redirect } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
-const TransactionsPage: React.FC<{ searchParams: { search?: string, page?: number } }>
+interface SelectedDateRange {
+    startDate: Date;
+    endDate: Date;
+}
+
+const TransactionsPage: React.FC<{ searchParams: { search?: string; page?: number; per_page?: number; } }>
 = ({ searchParams }) => {
 
     const { loading, data } = UseProfile();
     const { userData } = useContext(ProfileContext);
     const [allOrder, setAllOrder] = useState<TypesOrderHistory>([]);
+    const [sort, setSort] = useState<string>("asc");
+    const [selectedDate, setSelectedDate] = useState<SelectedDateRange>({
+        startDate: new Date(),
+        endDate: new Date(),
+    });
 
     // pagination
     const search = searchParams?.search || '';
 
     const [page, setPage] = useState<number>(searchParams?.page || 1);
-    const [perPage, setPerPage] = useState<number>(5);
+    const [perPage, setPerPage] = useState<number>(searchParams?.per_page || 5);
     const [status, setStatus] = useState<string>("All");
     const [totalOrder, setTotalOrder] = useState<number>(0);
 
@@ -40,10 +53,10 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string, page?: numbe
         }
     }
 
-
     const getAllOrders = async (pageNumber: number, searchQuery: string) => {
         if (userData && userData.admin) {
-            const response = await fetch(`/api/transaction?page=${pageNumber}&per_page=${perPage}&status=${status}&search=${searchQuery}`);
+            const url = `/api/transaction?page=${pageNumber}&per_page=${perPage}&status=${status}&search=${searchQuery}&sort_by=${sort}`;
+            const response = await fetch(url);
             if (!response.ok) {
                 return 'Failed get all orders';
             }
@@ -57,7 +70,7 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string, page?: numbe
     
     useEffect(() => {
         getAllOrders(page, search);
-    }, [userData, page, perPage, status, searchParams]);
+    }, [userData, page, perPage, status, sort, searchParams]);
 
     if (loading) {
         return 'Loading users info...!'
@@ -73,6 +86,11 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string, page?: numbe
                 <div className="flex flex-row items-center gap-2 w-1/2">
                     <TransactionStatusDropdown status={status} setStatus={setStatus} />
                     <TransactionSearchBar />
+                </div>
+                <div className="flex flex-row items-center gap-2">
+                    <TrxSelectDate selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+                    <TransactionRows perPage={perPage} setPerPage={setPerPage} setPage={setPage}/>
+                    <TrxSortButton sort={sort} setSort={setSort} />
                 </div>
             </div>
             <div className="mt-2">

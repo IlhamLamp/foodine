@@ -24,7 +24,7 @@ const TransactionSearchBar: React.FC = () => {
             <div className="relative flex flex-1">
                 <input 
                     type="search"
-                    placeholder="Search..."
+                    placeholder="cth. name or trx-"
                     onChange={(ev) => handleSearch(ev.target.value)}
                     defaultValue={searchParams.get("search")?.toString() || ""}
                     className="w-full border border-gray-200 bg-gray-200 py-2 pl-10 text-md outline-2 rounded-xl"

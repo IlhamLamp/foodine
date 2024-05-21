@@ -19,6 +19,7 @@ connect();
 
 interface UserQuery {
     transactionId?: { $regex: RegExp};
+    name?: { $regex: RegExp};
     status?: string;
 }
 
@@ -28,20 +29,33 @@ export async function GET(req: NextRequest) {
     const per_page = parseInt(searchParams.get('per_page'), 10) || 5;
     const search = searchParams.get('search')?.trim() || "";
     const status = searchParams.get('status') || "All";
+    const sort_by = searchParams.get('sort_by') || "asc";
 
     try {
         if (isNaN(page) || page < 1) {
             throw new Error('Invalid page number');
         };
         const skip = (page - 1) * per_page;
+
         const query: UserQuery = {};
         if (search !== "") {
-            query.transactionId = { $regex: new RegExp(search, 'i')};
+            if (search.includes('-') || search.includes('trx')) {
+                query.transactionId = { $regex: new RegExp(search, 'i') };
+            } else {
+                query.name = { $regex: new RegExp(search, 'i') };
+            }
         };
         if (status !== "All") {
             query.status = status;
         }
-        const userOrderHistory: TypesOrderHistoryDB = await Transaction.find(query).skip(skip).limit(per_page).lean();
+
+        const sortDirection = sort_by === "asc" ? 1 : -1;
+
+        const userOrderHistory: TypesOrderHistoryDB = await Transaction.find(query)
+            .sort({ updatedAt: sortDirection })
+            .skip(skip)
+            .limit(per_page)
+            .lean();
         const allProductsIds = userOrderHistory.flatMap((transaction) => transaction.items.map((item) => item.productId));
         const menuItems = await MenuItem.find({ '_id': { '$in': allProductsIds }});
         const productMap = menuItems.reduce((acc, item) => {
