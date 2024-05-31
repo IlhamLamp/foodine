@@ -35,10 +35,10 @@ const CartPage: React.FC = () => {
             <div className={`flex flex-col max-w-6xl mx-auto ${showPopup ? '' : 'relative' }`}>
 
                 <div className={`w-3/4 bg-white px-10 mb-5 ${showPopup ? '' : 'relative' }`}>
-                    <CartProductTable cartProduct={cartProducts.items} />
+                    <CartProductTable cartProduct={cartProducts?.items} />
                     <div className="flex items-center text-center justify-between">
                         <BackShopping />
-                        { cartProducts.items.length > 0 ? <DeleteCartProduct openPopup={handleOpenPopup} /> : ''}
+                        { cartProducts?.items.length > 0 ? <DeleteCartProduct openPopup={handleOpenPopup} /> : ''}
                     </div>
                 </div>
 

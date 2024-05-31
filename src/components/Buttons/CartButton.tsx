@@ -8,11 +8,11 @@ import { usePathname } from "next/navigation";
 
 const ShoppingCart: React.FC = () => {
     const path = usePathname();
+    const hiddenButton = path === '/checkout' || path === '/login' || path === '/register';
+
     const { totalQty } = useContext(CartContext);
 
-    if (path === '/checkout') {
-        return null;
-    }
+    if (hiddenButton) return null;
 
     return (
         <Link href={'/cart'} className={`

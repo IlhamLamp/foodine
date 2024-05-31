@@ -51,7 +51,7 @@ const OrdersPage: React.FC<{
                             <OrderStatusSide />
                         </div>
                         <div className="w-2/3 h-[60vh] rounded-lg overflow-y-auto shadow-inner">
-                            { filteredOrders.length === 0 ? (
+                            { filteredOrders?.length === 0 ? (
                                 <NotFoundOrder />
                             ) : (
                                 filteredOrders && filteredOrders.map((transaction, index) => (
