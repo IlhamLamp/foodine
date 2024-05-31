@@ -41,7 +41,7 @@ export default function ResetPasswordForm({ user, onSave, isValid }) {
                         <div className="mx-auto my-2">
                             <Link 
                                 href={'/login'}
-                                className="bg-primary border-none text-white px-4 py-2 rounded-xl btn-hover hover:bg-secondary text-canvas"
+                                className="bg-primary border-none text-white px-4 py-2 rounded-xl btn-hover hover:bg-secondary hover:text-canvas"
                             >
                                 Login
                             </Link>

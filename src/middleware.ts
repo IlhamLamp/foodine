@@ -7,7 +7,7 @@ export async function middleware(req: NextRequest) {
         req: req,
         secret: process.env.NEXTAUTH_SECRET,
     });
-
+    console.log(token);
     const isAuthorizedPath = path.includes("/dashboard/") || path === "/checkout";
     if (isAuthorizedPath && !token) {
         return NextResponse.redirect(new URL("/login", req.nextUrl));

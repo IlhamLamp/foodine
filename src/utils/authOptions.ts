@@ -60,8 +60,6 @@ export const authOptions: NextAuthOptions = {
         if (account.provider !== "google") {
           return user;
         }
-        console.log(user);
-        console.log(account);
         try {
           const { name, email } = user;
           await connect();
