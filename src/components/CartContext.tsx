@@ -59,7 +59,8 @@ export function CartProvider({ children }) {
                     }
 
                 } else {
-                    setCartProducts( JSON.parse( ls.getItem('cart') ) );     
+                    const savedCart = ls?.getItem('cart');
+                    if (savedCart) setCartProducts(JSON.parse(savedCart));
                 }
             } catch (error) {
                 console.error('Error fetching user cart:', error);
