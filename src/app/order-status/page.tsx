@@ -12,8 +12,7 @@ interface MidtransSearchParams {
     transaction_status: string; 
 }
 
-const OrderStatusPage: React.FC = () => {
-
+function OrderStatusResponse () {
     const searchParams = useSearchParams();
     const order_id = searchParams.get('order_id');
     const status_code = searchParams.get('status_code');
@@ -31,14 +30,18 @@ const OrderStatusPage: React.FC = () => {
             default:
                 return null;
         }
-    }, [transaction_status, transaction_id])
+    }, [transaction_status, transaction_id]);
 
+    return renderContent();
+}
+
+const OrderStatusPage: React.FC = () => {
 
     return (
         <section id="order-status" className="mt-28 mx-auto">
             <div className="max-w-6xl mx-auto">
                 <Suspense fallback={<div>Loading...</div>}>
-                    { renderContent() }
+                    <OrderStatusResponse />
                 </Suspense>
             </div>
         </section>
