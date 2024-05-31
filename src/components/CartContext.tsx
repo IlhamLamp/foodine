@@ -21,8 +21,8 @@ export function CartProvider({ children }) {
     // CART
     const [cartProducts, setCartProducts] = useState<TypesCart>(defaultCart);
     const [cartLoaded, setCartLoaded] = useState<boolean>(false);
-    const [totalQty, setTotalQty] = useState<number>(cartProducts.totalItemsQty);
-    const [totalPrice, setTotalPrice] = useState<number>(cartProducts.totalItemsPrice);
+    const [totalQty, setTotalQty] = useState<number>(cartProducts?.totalItemsQty);
+    const [totalPrice, setTotalPrice] = useState<number>(cartProducts?.totalItemsPrice);
 
     const ls = typeof window !== 'undefined' ? window.localStorage : null;
 
