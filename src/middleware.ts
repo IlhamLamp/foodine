@@ -7,22 +7,24 @@ export async function middleware(req: NextRequest) {
         req: req,
         secret: process.env.NEXTAUTH_SECRET,
     });
-    console.log(token);
+
+    const isAuthorizedPath = path.includes("/dashboard/") || path === "/checkout";
+    if (isAuthorizedPath && !token) {
+        return NextResponse.redirect(new URL("/login", req.nextUrl));
+    }
+    if (isAuthorizedPath && token) {
+        return NextResponse.next();
+    }
 
     const publicPaths = path === "/login" || path === "/register";
-    const isAuthorizedPath = path.startsWith("/dashboard");
-
     if (publicPaths && token) {
         return NextResponse.redirect(new URL("/dashboard", req.nextUrl))
     }
     if (!publicPaths && !token && !isAuthorizedPath) {
         return NextResponse.redirect(new URL("/login", req.nextUrl))
     }
-    if (token && isAuthorizedPath) {
-        return NextResponse.next();
-    }
 }
 
 export const config = {
-    matcher: ["/login", "/register", "/dashboard"],
+    matcher: ["/login", "/register", "/dashboard/:path*", "/checkout"],
 }

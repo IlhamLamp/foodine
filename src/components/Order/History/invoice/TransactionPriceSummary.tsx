@@ -4,15 +4,13 @@ import { BsCreditCardFill } from "react-icons/bs";
 import { GoQuestion } from "react-icons/go";
 import { Tooltip } from "react-tooltip";
 import MiniStatusButton from "../../Button/MiniStatusButton";
-import { useRouter } from "next/navigation";
 
-const TransactionPriceSummary: React.FC<{ transaction: TypesTransaction }> = ({ transaction }) => {
-
-    const router = useRouter();
-
-    const handlePayButton = () => {
-        router.push(transaction.snapRedirectUrl);
-    }
+const TransactionPriceSummary: React.FC<{ 
+    transaction: TypesTransaction;
+    pay: () => void;
+}> = ({ transaction, pay }) => {
+    
+    const CheckStatus = transaction.status === 'pending';
 
     return (
         <div className="w-full bg-white">
@@ -61,9 +59,9 @@ const TransactionPriceSummary: React.FC<{ transaction: TypesTransaction }> = ({ 
                         </div>
                     </div>
                     <hr className="mt-4" />
-                    { transaction.status === 'pending' && (
+                    { CheckStatus && (
                         <div className="my-8 flex justify-end">
-                            <button className="w-[200px] bg-primary hover:bg-secondary text-white btn-hover" onClick={handlePayButton}>
+                            <button className="w-[200px] bg-primary hover:bg-secondary text-white btn-hover" onClick={pay}>
                                 Bayar Pesanan
                             </button>
                         </div>

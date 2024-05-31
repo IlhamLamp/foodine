@@ -11,19 +11,11 @@ export async function GET(req: NextRequest) {
         const transactionId = pathname.split('/').pop();
 
         const transaction: TypesTransactionDB = await Transaction.findOne({ transactionId }).lean();
-
-        if (!transaction) {
-            return NextResponse.json({msg: `${transactionId} not found`}, {status: 400});
-        }
+        if (!transaction) return NextResponse.json({msg: `${transactionId} not found`}, {status: 400});
 
         const mappedItems = await Promise.all(transaction.items.map(async (item: TypesCartItemsDatabase) => {
             const menuItem: MenuItems = await MenuItem.findById(item.productId);
-
-            if (!menuItem) {
-                // Handle jika MenuItem tidak ditemukan
-                return null;
-            }
-
+            if (!menuItem) return null;
             const matchedSize = menuItem.sizes.find((size) => size._id.toString() === item.selectedSizes._id);  
 
             return {

@@ -142,6 +142,7 @@ export async function PUT(req: NextRequest) {
     try {
         const reqData = await req.json();
         const { transaction_id, status, data } = reqData;
+        console.log(data);
         const { payment_type, transaction_status } = data;
 
         let deliveryStatus: string;

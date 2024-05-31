@@ -1,0 +1,16 @@
+{
+    "functions": {
+        "api/cron/updateTransactions.ts": {
+            "runtime": "nodejs16.x"
+        }
+    },
+    "cron": {
+        "jobs": [
+            {
+                "path": "/api/cron/updateTransactions",
+                "schedule": "0 0 * * *"
+            }
+        ]
+    }
+}
+  

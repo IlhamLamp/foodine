@@ -6,6 +6,7 @@ import CheckoutProductDetails from "@/components/Checkout/CheckoutProductDetails
 import CheckoutProfileAddress from "@/components/Checkout/CheckoutProfileAddress";
 import { TransactionContext } from "@/components/TransactionContext";
 import { useSnap } from "@/hooks/useSnap";
+import { transactionService } from "@/services/TransactionService";
 import { TypesTransactionDB } from "@/types/transaction";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
@@ -45,23 +46,23 @@ const CheckoutPage: React.FC = () => {
                         onSuccess: async (result) => {
                             // kenapa route nya tidak berubah ya
                             console.log('Sucess', result);
-                            await updateTransaction(response.data.transactionId, 'settlement', result);
+                            await transactionService.updateTransaction(response.data.transactionId, 'settlement', result);
                             router.push(`/order-status?transaction_id=${response.data.transactionId}&transaction_status=settlement`);
                             setSnapShow(false);
                         },
                         onPending: async (result) => {
                             console.log('Pending', result);
-                            await updateTransaction(response.data.transactionId, 'pending', result);
+                            await transactionService.updateTransaction(response.data.transactionId, 'pending', result);
                             router.push(`/order-status?transaction_id=${response.data.transactionId}&transaction_status=pending`);
                             setSnapShow(false);
                         },
                         onError: async (result) => {
                             console.log('Failed', result);
-                            await updateTransaction(response.data.transactionId, 'failed', result);
+                            await transactionService.updateTransaction(response.data.transactionId, 'failed', result);
                             router.push(`/order-status?transaction_id=${response.data.transactionId}&transaction_status=failed`);
                         },
                         onClose: async () => {
-                            await updateTransaction(response.data.transactionId, 'failed');
+                            await transactionService.updateTransaction(response.data.transactionId, 'failed');
                             router.push(`/order-status?transaction_id=${response.data.transactionId}&transaction_status=failed`);
                             setSnapShow(false);
                         }
@@ -76,29 +77,6 @@ const CheckoutPage: React.FC = () => {
             }
         } 
     }
-
-    const updateTransaction = async (transaction_id: string, status: string, data?: any) => {
-
-        if (!transaction_id) {
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/transaction`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ transaction_id, status, data }),
-            })
-            if (!response.ok) {
-                console.log('Failed update transaction');
-                return;
-            }
-            console.log(`Transaction ${transaction_id} status updated to ${status}`);
-        } catch (error) {
-            console.error('Error updating transaction: ', error);
-        }
-    }
-
 
     return (
         <section id="checkout" className={`mt-20 mx-auto ${snapShow ? 'bg-slate-800' : 'bg-gray-50'}`}>
