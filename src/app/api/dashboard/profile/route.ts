@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
 import { connect } from "@/libs/dbConnect";
 import { User } from "@/models/User";
 import { UserInfo } from "@/models/UserInfo";
+import { authOptions } from "@/utils/authOptions";
 
 interface UserWithEmail {
   _id: string;

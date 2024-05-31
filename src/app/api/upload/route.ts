@@ -1,12 +1,12 @@
 import { connect } from "@/libs/dbConnect";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/route";
 import { DeleteImage, ExtractPublicId, UploadImage } from "@/libs/uploadHandler";
 import { User } from "@/models/User";
 import { MenuItem } from "@/models/MenuItem";
 import { MenuItems } from "@/types/menu";
 import { UserInformation } from "@/types/user-information";
+import { authOptions } from "@/utils/authOptions";
 
 interface FormData {
     form: any;
