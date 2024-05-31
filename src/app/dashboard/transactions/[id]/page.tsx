@@ -28,6 +28,10 @@ const TransactionsByIdPage: React.FC = () => {
 
     const isLoading = trxID === null;
 
+    const handlePayment = () => {
+        return null;
+    }
+
     return (
         <div id="transaction-id-page">
             <div className="flex justify-between">
@@ -44,7 +48,7 @@ const TransactionsByIdPage: React.FC = () => {
                     <div className="flex flex-col gap-4">
                         <TransactionProfileAddress transaction={trxID} />
                         <TransactionProductDetails transaction={trxID} />
-                        <TransactionPriceSummary transaction={trxID} />
+                        <TransactionPriceSummary transaction={trxID} pay={handlePayment} />
                     </div>  
                 )}
             </div>
