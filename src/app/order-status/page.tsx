@@ -3,7 +3,7 @@ import OrderStatusFailed from "@/components/Order/status/order-status-failed";
 import OrderStatusPending from "@/components/Order/status/order-status-pending";
 import OrderStatusSuccess from "@/components/Order/status/order-status-success";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { Suspense } from "react";
 
 interface MidtransSearchParams {
     order_id: string;
@@ -20,14 +20,6 @@ const OrderStatusPage: React.FC = () => {
     const transaction_id = searchParams.get('transaction_id');
     const transaction_status = searchParams.get('transaction_status');
 
-    // const getTransaction = React.useCallback( async (transaction_id: string) => {
-    //     if (!transaction_id) return null;
-    // }, [])
-
-    // useEffect(() => {
-
-    // }, [getTransaction, searchParams])
-
     const renderContent = React.useCallback(() => {
         switch(transaction_status) {
             case 'settlement':
@@ -39,13 +31,15 @@ const OrderStatusPage: React.FC = () => {
             default:
                 return null;
         }
-    }, [searchParams])
+    }, [transaction_status, transaction_id])
 
 
     return (
         <section id="order-status" className="mt-28 mx-auto">
             <div className="max-w-6xl mx-auto">
-                { renderContent() }
+                <Suspense fallback={<div>Loading...</div>}>
+                    { renderContent() }
+                </Suspense>
             </div>
         </section>
     )
