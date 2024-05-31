@@ -52,7 +52,7 @@ export default function ResetPasswordForm({ user, onSave, isValid }) {
                 <div className="">
                     <div className="flex flex-col gap-2 items-center">
                         <h1 className="text-2xl font-semibold">Reset Password</h1>
-                        <p className="w-1/2 text-center text-sm text-gray-500">insert your new password in the field below, then retype it for confirmation. It's case sensitive</p>
+                        <p className="w-1/2 text-center text-sm text-gray-500">insert your new password in the field below, then retype it for confirmation. It&apos;s case sensitive</p>
                     </div>
                     <form className="max-w-md mx-auto my-4" onSubmit={handleFormSubmit}>
                         <div className="flex flex-col gap-1">

@@ -31,7 +31,7 @@ const OrderStatusSuccess: React.FC<{ transactionID: string }> = ({ transactionID
                     <p className="text-sm text-white font-light tracking-wide drop-shadow-lg py-2">Thank You</p>
                     <h1 className="text-2xl text-white font-medium tracking-wide drop-shadow-lg uppercase">Your Payment Is Confirmed</h1>
                     <p className="text-md text-white font-light drop-shadow-lg">
-                        Your payment is confirmed and will be shipped shortly. We'll keep you updated with tracking
+                        Your payment is confirmed and will be shipped shortly. We&apos;ll keep you updated with tracking
                         information.
                     </p>
                 </div>
