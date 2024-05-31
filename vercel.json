@@ -1,9 +1,4 @@
 {
-    "functions": {
-        "api/cron/updateTransactions.ts": {
-            "runtime": "nodejs16.x"
-        }
-    },
     "cron": {
         "jobs": [
             {

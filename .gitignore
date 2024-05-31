@@ -17,9 +17,11 @@
 /build
 
 # misc
-.env
 .DS_Store
 *.pem
+
+# secret
+.env
 
 # debug
 npm-debug.log*
