@@ -3,6 +3,19 @@ import { connect } from "@/libs/dbConnect";
 connect();
 
 class TransactionService {
+    async getAllTransaction() {
+        try {
+            const response = await fetch('/api/transaction/all');
+            if (response.ok) {
+                const res = await response.json();
+                const transaction = res.data;
+                return transaction;
+            }
+        } catch (error) {
+            console.error('Error get all users', error);
+        }
+    }
+
     async updateTransaction(transaction_id: string, status: string, data?: any) {
         if (!transaction_id) {
             return;

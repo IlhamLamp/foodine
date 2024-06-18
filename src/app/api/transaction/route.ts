@@ -21,6 +21,7 @@ interface UserQuery {
     transactionId?: { $regex: RegExp};
     name?: { $regex: RegExp};
     status?: string;
+    createdAt?: { $gte: Date; $lte: Date };
 }
 
 export async function GET(req: NextRequest) {
@@ -30,6 +31,8 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get('search')?.trim() || "";
     const status = searchParams.get('status') || "All";
     const sort_by = searchParams.get('sort_by') || "asc";
+    const start_date = searchParams.get('startDate');
+    const end_date = searchParams.get('endDate');
 
     try {
         if (isNaN(page) || page < 1) {
@@ -48,7 +51,9 @@ export async function GET(req: NextRequest) {
         if (status !== "All") {
             query.status = status;
         }
-
+        if (start_date && end_date) {
+            query.createdAt = { $gte: new Date(start_date), $lte: new Date(end_date) };
+        }
         const sortDirection = sort_by === "asc" ? 1 : -1;
 
         const userOrderHistory: TypesOrderHistoryDB = await Transaction.find(query)

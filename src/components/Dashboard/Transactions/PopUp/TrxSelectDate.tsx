@@ -2,15 +2,19 @@ import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 import { DateRangePicker } from 'react-date-range';
 
-interface sdr { startDate: Date; endDate: Date;}
+interface sdr { startDate: Date; endDate: Date; key?: any; }
 interface SelectedDateRange {
-    selectedDate: sdr,
+    selectedDate: sdr;
     setSelectedDate: React.Dispatch<React.SetStateAction<sdr>>;
 }
 
 const TrxSelectDate: React.FC<SelectedDateRange> = ({ selectedDate, setSelectedDate }) => {
 
-    const initialSelection = selectedDate ? [selectedDate] : [];
+    const selectionRange = {
+        startDate: new Date(selectedDate.startDate.getTime() + selectedDate.startDate.getTimezoneOffset() * 60 * 1000),
+        endDate: new Date(selectedDate.endDate.getTime() + selectedDate.endDate.getTimezoneOffset() * 60 * 1000),
+        key: 'selection',
+    };
 
     return (
         <div className="relative inline-block text-left">
@@ -24,12 +28,13 @@ const TrxSelectDate: React.FC<SelectedDateRange> = ({ selectedDate, setSelectedD
                 <div className="absolute right-0 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300">
                     <div className='py-2'>
                         <DateRangePicker
-                            ranges={initialSelection} // Pass initial selection
+                            ranges={[selectionRange]}
                             onChange={(ranges) => {
-                              if (ranges.selection) {
-                                const { startDate, endDate } = ranges.selection;
-                                setSelectedDate({ startDate, endDate });
-                              }
+                                const { selection } = ranges;
+                                setSelectedDate({ 
+                                    startDate: new Date(selection.startDate.getTime() - selection.startDate.getTimezoneOffset() * 60 * 1000),
+                                    endDate: new Date(selection.endDate.getTime() - selection.endDate.getTimezoneOffset() * 60 * 1000)
+                                })
                             }}
                         />
                     </div>

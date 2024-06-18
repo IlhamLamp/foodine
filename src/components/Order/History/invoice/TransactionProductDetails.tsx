@@ -10,12 +10,12 @@ const TransactionProductDetails: React.FC<{ transaction: TypesTransaction}> = ({
                 <div className="flex flex-row justify-between">
                     <div className="flex flex-row gap-2">
                         <PiPackageFill className="w-6 h-6 text-primary" />
-                        <span className="text-lg font-medium text-primary">Produk Dipesan {transaction.totalItemsQty }</span>
+                        <span className="text-lg font-medium text-primary">Produk Dipesan {transaction?.totalItemsQty }</span>
                     </div>
                     <div><span className="font-semibold">Total</span></div>
                 </div>
                 <div className="flex flex-col px-2 pt-2 gap-2">
-                    {transaction && transaction.items.length > 0 && transaction.items.map(((item, index) => (
+                    {transaction && transaction?.items.length > 0 && transaction?.items.map(((item, index) => (
                         <div key={item.product._id + index} className="flex flex-row gap-2 border-b">
                             <div><img src={item.product.image || ''} alt={item.product.name} className="w-[100px] h-[100px]" /></div>
                             <div className="w-full flex flex-col justify-between">

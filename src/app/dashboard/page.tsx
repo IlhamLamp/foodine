@@ -1,4 +1,6 @@
 "use client";
+import DashboardAdminPage from "@/components/Dashboard/Layout/Admin/DashboardAdminPage";
+import DashboardUserPage from "@/components/Dashboard/Layout/User/DashboardUserPage";
 import UseProfile from "@/components/UseProfile";
 import { redirect } from "next/navigation";
 
@@ -9,13 +11,14 @@ const DashboardPage: React.FC = () => {
         return 'Loading users info...!'
     }
 
-    // if (!data) {
-    //     return redirect('/login');
-    // }
+    if (!data) {
+        return redirect('/login');
+    }
 
     return (
-        <section className="mt-24 mx-auto">
-            DASHBOARD
+        <section className="mt-2 mx-auto">
+            <DashboardAdminPage />
+            <DashboardUserPage />
         </section>
     )
 }

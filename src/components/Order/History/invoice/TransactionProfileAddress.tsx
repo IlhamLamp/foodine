@@ -18,24 +18,24 @@ const TransactionProfileAddress: React.FC<{ transaction: TypesTransaction }> = (
                     </div>
                     <div className="flex flex-col items-end">
                         <div className="flex flex-row gap-2">
-                            <span className="cursor-default text-gray-800">{transaction.transactionId}</span>
-                            <CopyToClipboard text={transaction.transactionId} onCopy={() => toast.success(`${transaction.transactionId} Copied!`)}>
+                            <span className="cursor-default text-gray-800">{transaction?.transactionId}</span>
+                            <CopyToClipboard text={transaction?.transactionId} onCopy={() => toast.success(`${transaction?.transactionId} Copied!`)}>
                                 <FaRegCopy className="cursor-pointer" />
                             </CopyToClipboard>
                         </div>
-                        <span className="text-sm text-gray-400">{moment(transaction.updatedAt).format('LLL')}</span>
+                        <span className="text-sm text-gray-400">{moment(transaction?.updatedAt).format('LLL')}</span>
                     </div>
                 </div>
                 <div className="w-full my-2 mx-4 grid grid-rows-3">
                     <div className="flex flex-row items-center gap-2">
-                        <span className="font-semibold uppercase">{transaction.name}</span>
-                        <span className="">{transaction.email}</span>
+                        <span className="font-semibold uppercase">{transaction?.name}</span>
+                        <span className="">{transaction?.email}</span>
                     </div>
                     <div>
                         <span className="font-semibold">{transaction?.phone}</span>
                     </div>
                     <div>
-                        <span>{transaction.shippingAddress}</span>
+                        <span>{transaction?.shippingAddress}</span>
                     </div>
                 </div>
             </div>

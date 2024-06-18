@@ -6,6 +6,8 @@ import { ProfileContext } from "./AppContext";
 interface OrderContextType {
     order: TypesOrderHistory;
     setOrder: React.Dispatch<React.SetStateAction<TypesOrderHistory>>;
+    delOrderID: string;
+    setDelOrderID: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const OrderContext = createContext<OrderContextType | null>(null);
@@ -13,6 +15,7 @@ export const OrderContext = createContext<OrderContextType | null>(null);
 export function OrderProvider({ children }) {
     const { userData } = useContext(ProfileContext);
     const [order, setOrder] = useState<TypesOrderHistory>([]);
+    const [delOrderID, setDelOrderID] = useState<string>('');
 
     useEffect(() => {
         const fetchOrderHistory = async () => {
@@ -30,7 +33,7 @@ export function OrderProvider({ children }) {
         fetchOrderHistory();
     }, [userData]);
 
-    const orderMemo = useMemo(() => ({ order, setOrder }), [ order, setOrder ]);
+    const orderMemo = useMemo(() => ({ order, setOrder, delOrderID, setDelOrderID }), [ order, setOrder, delOrderID, setDelOrderID ]);
 
     return(
         <OrderContext.Provider value={orderMemo}>

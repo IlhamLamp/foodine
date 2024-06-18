@@ -1,41 +1,29 @@
 "use client";
-import { words } from "@/libs/data";
-import { useEffect, useState } from "react"
-import Search from "../icons/Search";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const SearchMenuBtn: React.FC = () => {
-    const [activeSearch, setActiveSearch] = useState<string[]>([]);
+    const router = useRouter();
+    const [search, setSearch] = useState<string>("");
 
-    const handleSearch = (e: any) => {
-        if(e.target.value === ""){
-            setActiveSearch([])
-            return false
-        }
-        const filteredWords = words.filter((w) => w.includes(e.target.value)).slice(0, 8);
-        setActiveSearch(filteredWords);
-    }
+    const handleSearch = () => {
+        router.push(`/menu?search=${search}`);
+    };
 
-  return (
-    <form className='w-[350px] lg:w-[450px] relative'>
-        <div className="relative">
-            <input type="search" placeholder='Type Here' className='w-full p-4 rounded-full bg-white shadow-xl border-t' onChange={(e) => handleSearch(e)}/>
-        </div>
-        {/* <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-tertiary profile-hover cursor-pointer text-primary hover:text-white hover:bg-secondary">
-            <Search />  
-        </button> */}
-        {
-            activeSearch.length > 0 && (
-                <div className="absolute top-16 p-4 bg-white text-black shadow-xl w-full rounded-xl left-1/2 -translate-x-1/2 flex flex-col gap-2">
-                    {
-                        activeSearch.map(s => (
-                            <span key={s}>{s}</span>
-                        ))
-                    }
+    return (
+        <form className='w-[350px] lg:w-[450px] relative'>
+            <div className="relative">
+                <input type="search" placeholder='Type Here' className='w-full p-4 rounded-full bg-white shadow-xl border-t' 
+                    onChange={(ev) => setSearch(ev.target.value)} defaultValue={search}
+                />
+                <div role="button" onClick={handleSearch}>
+                    <svg className="text-primary h-6 w-6 absolute top-4 right-8 fill-current" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 56.966 56.966">
+                        <path d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z"></path>
+                    </svg>       
                 </div>
-            )
-        }        
-    </form>
-  )
+            </div>
+        </form>
+    )
 }
 
 export default SearchMenuBtn;

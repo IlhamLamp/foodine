@@ -1,16 +1,20 @@
 "use client";
 import Pagination from "@/components/Buttons/Pagination";
+import UserSearchBar from "@/components/Dashboard/Users/SearchBar";
 import { BackArrow } from "@/components/icons/Arrow";
-import { SolidPlusCircle } from "@/components/icons/Symbol";
 import UseProfile from "@/components/UseProfile"
 import { Category, MenuItems } from "@/types/menu";
 import { ObjectId } from "mongodb";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { IoAddSharp } from "react-icons/io5";
 
 export default function MenuItemsPage( {searchParams}: Readonly<{
-    searchParams: { page: string },
+    searchParams?: {
+        query?: string; 
+        page: string;
+    },
 }> ) {
 
     const { loading, data } = UseProfile();
@@ -95,21 +99,19 @@ export default function MenuItemsPage( {searchParams}: Readonly<{
     }
 
     return (
-        <div id="menu-items">
+        <div id="menu-items" className="mt-2">
             {/* HEADER */}
-            <div className="flex flex-row">
-                <div className="basis-3/4">
-                    Yahuu
-                </div>
-                <div className="basis-1/4">
-                    <Link className="button bg-canvas flex" href={'/dashboard/menu-items/new'}>
-                        <span>Add Menu</span>
-                        <SolidPlusCircle />
+            <div className="flex items-center justify-between gap-1">
+                <UserSearchBar />
+                <div>
+                    <Link href="/dashboard/menu-items/new" className="inline-flex items-center space-x-1 text-white bg-primary hover:bg-secondary px-5 py-[9px] rounded-md text-sm btn-hover">
+                        <IoAddSharp size={20} />
+                        Create
                     </Link>
                 </div>
             </div>
             <div>
-                <h2 className="text-sm text-secondary mt-8">Edit menu item: </h2>
+                <h2 className="text-sm text-secondary mt-2">Edit menu item: </h2>
                 <div className="flex flex-row gap-4">
                     <div className="flex flex-col bg-primary text-white rounded-xl p-6 w-[300px]">
                         <h1 className="mx-auto my-2 font-semibold">Filter by Categories</h1>

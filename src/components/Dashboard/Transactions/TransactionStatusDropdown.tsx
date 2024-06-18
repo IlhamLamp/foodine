@@ -1,4 +1,16 @@
-const TransactionStatusDropdown: React.FC<{ status: string, setStatus: React.Dispatch<React.SetStateAction<string>> }> = ({ status, setStatus }) => {
+type TypesSelectedDateRange = {
+    startDate: Date;
+    endDate: Date;
+    key?: any;
+}
+interface TrxStatusProps {
+    status: string;
+    setStatus: React.Dispatch<React.SetStateAction<string>>;
+    setSelectedDate: React.Dispatch<React.SetStateAction<TypesSelectedDateRange>>;
+    setPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const TransactionStatusDropdown: React.FC<TrxStatusProps> = ({ status, setStatus, setSelectedDate, setPage }) => {
 
     const PublicTransactionStatus = [
         { id: 1, status: 'All'},
@@ -11,7 +23,13 @@ const TransactionStatusDropdown: React.FC<{ status: string, setStatus: React.Dis
 
     const handleSelectedStatus = (ev: React.ChangeEvent<HTMLInputElement>) => {
         const status = ev.target.value;
+        if (status === 'All') setSelectedDate({
+            startDate: new Date(2024, 4, 2),
+            endDate: new Date(),
+            key: ''
+        })
         setStatus(status);
+        setPage(1);
     }
 
     return (

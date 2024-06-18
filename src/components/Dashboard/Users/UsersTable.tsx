@@ -29,9 +29,7 @@ export default function UsersTable ({ users, prevPage, perPage, page } : Readonl
                 if (response.ok) {
                     router.refresh();
                     resolve();
-                } else {
-                    reject();
-                }
+                } else reject();
             });
     
             await toast.promise(promise, {
@@ -52,6 +50,7 @@ export default function UsersTable ({ users, prevPage, perPage, page } : Readonl
                     <th className="py-3 px-6">#</th>
                     <th className="py-3 px-6">Name</th>
                     <th className="py-3 px-6">Email</th>
+                    {/* <th className="py-3 px-6">Role</th> */}
                     <th className="py-3 px-6">Created At</th>
                     <th className="py-3 px-6 text-center">Actions</th>
                 </tr>

@@ -113,9 +113,9 @@ const Header: React.FC = () => {
                     {/* PROFILE */}
                     <div className="flex flex-wrap items-center px-2 lg:px-0 mt-7 lg:mt-0 gap-10">
                         <div className="flex items-center gap-5">
-                            <div className="bg-tertiary profile-hover cursor-pointer text-primary hover:text-white hover:bg-secondary">
+                            <Link href={'/'} className="bg-tertiary profile-hover cursor-pointer text-primary hover:text-white hover:bg-secondary">
                                 <Search />
-                            </div>
+                            </Link>
                             <div className="flex justify-center items-center">
                                 <button 
                                     className="bg-gray-100 profile-hover cursor-pointer text-black hover:text-white hover:bg-gray-300 focus:ring focus:bg-gray-300 focus:text-white" 

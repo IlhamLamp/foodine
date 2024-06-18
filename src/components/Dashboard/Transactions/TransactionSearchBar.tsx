@@ -3,7 +3,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { IoSearch } from "react-icons/io5";
 import { useDebouncedCallback } from "use-debounce";
 
-const TransactionSearchBar: React.FC = () => {
+type TypesTRXsearchBar = {
+    setPage: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const TransactionSearchBar: React.FC<TypesTRXsearchBar> = ({ setPage }) => {
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
@@ -17,6 +21,7 @@ const TransactionSearchBar: React.FC = () => {
             params.delete("search");
         }
         replace(`${pathname}?${params.toString()}`);
+        setPage(1);
     }, 300)
 
     return (

@@ -34,3 +34,19 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({msg: 'An error occured'}, {status: 500});
     }
 }
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const { pathname } = new URL(req?.url);
+        const transactionId = pathname.split('/').pop();
+
+        const transaction: TypesTransactionDB = await Transaction.findOne({ transactionId }).lean();
+        if (!transaction) return NextResponse.json({msg: `${transactionId} not found`}, {status: 400});
+
+        await Transaction.deleteOne({_id: transaction._id});
+        return NextResponse.json({msg: 'Successfully Delete Tranasction'}, {status: 200});
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({msg: 'An error occured'}, {status: 500});
+    }
+}

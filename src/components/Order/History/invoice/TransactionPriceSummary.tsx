@@ -10,7 +10,7 @@ const TransactionPriceSummary: React.FC<{
     pay: () => void;
 }> = ({ transaction, pay }) => {
     
-    const CheckStatus = transaction.status === 'pending';
+    const CheckStatus = transaction?.status === 'pending';
 
     return (
         <div className="w-full bg-white">
@@ -21,8 +21,8 @@ const TransactionPriceSummary: React.FC<{
                         <span className="text-lg font-medium text-primary">Metode Pembayaran</span>
                     </div>
                     <div className="flex flex-row gap-2 items-center">
-                        <span className="font-semibold">{transaction.paymentMethod}</span>
-                        <MiniStatusButton status={transaction.status} />
+                        <span className="font-semibold">{transaction?.paymentMethod}</span>
+                        <MiniStatusButton status={transaction?.status} />
                     </div>
                 </div>
                 <div className="w-full my-2">
@@ -31,7 +31,7 @@ const TransactionPriceSummary: React.FC<{
                             <div className="flex-col">
                                 <div className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <span>Subtotal Untuk Produk :</span>
-                                    <span>{formatPrice(transaction.totalItemsPrice) || 0}</span>
+                                    <span>{formatPrice(transaction?.totalItemsPrice) || 0}</span>
                                 </div>
                                 <div className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <Tooltip place="top" id="tooltip-goquestion" />
@@ -43,11 +43,11 @@ const TransactionPriceSummary: React.FC<{
                                             className="w-4 h-4 btn-hover text-primary hover:text-secondary cursor-pointer" />
                                         :
                                     </span>
-                                    <span>{formatPrice(transaction.shippingCosts) || 0}</span>
+                                    <span>{formatPrice(transaction?.shippingCosts) || 0}</span>
                                 </div>
                                 <div className="flex flex-row justify-between py-2 gap-14 text-gray-500 text-sm">
                                     <span>Biaya Layanan :</span>
-                                    <span>{formatPrice(transaction.serviceFee) || 0}</span>
+                                    <span>{formatPrice(transaction?.serviceFee) || 0}</span>
                                 </div>
                             </div>
                         </div>
