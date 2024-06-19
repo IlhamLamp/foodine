@@ -6,9 +6,10 @@ interface sdr { startDate: Date; endDate: Date; key?: any; }
 interface SelectedDateRange {
     selectedDate: sdr;
     setSelectedDate: React.Dispatch<React.SetStateAction<sdr>>;
+    setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const TrxSelectDate: React.FC<SelectedDateRange> = ({ selectedDate, setSelectedDate }) => {
+const TrxSelectDate: React.FC<SelectedDateRange> = ({ selectedDate, setSelectedDate, setPage }) => {
 
     const selectionRange = {
         startDate: new Date(selectedDate.startDate.getTime() + selectedDate.startDate.getTimezoneOffset() * 60 * 1000),
@@ -35,6 +36,7 @@ const TrxSelectDate: React.FC<SelectedDateRange> = ({ selectedDate, setSelectedD
                                     startDate: new Date(selection.startDate.getTime() - selection.startDate.getTimezoneOffset() * 60 * 1000),
                                     endDate: new Date(selection.endDate.getTime() - selection.endDate.getTimezoneOffset() * 60 * 1000)
                                 })
+                                setPage(1);
                             }}
                         />
                     </div>

@@ -134,7 +134,7 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string; page?: numbe
                     </div>
                     <div className="flex flex-row justify-between gap-4">
                         <div className="flex flex-row items-center gap-2">
-                            <TrxSelectDate selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+                            <TrxSelectDate selectedDate={selectedDate} setSelectedDate={setSelectedDate} setPage={setPage}/>
                             <TransactionRows perPage={perPage} setPerPage={setPerPage} setPage={setPage}/>
                             <TrxSortButton sort={sort} setSort={setSort} />
                         </div>

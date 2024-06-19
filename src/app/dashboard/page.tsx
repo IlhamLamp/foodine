@@ -17,8 +17,10 @@ const DashboardPage: React.FC = () => {
 
     return (
         <section className="mt-2 mx-auto">
-            <DashboardAdminPage />
-            <DashboardUserPage />
+            { data?.admin 
+                ? (<DashboardAdminPage />)
+                : (<DashboardUserPage />)
+            }
         </section>
     )
 }
