@@ -1,11 +1,17 @@
+import ContentAbout from "@/components/Content/ContentAbout";
+import ContentCategory from "@/components/Content/ContentCategory";
 import Hero from "@/components/Hero";
-import HomeFilterMenu from "@/components/layout/HomeFilterMenu";
 
 export default function Home() {
   return (
-    <main className="max-w-[1170px] mx-auto mt-20 lg:mt-24">
+    <main className="mt-20 lg:mt-24 flex flex-col max-w-[1170px] mx-auto">
+      <section id="hero">
         <Hero />
-        {/* <HomeFilterMenu /> */}
+      </section>
+      <section id="content" className="items-center pt-[500px] w-full">
+        <ContentCategory />
+        <ContentAbout />
+      </section>
     </main>
   );
 }

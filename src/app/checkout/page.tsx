@@ -67,6 +67,7 @@ const CheckoutPage: React.FC = () => {
                             setSnapShow(false);
                         }
                     })
+                    router.refresh();
                 } else {
                     return toast.error('Error add transaction, please try again later.');
                 }

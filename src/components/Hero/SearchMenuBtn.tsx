@@ -13,7 +13,7 @@ const SearchMenuBtn: React.FC = () => {
     return (
         <form className='w-[350px] lg:w-[450px] relative'>
             <div className="relative">
-                <input type="search" placeholder='Type Here' className='w-full p-4 rounded-full bg-white shadow-xl border-t' 
+                <input type="search" placeholder='keripik kentang...' className='w-full p-4 rounded-full bg-gray-50 shadow-xl border-t' 
                     onChange={(ev) => setSearch(ev.target.value)} defaultValue={search}
                 />
                 <div role="button" onClick={handleSearch}>
