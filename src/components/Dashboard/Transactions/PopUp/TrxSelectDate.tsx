@@ -12,8 +12,8 @@ interface SelectedDateRange {
 const TrxSelectDate: React.FC<SelectedDateRange> = ({ selectedDate, setSelectedDate, setPage }) => {
 
     const selectionRange = {
-        startDate: new Date(selectedDate.startDate.getTime() + selectedDate.startDate.getTimezoneOffset() * 60 * 1000),
-        endDate: new Date(selectedDate.endDate.getTime() + selectedDate.endDate.getTimezoneOffset() * 60 * 1000),
+        startDate: selectedDate.startDate,
+        endDate: selectedDate.endDate,
         key: 'selection',
     };
 

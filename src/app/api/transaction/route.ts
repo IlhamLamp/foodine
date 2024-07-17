@@ -52,7 +52,10 @@ export async function GET(req: NextRequest) {
             query.status = status;
         }
         if (start_date && end_date) {
-            query.createdAt = { $gte: new Date(start_date), $lte: new Date(end_date) };
+            query.createdAt = { 
+                $gte: new Date(start_date + 'T00:00:00Z'),
+                $lte: new Date(end_date + 'T23:59:59Z'),
+            };
         }
         const sortDirection = sort_by === "asc" ? 1 : -1;
 

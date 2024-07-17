@@ -37,9 +37,9 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string; page?: numbe
     const [allOrder, setAllOrder] = useState<TypesOrderHistory>([]);
     const [sort, setSort] = useState<string>("asc");
     const [selectedDate, setSelectedDate] = useState<SelectedDateRange>({
-        // first init 4 may, 2024
-        startDate: new Date(2024, 4, 2),
-        endDate: new Date(),
+        // first init 2 may, 2024
+        startDate: new Date(Date.UTC(2024, 4, 2)),
+        endDate: new Date(Date.now()),
         key: '',
     });
 
