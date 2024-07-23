@@ -1,4 +1,5 @@
 "use client";
+import { ProfileContext } from "@/components/AppContext";
 import Pagination from "@/components/Buttons/Pagination";
 import UserSearchBar from "@/components/Dashboard/Users/SearchBar";
 import { BackArrow } from "@/components/icons/Arrow";
@@ -7,17 +8,15 @@ import { Category, MenuItems } from "@/types/menu";
 import { ObjectId } from "mongodb";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import React, { useContext, useEffect, useState } from "react";
 import { IoAddSharp } from "react-icons/io5";
 
-export default function MenuItemsPage( {searchParams}: Readonly<{
-    searchParams?: {
-        query?: string; 
-        page: string;
-    },
-}> ) {
+const MenuItemsPage: React.FC<{ searchParams: { query?: string; page: number;}}> 
+= ({ searchParams }) => {
 
     const { loading, data } = UseProfile();
+    const { userData } = useContext(ProfileContext);
 
     const [menuItems, setMenuItems] = useState<MenuItems[]>([]);
     const [totalItem, setTotalItem] = useState<number>(0);
@@ -28,8 +27,8 @@ export default function MenuItemsPage( {searchParams}: Readonly<{
     const [ctgTotalMap, setCtgTotalMap] = useState<string[]>([]);
     
     // pagination
-    let page = parseInt(searchParams.page, 10);
-    page = !page || page < 1 ? 1 : page;
+    const query = searchParams?.query || "";
+    const page = Number(searchParams?.page) || 1;
     const perPage: number = 9;
 
     const totalPages = Math.ceil(totalItem / perPage);
@@ -45,38 +44,56 @@ export default function MenuItemsPage( {searchParams}: Readonly<{
         }
     }
 
-    useEffect(() => {
-        fetchAllCategories();
-        fetchMenuItems(page, selectedCategory);
-    }, [searchParams, selectedCategory]);
+    // function fetchMenuItems(pageNumber: number = 1, categoryId?: ObjectId | string | null) {
+    //     if (categoryId) {
+    //         fetch(`/api/dashboard/menu-items?page=${pageNumber}&per_page=${perPage}&category=${selectedCategory}`)
+    //         .then(res => {
+    //             res.json().then(data => {
+    //                 setMenuItems(data.menuItem);
+    //                 setTotalItem(data.totalItem);
+    //                 setCtgTotalMap(data.categoryTotalMap)
+    //             })
+    //         })
+    //     } else {
+    //         fetch(`/api/dashboard/menu-items?page=${pageNumber}&per_page=${perPage}`)
+    //         .then(res => {
+    //             res.json().then(data => {
+    //                 setMenuItems(data.menuItem);
+    //                 setTotalItem(data.totalItem);
+    //             })
+    //         })
+    //     }
+    // }
 
-    function fetchMenuItems(pageNumber: number = 1, categoryId?: ObjectId | string | null) {
+    const getMenuItems = async (pageNumber: number = 1, query: string = "", categoryId?: ObjectId | string | null) => {
+
+        const queryParams = new URLSearchParams({
+            page: pageNumber.toString(),
+            per_page: perPage.toString(),
+            q: query,
+        })
+
         if (categoryId) {
-            fetch(`/api/dashboard/menu-items?page=${pageNumber}&per_page=${perPage}&category=${selectedCategory}`)
-            .then(res => {
-                res.json().then(data => {
-                    setMenuItems(data.menuItem);
-                    setTotalItem(data.totalItem);
-                    setCtgTotalMap(data.categoryTotalMap)
-                })
-            })
+            const response = await fetch(`/api/dashboard/menu-items?${queryParams}&category=${categoryId}`);
+            if (!response.ok) return 'failed get menu items by category';
+            const data = await response.json();
+            setMenuItems(data.menuItem);
+            setTotalItem(data.totalItem);
+            setCtgTotalMap(data.categoryTotalMap);
         } else {
-            fetch(`/api/dashboard/menu-items?page=${pageNumber}&per_page=${perPage}`)
-            .then(res => {
-                res.json().then(data => {
-                    setMenuItems(data.menuItem);
-                    setTotalItem(data.totalItem);
-                })
-            })
+            const response = await fetch(`/api/dashboard/menu-items?${queryParams}`);
+            if (!response.ok) return 'failed get menu items by category';
+            const data = await response.json();
+            setMenuItems(data.menuItem);
+            setTotalItem(data.totalItem);
         }
     }
 
-    function fetchAllCategories() {
-        fetch('/api/dashboard/categories/all').then(res => {
-            res.json().then(data => {
-                setCategories(data);
-            })
-        })
+    const getAllCategories = async () => {
+        const response = await fetch('/api/dashboard/categories/all');
+        if (!response.ok) return 'failed get all categories';
+        const res = await response.json();
+        setCategories(res);
     }
 
     const handleCategoryChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,12 +107,17 @@ export default function MenuItemsPage( {searchParams}: Readonly<{
         window.history.pushState({}, '', newUrl.toString());
     };
 
+    useEffect(() => {
+        getAllCategories();
+        getMenuItems(page, query, selectedCategory);
+    }, [searchParams, selectedCategory]);
+
     if (loading) {
         return 'Loading user info...'
     }
 
     if (!data.admin) {
-        return 'Not an Admin!'
+        return redirect('/login');
     }
 
     return (
@@ -181,3 +203,5 @@ export default function MenuItemsPage( {searchParams}: Readonly<{
         </div>
     )
 }
+
+export default MenuItemsPage;

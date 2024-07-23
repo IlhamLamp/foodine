@@ -9,28 +9,22 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function EditMenuItemPage() {
+const EditMenuItemPage: React.FC = () => {
 
     const { id } = useParams();
     const {loading, data} = UseProfile();
     const [menuItem, setMenuItem] = useState<MenuItems>(null);
     const router = useRouter();
 
-    useEffect(() => {
-        fetchMenuItems();
-    }, [id])
-
     const handleBackButton = () => {
         router.push('/dashboard/menu-items')
     }
 
-    function fetchMenuItems() {
-        fetch('/api/dashboard/menu-items/all').then(res => {
-            res.json().then(items => {
-                const item = items.find((i: {_id: string | string[];}) => i._id === id);
-                setMenuItem(item);
-            });
-        });
+    const getMenuItems = async () => {
+        const response = await fetch(`/api/dashboard/menu-items/${id}`);
+        if (!response.ok) return `failed get menu items ${id}`;
+        const res = await response.json();
+        setMenuItem(res.data);
     };
     
     async function handleFormSubmit(ev: any, data: any) {
@@ -90,6 +84,10 @@ export default function EditMenuItemPage() {
         }
     }
 
+    useEffect(() => {
+        getMenuItems();
+    }, [id])
+
     if (loading) {
         return 'Loading menu items...'
     }
@@ -116,3 +114,5 @@ export default function EditMenuItemPage() {
         </div>
     )
 }
+
+export default EditMenuItemPage;

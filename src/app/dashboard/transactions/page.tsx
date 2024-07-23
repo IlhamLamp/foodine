@@ -15,9 +15,10 @@ import { generateInvoicePdf } from "@/libs/exportHandler";
 import { TypesOrderHistory } from "@/types/order";
 import { TypesTransactionPagination } from "@/types/transaction";
 import { redirect, useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { IoMdDownload } from "react-icons/io";
+import { useDownloadExcel } from 'react-export-table-to-excel';
 
 interface SelectedDateRange {
     startDate: Date;
@@ -29,6 +30,7 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string; page?: numbe
 = ({ searchParams }) => {
 
     const router = useRouter();
+    const tableRef = useRef<HTMLTableElement>(null);
     const [showPopup, setShowPopup] = useState<boolean>(false);
 
     const { loading, data } = UseProfile();
@@ -37,11 +39,12 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string; page?: numbe
     const [allOrder, setAllOrder] = useState<TypesOrderHistory>([]);
     const [sort, setSort] = useState<string>("asc");
     const [selectedDate, setSelectedDate] = useState<SelectedDateRange>({
-        // first init 2 may, 2024
-        startDate: new Date(Date.UTC(2024, 4, 2)),
+        // first init 1 may, 2024
+        startDate: new Date(Date.UTC(2024, 4, 1)),
         endDate: new Date(Date.now()),
         key: '',
     });
+    const today = new Date().toJSON().slice(0,10).split('-').reverse().join('/');
 
     // pagination
     const search = searchParams?.search || '';
@@ -105,9 +108,22 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string; page?: numbe
         }
     }
 
-    const handlePDF = () => {
-        generateInvoicePdf('adminInvoice', `admin.pdf`);
-    }
+    // EXPORT 
+
+    // const handlePDF = () => {
+    //     const pdf = generateInvoicePdf('adminInvoice', `admin-${userData.name}-${today}.pdf`);
+    //     return toast.promise(pdf, {
+    //         loading: 'please wait a moment...',
+    //         success: 'pdf succesfully generated',
+    //         error: 'error generate pdf',
+    //     })
+    // }
+
+    const { onDownload } = useDownloadExcel({
+        currentTableRef: tableRef.current,
+        filename: `admin-${userData?.name}-${today}`,
+        sheet: `${status}`,
+    })
     
     useEffect(() => {
         getAllOrders(page, search, selectedDate);
@@ -138,8 +154,8 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string; page?: numbe
                             <TransactionRows perPage={perPage} setPerPage={setPerPage} setPage={setPage}/>
                             <TrxSortButton sort={sort} setSort={setSort} />
                         </div>
-                        <div role="button" onClick={handlePDF} className="flex flex-row justify-between items-center gap-2 rounded-full bg-white hover:bg-gray-100 btn-hover shadow-xl p-2">
-                            <span className="text-slate-700 text-xs font-semibold">PDF</span>
+                        <div role="button" onClick={onDownload} className="flex flex-row justify-between items-center gap-2 rounded-full bg-white hover:bg-gray-100 btn-hover shadow-xl p-2">
+                            <span className="text-slate-700 text-xs font-semibold">XLS</span>
                             <IoMdDownload className="text-slate-700" />
                         </div>
                     </div>
@@ -149,7 +165,7 @@ const TransactionsPage: React.FC<{ searchParams: { search?: string; page?: numbe
                 { allOrder.length === 0 ? (
                     <NotFoundOrder />
                 ) : (
-                    <TransactionsTable id={'adminInvoice'} orders={allOrder} page={page} prevPage={prevPage} perPage={perPage} popup={() => setShowPopup(!showPopup)} />
+                    <TransactionsTable id={'adminInvoice'} ref={tableRef} orders={allOrder} page={page} prevPage={prevPage} perPage={perPage} popup={() => setShowPopup(!showPopup)} />
                 )}
             </div>
             {!isPageOutOfRange && (

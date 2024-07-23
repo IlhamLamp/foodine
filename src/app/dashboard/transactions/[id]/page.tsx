@@ -8,6 +8,7 @@ import { generateInvoicePdf } from "@/libs/exportHandler";
 import { TypesTransaction } from "@/types/transaction";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaBackspace } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 
@@ -33,8 +34,12 @@ const TransactionsByIdPage: React.FC = () => {
     }
 
     const handlePDF = () => {
-        generateInvoicePdf('invoice', `${trxID?.transactionId}.pdf`);
-        return
+        const pdf = generateInvoicePdf('invoice', `${trxID?.transactionId}.pdf`);
+        return toast.promise(pdf, {
+            loading: 'please wait a moment',
+            success: `${id} downloaded`,
+            error: 'error generate pdf',
+        })
     }
 
     return (

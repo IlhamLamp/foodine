@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
                         </div>
                         <p className="text-base font-bold tracking-wide text-gray-900">Email</p>
                         <div className="flex">
-                            <a href="#" title="send email">aryakuesnack@mail.com</a>
+                            <a href="#" title="send email">arya.kue@mail.com</a>
                         </div>
                     </div>
     

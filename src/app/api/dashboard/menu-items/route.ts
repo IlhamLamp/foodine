@@ -5,6 +5,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 connect();
 
+interface MenuQuery {
+    name?: { $regex: RegExp };
+}
+
 export async function POST(req: NextRequest) {
     try {
         const data = await req.json();
@@ -21,6 +25,7 @@ export async function GET(req: NextRequest) {
     const searchParams = new URLSearchParams(url?.searchParams);
     const recentPage = parseInt(searchParams.get('page'), 10);
     const perPage = parseInt(searchParams.get('per_page'), 10);
+    const searchQuery = searchParams.get('q')?.trim() || "";
     const category = searchParams.get('category');
     
     try {
@@ -28,14 +33,21 @@ export async function GET(req: NextRequest) {
             throw new Error('Invalid page number');
         }
         const skip = (recentPage - 1) * perPage;
+
+        // filtering
+        const query: MenuQuery = {};
+        if (searchQuery !== "") {
+            query.name = { $regex: new RegExp(searchQuery, 'i')};
+        }
+
         if (category === "All") {
             // Fetch all menu items (unchanged)
-            const menuItem = await MenuItem.find({}).skip(skip).limit(perPage);
-            const totalItem = await MenuItem.countDocuments({});
+            const menuItem = await MenuItem.find(query).skip(skip).limit(perPage);
+            const totalItem = await MenuItem.countDocuments(query);
             return NextResponse.json({
                 menuItem,
                 totalItem,
-            });
+            }, {status: 200});
         } else {
             // handle pagination based on category
             const menuItem = await MenuItem.find({ category: category }).skip(skip).limit(perPage);
