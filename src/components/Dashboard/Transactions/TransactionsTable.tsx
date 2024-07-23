@@ -70,4 +70,6 @@ const TransactionsTable = forwardRef<HTMLTableElement, TransactionTableProps>(({
     );
 });
 
+TransactionsTable.displayName = 'TransactionsTable';
+
 export default TransactionsTable;
