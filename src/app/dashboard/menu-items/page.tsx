@@ -1,5 +1,4 @@
 "use client";
-import { ProfileContext } from "@/components/AppContext";
 import Pagination from "@/components/Buttons/Pagination";
 import UserSearchBar from "@/components/Dashboard/Users/SearchBar";
 import { BackArrow } from "@/components/icons/Arrow";
@@ -9,14 +8,13 @@ import { ObjectId } from "mongodb";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoAddSharp } from "react-icons/io5";
 
 const MenuItemsPage: React.FC<{ searchParams: { query?: string; page: number;}}> 
 = ({ searchParams }) => {
 
     const { loading, data } = UseProfile();
-    const { userData } = useContext(ProfileContext);
 
     const [menuItems, setMenuItems] = useState<MenuItems[]>([]);
     const [totalItem, setTotalItem] = useState<number>(0);
@@ -43,27 +41,6 @@ const MenuItemsPage: React.FC<{ searchParams: { query?: string; page: number;}}>
             pageNumbers.push(i);
         }
     }
-
-    // function fetchMenuItems(pageNumber: number = 1, categoryId?: ObjectId | string | null) {
-    //     if (categoryId) {
-    //         fetch(`/api/dashboard/menu-items?page=${pageNumber}&per_page=${perPage}&category=${selectedCategory}`)
-    //         .then(res => {
-    //             res.json().then(data => {
-    //                 setMenuItems(data.menuItem);
-    //                 setTotalItem(data.totalItem);
-    //                 setCtgTotalMap(data.categoryTotalMap)
-    //             })
-    //         })
-    //     } else {
-    //         fetch(`/api/dashboard/menu-items?page=${pageNumber}&per_page=${perPage}`)
-    //         .then(res => {
-    //             res.json().then(data => {
-    //                 setMenuItems(data.menuItem);
-    //                 setTotalItem(data.totalItem);
-    //             })
-    //         })
-    //     }
-    // }
 
     const getMenuItems = async (pageNumber: number = 1, query: string = "", categoryId?: ObjectId | string | null) => {
 
