@@ -6,6 +6,7 @@ import CheckoutProductDetails from "@/components/Checkout/CheckoutProductDetails
 import CheckoutProfileAddress from "@/components/Checkout/CheckoutProfileAddress";
 import { TransactionContext } from "@/components/TransactionContext";
 import { useSnap } from "@/hooks/useSnap";
+import { productsService } from "@/services/ProductsServices";
 import { transactionService } from "@/services/TransactionService";
 import { TypesTransactionDB } from "@/types/transaction";
 import { useRouter } from "next/navigation";
@@ -47,6 +48,7 @@ const CheckoutPage: React.FC = () => {
                             // kenapa route nya tidak berubah ya
                             console.log('Sucess', result);
                             await transactionService.updateTransaction(response.data.transactionId, 'settlement', result);
+                            await productsService.updateStockProducts(response.data.items);
                             router.push(`/order-status?transaction_id=${response.data.transactionId}&transaction_status=settlement`);
                             setSnapShow(false);
                         },
