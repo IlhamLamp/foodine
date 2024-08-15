@@ -23,12 +23,15 @@ const CartSummary: React.FC = () => {
     const formattedTotalCost = formatPrice(totalPrice + costShipping);
 
     const handleCheckout = () => {
-
-        if (cartProducts.items.length !== 0) {
+        if (distance >= 30000) {
+            return toast.error('Sorry, your order cannot be completed because it exceeds the distance limit of 30 km.');
+        }
+        
+        if (cartProducts && cartProducts.items && cartProducts.items.length > 0) {
             addTransaction(totalPrice, costShipping, totalQty);
             router.push('/checkout');
         } else {
-            return toast.error('Please add product before checkout!')
+            return toast.error('Please add product before checkout!');
         }
     }
 
